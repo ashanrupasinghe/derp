@@ -1,0 +1,1 @@
+[05-Nov-2016 22:53:30 UTC] PHP Parse error:  syntax error, unexpected ']', expecting identifier (T_STRING) or variable (T_VARIABLE) or '{' or '$' in /home/allinslcp/public_html/erp.direct2door.lk/src/Template/Products/view.ctp on line 59

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	 <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+
+
+<script type="text/javascript">
+  $('select').select2();
+</script>
+
+	
+</head>
+<body>
+
+
+<div class="container main-content">
+
+	
+
+
+<div class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Example #6 (Handling data with PHP) <a data-toggle="collapse" class="btn btn-warning" href="#srcExample6" aria-expanded="false" aria-controls="srcExample6">SOURCE</a></h2>
+			<div class="collapse" id="srcExample6">
+<pre>
+&lt;form method="post"&gt;
+&lt;div id="example-6" class="content"&gt;
+	&lt;div class="row"&gt;
+		&lt;div class="col-md-12"&gt;&lt;button type="button" id="btnAdd-6" class="btn btn-primary"&gt;Add Employee&lt;/button&gt;&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;div class="row group"&gt;
+		&lt;div class="col-md-2"&gt;
+			&lt;div class="form-group"&gt;
+				&lt;label&gt;Name&lt;input class="form-control" class="form-control" type="text" name="user_name[]"&gt;&lt;/label&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class="col-md-2"&gt;
+			&lt;label&gt;Gender
+			&lt;select name="user_gender[]" class="form-control"&gt;
+				&lt;option value=""&gt;Please select..&lt;/option&gt;
+				&lt;option value="male"&gt;Male&lt;/option&gt;
+				&lt;option value="female"&gt;Female&lt;/option&gt;
+			&lt;/select&gt;
+			&lt;/label&gt;
+		&lt;/div&gt;
+		&lt;div class="col-md-4"&gt;
+			&lt;div class="col-md-2"&gt;
+				&lt;div class="radio"&gt;
+					&lt;label&gt;&lt;input type="radio" name="user_role[0]" value="manager"&gt; Manager &lt;/label&gt;
+				&lt;/div&gt;
+				&lt;div class="radio"&gt;
+					&lt;label&gt;&lt;input type="radio" name="user_role[0]" value="editor"&gt; Editor &lt;/label&gt;
+				&lt;/div&gt;
+				&lt;div class="radio"&gt;
+					&lt;label class="checkbox-inline"&gt;&lt;input type="radio" name="user_role[0]" value="writer"&gt; Writer &lt;/label&gt;
+				&lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+		&lt;div class="col-md-3"&gt;
+			&lt;button type="button" class="btn btn-danger btnRemove"&gt;Remove&lt;/button&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+&lt;/form&gt;
+</pre>
+<pre>
+&lt;script&gt;
+$('#example-6').multifield({
+	section: '.group',
+	btnAdd:'#btnAdd-6',
+	btnRemove:'.btnRemove',
+});
+&lt;/script&gt;
+</pre>
+<pre>
+&lt;?php var_dump($_POST); ?&gt;
+
+OUTPUT :
+
+  'user_name' =>
+    array (size=5)
+      0 => string 'John Doe' (length=8)
+      1 => string 'Alice Smith' (length=11)
+      2 => string 'Jason Louis' (length=11)
+      3 => string 'Bob Freeman' (length=11)
+      4 => string 'Jane Watkins' (length=12)
+  'user_gender' =>
+    array (size=5)
+      0 => string 'male' (length=4)
+      1 => string 'female' (length=6)
+      2 => string 'male' (length=4)
+      3 => string 'male' (length=4)
+      4 => string 'female' (length=6)
+  'user_role' =>
+    array (size=5)
+      0 => string 'manager' (length=7)
+      1 => string 'editor' (length=6)
+      2 => string 'writer' (length=6)
+      3 => string 'writer' (length=6)
+      4 => string 'writer' (length=6)
+
+// Get information about the first record
+$_POST['user_name'][0]; // John Doe
+$_POST['user_gender'][0]; // male
+$_POST['user_role'][0]; // manager
+
+</pre>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div id="example-6" class="content">
+	<div class="row">
+		<div class="col-md-12"><button type="button" id="btnAdd-6" class="btn btn-primary">Add Employee</button></div>
+	</div>
+	<div class="row group">
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>Name<input class="form-control" class="form-control" type="text" name="user_name[]"></label>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label>Gender
+			<select name="user_gender[]" class="form-control">
+				<option value="">Please select..</option>
+				<option value="male">Male</option>
+				<option value="female">Female</option>
+			</select>
+			</label>
+		</div>
+		<div class="col-md-4">
+			<div class="col-md-2">
+				<div class="radio">
+					<label><input type="radio" name="user_role[0]" value="manager"> Manager </label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="user_role[0]" value="editor"> Editor </label>
+				</div>
+				<div class="radio">
+					<label class="checkbox-inline"><input type="radio" name="user_role[0]" value="writer"> Writer </label>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<button type="button" class="btn btn-danger btnRemove">Remove</button>
+		</div>
+	</div>
+</div>
+
+
+	
+
+</div>
+
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!-- jQuery Multifield -->
+<script src="jquery.multifield.min.js"></script>
+<script>
+	$('#example-6').multifield({
+		section: '.group',
+		btnAdd:'#btnAdd-6',
+		btnRemove:'.btnRemove'
+	});
+</script>
+
+<!-- Place this tag right after the last button or just before your close body tag. -->
+<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
+
+
+
+
+<div id="example-6">			
+			<?= $this->Form->button(__('Add Product'),['type'=>'button','id'=>'btnAdd-6']) ?>	
+			<div class="row group">
+			
+			<div class="large-3 medium-3 columns">
+			<?php 
+			$status=['male'=>'Male','female'=>'Female'];
+            echo $this->Form->input('Produc Name',['options'=>$status,'empty'=>'Please select..','name'=>'user_gender[]']);
+            ?>
+            </div>
+            <div class="large-2 medium-2 columns">
+            <?php 
+            echo $this->Form->input('Ammount',['type'=>'text','name'=>'user_name[]']);
+            ?>
+            </div>
+            <div class="large-3 medium-3 columns">
+            <?php
+            $status=['male'=>'Male','female'=>'Female'];
+            echo $this->Form->input('Supplier',['options'=>$status,'empty'=>'Please select..','name'=>'user_gender[]']);            
+			?>
+			</div>
+			<div class="large-1 medium-1 columns">
+			<?= $this->Form->button(__('X'),['type'=>'button','id'=>'btnAdd-6','class'=>'btnRemove']) ?>		
+			</div>
+			<div class="large-3 medium-3 columns">
+			</div>
+	</div>
+	
+</div>

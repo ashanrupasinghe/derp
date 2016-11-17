@@ -1,0 +1,28 @@
+<div class="suppliers form large-10 medium-10 columns content">
+    <?= $this->Form->create($supplier) ?>
+    <fieldset>
+        <legend><?= __('Add Supplier') ?></legend>
+        <?php             	
+            echo $this->Form->input('user_id', ['options' => $users,'empty'=>'select user']);
+            echo $this->Form->input('firstName');
+            echo $this->Form->input('lastName');
+            echo $this->Form->input('username');
+            echo $this->Form->input('password');
+            echo $this->Form->input('email');
+            echo $this->Form->input('address');
+            //echo $this->Form->input('city',['name'=>'cityId','id'=>'cityId']);
+            echo $this->Form->input('city',['options'=>$cities,'empty'=>'select city']);
+            echo $this->Form->input('latitude');
+            echo $this->Form->input('longitude');
+            echo $this->Form->input('contactNo');
+            echo $this->Form->input('mobileNo');
+            echo $this->Form->input('faxNo');
+            echo $this->Form->input('companyName');
+            echo $this->Form->input('regNo');
+            $status=['1'=>'Active','0'=>'Inactive'];
+            echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
+        ?>
+    </fieldset>
+    <?= $this->Form->button(__('Submit')) ?>
+    <?= $this->Form->end() ?>
+</div>
