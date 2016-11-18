@@ -104,11 +104,11 @@ class SuppliersController extends AppController {
 		 * } ) ;
 		 */
 		// I think this query should be on MODAL, but-->get all user that relation with supplier table,
-		$subquery = $this->Suppliers->find ()->select ( 'user_id' )->hydrate ( false )->join ( [ 
+		$subquery = $this->Suppliers->find ()->select ( ['user_id'] )->hydrate ( false )->join ( [ 
 				'table' => 'users',
 				'alias' => 'u',
 				'type' => 'INNER',
-				'conditions' => 'u.id = suppliers.user_id' 
+				'conditions' => 'u.id = user_id' 
 		] );
 		
 		$users = $this->Suppliers->Users->find ( 'all', [ 

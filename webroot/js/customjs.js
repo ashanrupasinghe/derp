@@ -27,11 +27,11 @@ $(document).ready(function(){
 	    //var productId = $('option:selected', this).val();
 		var productId = $('option:selected', this).text();
 		
-	    //alert(myBaseUrl+"orders/getProductSeller");
-	    //alert(productId);
+	    //alert(myBaseUrl);
+	    //alert(myBaseUrl+"/productsuppliers");
 	    
-	    $.post(myBaseUrl+"orders/productsuppliers",
-	    	    {productId:productId},
+	    $.post(myBaseUrl+"/productsuppliers",
+	    	    {"productId":productId},
 	    	    function(data, status){
 	    	    	//alert(data);
 	    	    	var supplier=JSON.parse(data);    	    	
@@ -40,7 +40,7 @@ $(document).ready(function(){
 	    	        for (var i = 0; i < supplier.length; i++){
 	    	          listItems+= "<option value='" + supplier[i].s.id + "'>" + supplier[i].s.firstName+" "+supplier[i].s.lastName+" - "+supplier[i].city.cname + "</option>";
 	    	        }
-	    	        
+	    	        //alert(listItems);
 	    	        
 	    	        //$(this).next().next().html(listItems);
 	    	        $("#"+divid).find("select.sup-select").html(listItems);

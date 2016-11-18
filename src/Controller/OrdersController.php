@@ -130,7 +130,7 @@ class OrdersController extends AppController {
 		$this->set ( compact ( 'callcenterId' ) );
 		
 		$productmodel=$this->loadModel('Products');
-		$products=$productmodel->find('list',['fields'=>['id','name']]);
+		$products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']);;
 		$this->set ( 'products',$products );
 		
 		
@@ -244,7 +244,7 @@ class OrdersController extends AppController {
 				'table' => 'suppliers',
 				'alias' => 's',
 				'type' => 'INNER',
-				'conditions' => 'products.supplierId = s.id'
+				'conditions' => 's.id=supplierId'
 		] )
 		->join ( [
 				'table' => 'city',

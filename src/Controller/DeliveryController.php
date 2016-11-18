@@ -68,7 +68,7 @@ class DeliveryController extends AppController
         		'table' => 'users',
         		'alias' => 'u',
         		'type' => 'INNER',
-        		'conditions' => 'u.id = delivery.user_id'
+        		'conditions' => 'u.id = user_id'
         ] );
         
         $users = $this->Delivery->Users->find ( 'all', [

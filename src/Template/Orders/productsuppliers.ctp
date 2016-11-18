@@ -1,3 +1,3 @@
 <?php
- echo json_encode($suppliers);
+echo json_encode($suppliers);
 ?>

@@ -68,7 +68,7 @@ class CallcenterController extends AppController
         		'table' => 'users',
         		'alias' => 'u',
         		'type' => 'INNER',
-        		'conditions' => 'u.id = callcenter.user_id'
+        		'conditions' => 'u.id = user_id'
         ] );
         
         $users = $this->Callcenter->Users->find ( 'all', [
