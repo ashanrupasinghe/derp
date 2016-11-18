@@ -43,6 +43,14 @@ class OrdersTable extends Table
         $this->hasMany('OrderProducts', [
             'foreignKey' => 'order_id'
         ]);
+        $this->hasMany('SupplierNotifications',[
+        	'foreignKey' => 'orderId'	
+        ]);
+        $this->hasMany('DeliveryNotifications',[
+        		'foreignKey' => 'orderId'
+        ]);
+        
+        
 		$this->belongsTo('callcenter',['foreignKey'=>'callcenterId']);
 		$this->belongsTo('delivery',['foreignKey'=>'deliveryId']);
 		$this->belongsTo('city',['foreignKey'=>'city','propertyName'=>'cid']);
@@ -55,7 +63,7 @@ class OrdersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+  /*  public function validationDefault(Validator $validator)
     {
         $validator
             ->integer('id')
@@ -123,5 +131,5 @@ class OrdersTable extends Table
             ->notEmpty('status');
 
         return $validator;
-    }
+    }*/
 }

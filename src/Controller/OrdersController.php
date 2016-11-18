@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\SupplierNotification;
 
 /**
  * Orders Controller
@@ -71,20 +72,46 @@ class OrdersController extends AppController {
 	 *
 	 * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
 	 */
-	public function add() {
-		//$sup=$this->productsuppliers('leeks');
+	public function add() {		
 		$session = $this->request->session ();
-		$client_id = $session->read ( 'Config.clientid' );
-		//$session->
+		$client_id = $session->read ( 'Config.clientid' );		
 		$order = $this->Orders->newEntity ();
+		$order_data=$this->request->data();
 		if ($this->request->is ( 'post' )) {
-			print '<pre>';
-			print_r($this->request->data);
-			die();
-			
-			$order = $this->Orders->patchEntity ( $order, $this->request->data );
-			if ($this->Orders->save ( $order )) {
-				$session->destroy('Config.clientid');
+			$order = $this->Orders->patchEntity ( $order, $this->request->data );	
+			$saving=$this->Orders->save ( $order );				
+				
+			if ($saving) {				
+				//$session->destroy('Config.clientid');
+				
+				//delevery notification
+				//$dilivery_id=$order->deliveryId;
+				$dilivery_notification=['deliveryId'=>$order->deliveryId,'notificationText'=>'del nofify','sentFrom'=>1,'orderId'=>$order->id];
+				//create array for order_pruducts table
+				$order_products=[];
+				//supplier noification
+				$supplier_notification=[];
+				
+				  for($i=0;$i<sizeof($order->product_name);$i++){
+				 	//order_pruducts table
+					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order->product_name[$i],'product_amount'=>$order->product_ammount[$i]];
+					$supplier_notification[$i]=['supplierId'=>$order->product_supplier[$i],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];					
+				}  
+				
+				$order_product_entities = $this->Orders->OrderProducts->newEntities($order_products);
+				$order_product_result = $this->Orders->OrderProducts->saveMany($order_product_entities);
+				
+				
+				
+				$supplier_notification_entites=$this->Orders->SupplierNotifications->newEntities($supplier_notification);
+				$supplier_notification_result=$this->Orders->SupplierNotifications->saveMany($supplier_notification_entites);
+				
+				$dlilevery_notification_entity=$this->Orders->DeliveryNotifications->newEntity($dilivery_notification);
+				$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
+				
+				
+				
+				
 				$this->Flash->success ( __ ( 'The order has been saved.' ) );
 				
 				return $this->redirect ( [ 
@@ -124,13 +151,14 @@ class OrdersController extends AppController {
 		} );
 		$this->set ( compact ( 'deliveries' ) );
 		
+		
 		$callcenterId = $this->Auth->user ( 'id' ); // get from session values
 		$usermodel = $this->loadModel ( 'Callcenter' );
 		$callcenterId = $usermodel->getcallcenterid ( $callcenterId );
 		$this->set ( compact ( 'callcenterId' ) );
 		
 		$productmodel=$this->loadModel('Products');
-		$products=$productmodel->find('list',['fields'=>['id','name']]);
+		$products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']);
 		$this->set ( 'products',$products );
 		
 		
@@ -144,7 +172,7 @@ class OrdersController extends AppController {
 			} );
 		} );
 		$this->set ( compact ( 'cities' ) );
-		$this->set ( compact ( 'sup' ) );
+		//$this->set ( compact ( 'sup' ) );
 	}
 	
 	/**
@@ -285,3 +313,13 @@ class OrdersController extends AppController {
 
 
 //http://stackoverflow.com/questions/11054402/jquery-onchange-event-for-cloned-field
+
+
+
+///https://www.packtpub.com/books/content/working-simple-associations-using-cakephp
+
+//http://stackoverflow.com/questions/34651392/cakephp-3-x-multiple-records-from-one-form-into-multiple-tables
+//http://stackoverflow.com/questions/16443656/cannot-save-associated-data-with-hasmany-through-join-model
+//http://stackoverflow.com/questions/4260445/save-multiple-records-for-one-model-in-cakephp
+
+//http://stackoverflow.com/questions/30711705/get-last-inserted-id-after-inserting-to-associated-table

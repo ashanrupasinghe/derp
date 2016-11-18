@@ -35,6 +35,13 @@ class DeliveryNotificationsTable extends Table
         $this->table('delivery_notifications');
         $this->displayField('id');
         $this->primaryKey('id');
+        $this->belongsTo('Orders', [
+        		'foreignKey' => 'orderId'
+        ]);
+        $this->belongsTo('Delivery', [
+        		'foreignKey' => 'deliveryId'
+        ]);
+        
 
         $this->addBehavior('Timestamp');
     }

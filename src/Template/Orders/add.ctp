@@ -44,7 +44,7 @@ padding-bottom: 9px;
 		<div class="group large-12 medium-12 columns prod" id="x-1">
 			<div class="large-4 medium-4 columns prod-left">
 					
-					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select produc','options'=>$products,'name'=>'product_name[]']);?>
+					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]']);?>
 					
 			</div>			
 			<div class="large-3 medium-3 columns">			
@@ -55,7 +55,7 @@ padding-bottom: 9px;
 			
 			<?php
 			$sup=[];
-			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select produc','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select']);?>		
+			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select product','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select']);?>		
 					
 			</div>
 
@@ -73,9 +73,11 @@ padding-bottom: 9px;
             echo $this->Form->input('discount');
             echo $this->Form->input('couponCode');
             echo $this->Form->input('total');
-            echo $this->Form->input('paymentStatus');
+            $payment_status=['1'=>'pnding','2'=>'paid'];
+            //echo $this->Form->input('paymentStatus');
+            echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);
             //echo $this->Form->input('status');
-            $status=['1'=>'Active','0'=>'Inactive'];
+            $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];
             echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
         ?>
 </div>        

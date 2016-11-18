@@ -35,7 +35,17 @@ class SupplierNotificationsTable extends Table
         $this->table('supplier_notifications');
         $this->displayField('id');
         $this->primaryKey('id');
-
+        
+        $this->belongsTo('Orders', [
+        		'foreignKey' => 'orderId',
+        		'joinType' => 'INNER'
+        ]);
+        
+        $this->belongsTo('Suppliers', [
+        		'foreignKey' => 'supplierId'
+        ]);
+      
+        
         $this->addBehavior('Timestamp');
     }
 
