@@ -267,7 +267,7 @@ class OrdersController extends AppController {
 		$productName = $this->request->data( 'productId' );
 		$productmodel=$this->loadModel('Products');
 		$product_supplier_city=$productmodel->find('all',['conditions' =>['name'=>$productName]])
-		->select(['s.id','s.firstName','s.lastName','city.cname'])
+		->select(['s.id','s.firstName','s.lastName','city.cname','pack.type'])
 		->join ( [
 				'table' => 'suppliers',
 				'alias' => 's',
@@ -279,6 +279,12 @@ class OrdersController extends AppController {
 				'alias' => 'city',
 				'type' => 'INNER',
 				'conditions' => 'city.cid = s.city'
+		] )
+		->join ( [
+				'table' => 'package_type',
+				'alias' => 'pack',
+				'type' => 'INNER',
+				'conditions' => 'products.package = pack.id'
 		] )/*  ->formatResults ( function ($results) {			
 			return $results->combine ( 'id', function ($row) {
 				return $row ['s']['firstName'] . ' ' . $row['s'] ['lastName'].' - '.$row['city']['cname'];

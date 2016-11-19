@@ -42,13 +42,16 @@ padding-bottom: 9px;
 		<button type="button" id="btnAdd-6" class="btn btn-primary">Add Product</button>
 	
 		<div class="group large-12 medium-12 columns prod" id="x-1">
-			<div class="large-4 medium-4 columns prod-left">
+			<div class="large-3 medium-3 columns prod-left">
 					
 					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]']);?>
 					
 			</div>			
-			<div class="large-3 medium-3 columns">			
+			<div class="large-2 medium-2 columns">			
 					<label>Ammount<input type="text" name="product_ammount[]" id="fuck"></label>
+			</div>
+			<div class="large-2 medium-2 columns">
+			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype']);?>	
 			</div>
 			<!--<select id="DLState">-->
 			<div class="large-4 medium-4 columns sup-right">	

@@ -33,7 +33,7 @@ $(document).ready(function(){
 	    $.post(myBaseUrl+"orders/productsuppliers",
 	    	    {productId:productId},
 	    	    function(data, status){
-	    	    	//alert(data);
+	    	    	alert(data);
 	    	    	var supplier=JSON.parse(data);    	    	
 	    	    	
 	    	    	listItems= "<option value=''>select product</option>";
@@ -44,6 +44,7 @@ $(document).ready(function(){
 	    	        
 	    	        //$(this).next().next().html(listItems);
 	    	        $("#"+divid).find("select.sup-select").html(listItems);
+	    	        $("#"+divid).find("input.packagetype").val("X "+supplier[0].pack.type);
 	    	        //$("select#orders-products-id").closest("div.prod-left").next().next().find("select").html(listItems);
 	    	        //$("select#orders-products-id").closest("div.prod-left").next().next().find("select").html(listItems);
 	    	        //$("#orders-suppliers-id").html(listItems);
