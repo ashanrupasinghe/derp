@@ -45,6 +45,7 @@ class ProductsTable extends Table
         ]);
 		
 		$this->belongsTo('suppliers',['foreignKey'=>'supplierId']);
+		$this->belongsTo('packageType',['foreignKey'=>'package']);
     }
 
     /**
@@ -70,6 +71,10 @@ class ProductsTable extends Table
             ->numeric('price')
             ->requirePresence('price', 'create')
             ->notEmpty('price');
+        $validator
+        ->numeric('package')
+        ->requirePresence('package', 'create')
+        ->notEmpty('package');
 
         $validator
             ->requirePresence('availability', 'create')

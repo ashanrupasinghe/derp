@@ -82,6 +82,20 @@ class ProductsController extends AppController
     });
 	$this->set(compact('suppliers'));
 	
+	$packages = $this->Products->PackageType->find()
+	->select(['id','type'])
+	->formatResults(function($results) {
+		/* @var $results \Cake\Datasource\ResultSetInterface|\Cake\Collection\CollectionInterface */
+		return $results->combine('id',function($row) {
+			return $row['type'];
+		}
+			);
+	});
+
+	$this->set(compact('packages'));
+	
+	
+	
 	
     
     }
@@ -120,6 +134,17 @@ class ProductsController extends AppController
         		);
         });
         $this->set(compact('suppliers'));
+        $packages = $this->Products->PackageType->find()
+        ->select(['id','type'])
+        ->formatResults(function($results) {
+        	/* @var $results \Cake\Datasource\ResultSetInterface|\Cake\Collection\CollectionInterface */
+        	return $results->combine('id',function($row) {
+        		return $row['type'];
+        	}
+        		);
+        });
+        
+        	$this->set(compact('packages'));
     }
 
     /**
