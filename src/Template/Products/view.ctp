@@ -5,27 +5,45 @@
             <th><?= __('Name') ?></th>
             <td><?= h($product->name) ?></td>
         </tr>
-        <tr>
+        <!--<tr>
             <th><?= __('Availability') ?></th>
             <td><?= h($product->availability) ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th><?= __('Image') ?></th>
             <td><?= h($product->image) ?></td>
         </tr>
-        <tr>
+        <!--<tr>
             <th><?= __('Status') ?></th>
             <td><?= h($product->status) ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($product->id) ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th><?= __('Price') ?></th>
             <td><?= $this->Number->format($product->price) ?></td>
         </tr>
         <tr>
+            <th><?= __('Quantity type') ?></th>
+            <td><?= h($package_type[$product->package]) ?></td>
+        </tr>
+        <?php              
+        $i=1;
+        foreach($suppliers as $supplier){?>        	
+        	<tr>
+            <th><?php if($i==1):?><?= __('Suppliers') ?><?php endif;?></th>
+            <td><?php $name= $supplier->supp['firstName']." " .$supplier->supp['lastName']?>
+            <?= $this->Html->link(__($name), ['controller'=>'suppliers','action' => 'index']) ?>
+            </td>
+        </tr>
+      <?php 
+      $i++;
+       }
+        ?>
+        
+       <!-- <tr>
             <th><?= __('SupplierId') ?></th>
             <td><?= $this->Number->format($product->supplierId) ?></td>
         </tr>
@@ -36,13 +54,13 @@
         <tr>
             <th><?= __('Modified') ?></th>
             <td><?= h($product->modified) ?></td>
-        </tr>
+        </tr>-->
     </table>
     <div class="row">
         <h4><?= __('Description') ?></h4>
         <?= $this->Text->autoParagraph(h($product->description)); ?>
     </div>
-    <div class="related">
+    <!--<div class="related">
         <h4><?= __('Related Order Products') ?></h4>
         <?php if (!empty($product->order_products)): ?>
         <table cellpadding="0" cellspacing="0">
@@ -64,5 +82,5 @@
             <?php endforeach; ?>
         </table>
         <?php endif; ?>
-    </div>
+    </div>-->
 </div>

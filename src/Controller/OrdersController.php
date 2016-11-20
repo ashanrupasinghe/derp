@@ -39,7 +39,33 @@ class OrdersController extends AppController {
 	 */
 	public function index() {
 		$orders = $this->paginate ( $this->Orders );
+		$callcenter_query=$this->Orders->Callcenter->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
+							->join ( [
+				'table' => 'users',
+				'alias' => 'users',
+				'type' => 'INNER',	
+				'conditions' => 'user_id = users.id'
+		] );
+							$callcenters=$callcenter_query->toArray();
+
+							$this->set('callcenters',$callcenters);	
+													
+		$delivery_query=$this->Orders->Delivery->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
+							->join ( [
+				'table' => 'users',
+				'alias' => 'users',
+				'type' => 'INNER',	
+				'conditions' => 'user_id = users.id'
+		] );
+							$deliveries=$delivery_query->toArray();
+
+							$this->set('deliveries',$deliveries);	
+						
 		
+		$cities_query=$this->Orders->City->find('list',['keyField'=>'cid','valueField'=>'cname']);
+		$city=$cities_query->toArray();
+		$this->set('cities',$city);
+
 		$this->set ( compact ( 'orders' ) );
 		$this->set ( '_serialize', [ 
 				'orders' 
@@ -94,7 +120,7 @@ class OrdersController extends AppController {
 				
 				  for($i=0;$i<sizeof($order->product_name);$i++){
 				 	//order_pruducts table
-					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order->product_name[$i],'product_amount'=>$order->product_ammount[$i]];
+					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order->product_name[$i],'product_quantity'=>$order->product_quantity[$i]];
 					$supplier_notification[$i]=['supplierId'=>$order->product_supplier[$i],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];					
 				}  
 				
@@ -127,6 +153,9 @@ class OrdersController extends AppController {
 				'order' 
 		] );
 		$this->set ( 'clientid', $client_id );
+		$client_data_query=$this->Orders->Customers->find('all',['conditions'=>['id'=>$client_id]])->select(['address','city'])->first();
+		$client_data=$client_data_query->toArray();
+		$this->set('client_data',$client_data);
 		$callcenters = $this->Orders->Callcenter->find ()->select ( [ 
 				'id',
 				'firstName',
@@ -309,6 +338,15 @@ class OrdersController extends AppController {
 	
 		
 		
+	
+}
+/*
+ * get supplier list according to the product id*/
+public function productsuppliers2(){
+	$this->request->allowMethod ( ['post'] );	
+	$productName = $this->request->data( 'productId' );
+	$productmodel=$this->loadModel('Products');
+	
 	
 }
 }

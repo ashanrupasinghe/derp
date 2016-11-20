@@ -54,6 +54,7 @@ class OrdersTable extends Table
 		$this->belongsTo('callcenter',['foreignKey'=>'callcenterId']);
 		$this->belongsTo('delivery',['foreignKey'=>'deliveryId']);
 		$this->belongsTo('city',['foreignKey'=>'city','propertyName'=>'cid']);
+		$this->belongsTo('customers',['foreignKey'=>'customerId']);
 		
     }
 

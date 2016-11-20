@@ -23,8 +23,8 @@ padding-bottom: 9px;
         	
             echo $this->Form->input('customerId',['value'=>$clientid,'disabled'=>'true']);
             echo $this->Form->input('customerId',['value'=>$clientid,'disabled' => false,'type'=>'hidden']);
-            echo $this->Form->input('address');
-            echo $this->Form->input('city',['options'=>$cities,'empty'=>'select city']);
+            echo $this->Form->input('address',['value'=>$client_data['address']]);
+            echo $this->Form->input('city',['options'=>$cities,'empty'=>'select city','default'=>$client_data['city']]);
             echo $this->Form->input('latitude');
             echo $this->Form->input('longitude');
             //echo $this->Form->input('callcenterId');
@@ -48,7 +48,7 @@ padding-bottom: 9px;
 					
 			</div>			
 			<div class="large-2 medium-2 columns">			
-					<label>Ammount<input type="text" name="product_ammount[]" id="fuck"></label>
+					<label>Quantity<input type="text" name="product_quantity[]" id="fuck"></label>
 			</div>
 			<div class="large-2 medium-2 columns">
 			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype']);?>	
@@ -58,7 +58,7 @@ padding-bottom: 9px;
 			
 			<?php
 			$sup=[];
-			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select product','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select']);?>		
+			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select']);?>		
 					
 			</div>
 
@@ -76,7 +76,7 @@ padding-bottom: 9px;
             echo $this->Form->input('discount');
             echo $this->Form->input('couponCode');
             echo $this->Form->input('total');
-            $payment_status=['1'=>'pnding','2'=>'paid'];
+            $payment_status=['1'=>'pending','2'=>'paid'];
             //echo $this->Form->input('paymentStatus');
             echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);
             //echo $this->Form->input('status');

@@ -44,7 +44,7 @@ $cakeDescription = 'Direct2Door.lk';
         <nav class="top-bar expanded" data-topbar role="navigation">
             <ul class="title-area large-2 medium-2 columns">
                 <li class="name">
-                    <h1><a href="">Direct2Door.lk ERP</a></h1>
+                    <h1><a href="<?php echo $this->Url->build('/customers/search'); ?>">Direct2Door.lk ERP</a></h1>
                 </li>
             </ul>
             
@@ -62,7 +62,14 @@ $cakeDescription = 'Direct2Door.lk';
             
             <nav class="large-2 medium-2 columns" id="actions-sidebar">
                 <ul class="side-nav">	
-                    <li><?= $this->Html->link(__('Dashboard'), ['action' => 'index']) ?></li>
+                    <li>
+                    <?php if($userLevel==1 || $userLevel==2):
+                    echo $this->Html->link(__('Dashboard'), ['controller'=>'customers', 'action' => 'search']);
+                     else:                    
+                    echo $this->Html->link(__('Dashboard'), ['action' => 'index']);
+                    endif;
+                    ?>
+                    </li>
                     <li><?= $this->Html->link(__('Products'), ['controller'=>'Products','action' => 'index']) ?>
                     </li>
                     <li><?= $this->Html->link(__('Orders'), ['controller'=>'Orders','action' => 'index']) ?>
@@ -95,7 +102,8 @@ $cakeDescription = 'Direct2Door.lk';
         </div>
         <footer>
         <script type="text/javascript">
-  $('select').select2();
+  $('select').select2({tags: true});
+  $(".js-example-basic-multiple").select2();
 </script>
         </footer>
     </body>

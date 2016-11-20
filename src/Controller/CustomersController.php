@@ -35,6 +35,9 @@ class CustomersController extends AppController {
 		$customers = $this->paginate ( $this->Customers );
 		
 		$this->set ( compact ( 'customers' ) );
+		$cities_query=$this->Customers->City->find('list',['keyField'=>'cid','valueField'=>'cname']);
+		$city=$cities_query->toArray();
+		$this->set('cities',$city);
 		$this->set ( '_serialize', [ 
 				'customers' 
 		] );

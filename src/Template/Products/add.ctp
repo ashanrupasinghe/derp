@@ -10,7 +10,7 @@
             echo $this->Form->input('availability');
             echo $this->Form->input('image');
 			//echo $suppliers;
-            echo $this->Form->input('supplierId',['empty'=>'select supplier','options'=>$suppliers]);
+            echo $this->Form->input('supplierId',['empty'=>'select supplier','options'=>$suppliers,'multiple'=>'multiple']);
             echo $this->Form->input('status');
 			
 			
