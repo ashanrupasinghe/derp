@@ -140,8 +140,13 @@
 
 				if(sectionsCount<=2){
 					$(this.config.btnRemove,this.$elem).hide();
+					
 				}
 				section.slideUp('fast', function () {$(this).detach();});
+				//ashan
+				setTimeout(this.displaySubTotal, 2000);
+				
+				
 			}
 		},
 
@@ -150,6 +155,28 @@
 		 */
 		getSectionsCount: function(){
 			return this.$elem.children(this.config.section).length;
+		},
+		
+		displaySubTotal: function(){
+			var productPrices = $('input[name="product_price[]"]');
+	    	 var totalPrice=0;
+	    	 for(var i = 0; i < productPrices.length; i++){
+	    		 totalPrice+=parseInt(($(productPrices[i]).val()));
+	    		}
+	    	  
+	    	 
+	    	 //tax, discount
+	    	 var tax_p=10;//persantage
+	    	 var discount_p=5;//persantage
+	    	 var tax=totalPrice*tax_p/100;
+	    	 var discount=totalPrice*discount_p/100;
+	    	 var total=totalPrice+tax-discount;
+	    	 
+	    	 $("#subtotal").val(totalPrice);
+	    	 $("#tax").val(tax); 
+	    	 $("#discount").val(discount);
+	    	 $("#total").val(total); 
+	    	 
 		}
 
 	};

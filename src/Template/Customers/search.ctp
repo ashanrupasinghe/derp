@@ -5,7 +5,7 @@
         <legend><?= __('Search Customer') ?></legend>
         <div class="large-10 medium-10 columns content">
         <?php
-            echo $this->Form->input('Phone/ Name',['name'=>'s','id'=>'s','class'=>'big-search','style'=>'height: 100px;font-size: 80pt;']);            
+            echo $this->Form->input('Phone/ Name',['name'=>'s','id'=>'s','class'=>'big-search','style'=>'height: 100px;font-size: 50pt;']);            
         ?>
          </div>
         <div class="large-2 medium-2 columns content">

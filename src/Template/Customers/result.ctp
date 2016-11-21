@@ -1,4 +1,4 @@
-<div class="customers index large-10 medium-10 columns content">
+	<div class="customers index large-10 medium-10 columns content">
 
 <div class="form-x">
    <?= $this->Form->create(null, ['url' => ['action' => 'result']]) ?>
@@ -6,7 +6,7 @@
     <fieldset>
         <legend><?= __('Search Customer') ?></legend>
         <?php
-            echo $this->Form->input('Phone/ Name',['name'=>'s','id'=>'s','style'=>'float: left;max-width: 80%;height: 100px;font-size: 80pt;']);            
+            echo $this->Form->input('Phone/ Name',['name'=>'s','id'=>'s','style'=>'float: left;max-width: 80%;height: 100px;font-size: 50pt;']);            
         ?>
         <?= $this->Form->button(__('Search'),['style'=>'float:right;float: right;height: 100px;font-size: 30px;']) ?>
     </fieldset>

@@ -47,14 +47,19 @@ padding-bottom: 9px;
 					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]']);?>
 					
 			</div>			
-			<div class="large-2 medium-2 columns">			
-					<label>Quantity<input type="text" name="product_quantity[]" id="fuck"></label>
+			<div class="large-1 medium-1 columns">			
+					<label>Quantity<input type="text" name="product_quantity[]" class="product-quantity"></label>
 			</div>
 			<div class="large-2 medium-2 columns">
-			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype']);?>	
+			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype', 'id'=>'']);?>	
+			</div>
+			
+			<div class="large-2 medium-2 columns">
+			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount', 'id'=>'']);?>	
+			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount-hidden', 'id'=>'','type'=>'hidden','name'=>'product_price[]','default'=>0]);?>
 			</div>
 			<!--<select id="DLState">-->
-			<div class="large-4 medium-4 columns sup-right">	
+			<div class="large-3 medium-3 columns sup-right">	
 			
 			<?php
 			$sup=[];
@@ -71,11 +76,13 @@ padding-bottom: 9px;
 <!--/..-->
 <div>			
 			<?php
-            echo $this->Form->input('subTotal');
-            echo $this->Form->input('tax');
-            echo $this->Form->input('discount');
-            echo $this->Form->input('couponCode');
-            echo $this->Form->input('total');
+            echo $this->Form->input('subTotal',['disabled'=>true]);
+            echo $this->Form->input('tax',['disabled'=>true]);
+            echo $this->Form->input('discount',['disabled'=>true]);?>
+	            
+          <?php  echo $this->Form->input('couponCode');
+            
+            echo $this->Form->input('total',['disabled'=>true]);
             $payment_status=['1'=>'pending','2'=>'paid'];
             //echo $this->Form->input('paymentStatus');
             echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);

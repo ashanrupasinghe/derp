@@ -1,0 +1,7 @@
+<div class="large-12 medium-12 columns" style="padding-left: 0px;padding-right: 0px;">		
+<div class="large-7 medium-7 columns" style="padding-left: 0px;"><?php echo $this->Form->input('couponCode');?></div>
+<div class="large-3 medium-3 columns"><button type="button" class="btn btn-danger check-available">Check availability</button></div>
+<div class="large-2 medium-2 columns"><?php echo $this->Form->input('Available',['value'=>'Rs. 2000']);?>
+<?php echo $this->Form->input('Available',['value'=>'Rs. 2000','type'=>'hidden','id'=>'coponid']);?>
+</div>
+</div>

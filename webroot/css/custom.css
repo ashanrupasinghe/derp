@@ -74,3 +74,10 @@ outline: none;
 border-color: #999;
 outline: none;
 }
+
+.check-available{
+	display: inline-block;
+margin-top: 20px;
+padding-top: 9px;
+padding-bottom: 9px;
+}

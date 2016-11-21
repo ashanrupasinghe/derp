@@ -21,7 +21,10 @@ class OrdersController extends AppController {
 				'delete',
 				'view',
 				'index',
-				'productsuppliers' 
+				'productsuppliersbyid',
+				'singlecal',
+				'countSubTotal',
+				'processdata'
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -103,8 +106,10 @@ class OrdersController extends AppController {
 		$client_id = $session->read ( 'Config.clientid' );		
 		$order = $this->Orders->newEntity ();
 		$order_data=$this->request->data();
+		
 		if ($this->request->is ( 'post' )) {
-			$order = $this->Orders->patchEntity ( $order, $this->request->data );	
+			$data=$this->processdata($order_data);//rearrange data sets with count total
+			$order = $this->Orders->patchEntity ( $order, $data );	
 			$saving=$this->Orders->save ( $order );				
 				
 			if ($saving) {				
@@ -118,11 +123,16 @@ class OrdersController extends AppController {
 				//supplier noification
 				$supplier_notification=[];
 				
-				  for($i=0;$i<sizeof($order->product_name);$i++){
+				  for($i=0;$i<sizeof($order_data['product_name']);$i++){
 				 	//order_pruducts table
-					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order->product_name[$i],'product_quantity'=>$order->product_quantity[$i]];
-					$supplier_notification[$i]=['supplierId'=>$order->product_supplier[$i],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];					
+					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order_data['product_name'][$i],'product_quantity'=>$order_data['product_quantity'][$i]];
+					$supplier_notification[$i]=['supplierId'=>$order_data['product_supplier'][$i],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];					
 				}  
+				
+				
+				//print_r($saving);
+				
+				
 				
 				$order_product_entities = $this->Orders->OrderProducts->newEntities($order_products);
 				$order_product_result = $this->Orders->OrderProducts->saveMany($order_product_entities);
@@ -213,6 +223,7 @@ class OrdersController extends AppController {
 	 * @throws \Cake\Network\Exception\NotFoundException When record not found.
 	 */
 	public function edit($id = null) {
+		
 		$order = $this->Orders->get ( $id, [ 
 				'contain' => [ ] 
 		] );
@@ -236,10 +247,27 @@ class OrdersController extends AppController {
 		$this->set ( '_serialize', [ 
 				'order' 
 		] );
+		
+		$callcenters = $this->Orders->Callcenter->find ()->select ( [
+				'id',
+				'firstName',
+				'lastName'
+		] )->formatResults ( function ($results) {
+			/* @var $results \Cake\Datasource\ResultSetInterface|\Cake\Collection\CollectionInterface */
+			return $results->combine ( 'id', function ($row) {
+				return $row ['firstName'] . ' ' . $row ['lastName'];
+			} );
+		} );
+		$this->set ( compact ( 'callcenters' ) );
+		
+		$productmodel=$this->loadModel('Products');
+		$products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']);
+		$this->set ( 'products',$products );
+		
 		$callcenterId = $this->Auth->user ( 'id' ); // get from session values
 		$usermodel = $this->loadModel ( 'Callcenter' );
 		$callcenterId = $usermodel->getcallcenterid ( $callcenterId );
-		$this->set ( compact ( 'callcenters' ) );
+		$this->set ( compact ( 'callcenterId' ) );
 		$deliveries = $this->Orders->Delivery->find ()->select ( [ 
 				'id',
 				'firstName',
@@ -262,6 +290,16 @@ class OrdersController extends AppController {
 			} );
 		} );
 		//$this->set ( compact ( 'cities' ) );
+		
+			$cities = $this->Orders->City->find ()->select ( [
+					'cid',
+					'cname'
+			] )->formatResults ( function ($results) {				
+				return $results->combine ( 'cid', function ($row) {
+					return $row ['cname'];
+				} );
+			} );
+			$this->set ( compact ( 'cities' ) );
 	}
 	
 	/**
@@ -342,13 +380,119 @@ class OrdersController extends AppController {
 }
 /*
  * get supplier list according to the product id*/
-public function productsuppliers2(){
+public function productsuppliersbyid(){
 	$this->request->allowMethod ( ['post'] );	
-	$productName = $this->request->data( 'productId' );
-	$productmodel=$this->loadModel('Products');
+	$productId = $this->request->data( 'productId' );
+	$productSupModel=$this->loadModel('ProductSuppliers');
 	
+	$product_supplier_city=$productSupModel->find('all',['conditions' =>['product_id'=>$productId]])
+	->select(['s.id','s.firstName','s.lastName','city.cname','pack.type'])
+	->join([
+			'table'=>'products',
+			'alias'=>'products',
+			'type'=>'INNER',
+			'conditions'=>'products.id=product_id'
+	])
+	->join ( [
+			'table' => 'suppliers',
+			'alias' => 's',
+			'type' => 'INNER',
+			'conditions' => 'supplier_Id = s.id'
+	] )
+	->join ( [
+			'table' => 'city',
+			'alias' => 'city',
+			'type' => 'INNER',
+			'conditions' => 'city.cid = s.city'
+	] )
+	->join ( [
+			'table' => 'package_type',
+			'alias' => 'pack',
+			'type' => 'INNER',
+			'conditions' => 'products.package = pack.id'
+	] )/*  ->formatResults ( function ($results) {
+			return $results->combine ( 'id', function ($row) {
+					return $row ['s']['firstName'] . ' ' . $row['s'] ['lastName'].' - '.$row['city']['cname'];
+					} );
+			} ) */;
+	
+	//return $product_supplier_city;
+	$this->set ( 'suppliers',$product_supplier_city );
+	$this->set ( '_serialize', [
+			'suppliers'
+	] );
 	
 }
+
+//jquery calculae single product total ammount
+public function singlecal(){
+	//$this->request->allowMethod ( ['post'] );
+	$productId = $this->request->data( 'productId' );
+	$productQuantity = $this->request->data( 'quantity' );
+// 	$productQuantity=5;
+// 	$productId=31;
+	$productSupModel=$this->loadModel('Products');
+	$price_obj=$productSupModel->get($productId,['fields'=>['price']]);
+	$price=$price_obj->price;
+	$total=$price*$productQuantity;
+	
+	echo '{"productQuantity":'.$productQuantity.',"productPrice":'.$price.',"total":'.$total.'}';
+	//echo '{"total":'.$total.'}';
+	//$singleCalPrice=['total'];
+	//echo json_encode($singleCalPrice);
+}
+//for php count
+public function countSubTotal($arrIds,$arrQuantity){
+	$productSupModel=$this->loadModel('Products');
+	$subTotal=0;
+	for ($i=0;$i<sizeof($arrIds);$i++){
+	$price_obj=$productSupModel->get($arrIds[$i],['fields'=>['price']]);
+	$price=$price_obj->price;
+	$total=$price*$arrQuantity[$i];
+	$subTotal+=$total;
+	}
+	return $subTotal;
+}
+/* public function countFinaltotal($subtotal,$tax_p=0,$discount_p=0,$coupon_value=0){
+	$tax=$subtotal*$tax_p/100;
+	$discount=$subtotal*$discount_p/100;
+	$total=$subtotal+$tax-$discount-$coupon_value;
+	return $total;
+} */
+
+public function processdata($data){
+	$tax_p=10;//tax persontage
+	$discount_p=5;//discount persentage
+	$counpon_value=0;//call to a function to find coupon values
+	$subtotal=$this->countSubTotal($data['product_name'],$data['product_quantity']);//count sub total
+	$tax=$subtotal*$tax_p/100;
+	$discount=$subtotal*$discount_p/100;
+	$total=$subtotal+$tax-$discount-$counpon_value;
+	
+	$newdata=[
+			'customerId'=>$data['customerId'],
+			'address'=>$data['address'],
+			'city'=>$data['city'],
+			'latitude'=>$data['latitude'],
+			'longitude'=>$data['longitude'],
+			'callcenterId'=>$data['callcenterId'],
+			'deliveryId'=>$data['deliveryId'],
+			
+			'subTotal'=>$subtotal,
+			'tax'=>$tax,
+			'discount'=>$discount,	
+					
+			'couponCode'=>$data['couponCode'],
+			
+			'total'=>$total,
+			'paymentStatus'=>$data['paymentStatus'],
+			'status'=>$data['status']
+	];
+	return $newdata;
+}
+
+
+
 }
 //http://www.jqueryscript.net/form/jQuery-Plugin-To-Duplicate-and-Remove-Form-Fieldsets-Multifield.html
 //http://stackoverflow.com/questions/17175534/clonned-select2-is-not-responding
