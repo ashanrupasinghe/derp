@@ -211,7 +211,7 @@ class OrdersController extends AppController {
 			} );
 		} );
 		$this->set ( compact ( 'cities' ) );
-		//$this->set ( compact ( 'sup' ) );
+		
 	}
 	
 	/**
@@ -232,8 +232,53 @@ class OrdersController extends AppController {
 				'post',
 				'put' 
 		] )) {
+			$order_data=$this->request->data();//submited data
+			$no_of_old_products=$order_data['editorder'];//number of product oder before
+			if(sizeof($order_data['product_name'])>$no_of_old_products){
+				$data=$this->processdata($order_data);//rearrange data sets with count total
+				$order = $this->Orders->patchEntity ( $order, $data );
+				//$saving=$this->Orders->save ( $order );
+			}
+			/* print '<pre>';
+			print_r($this->request->data);
+			echo $no_of_old_products;
+			die();  */
 			$order = $this->Orders->patchEntity ( $order, $this->request->data );
 			if ($this->Orders->save ( $order )) {
+				
+				
+				if(sizeof($order_data['product_name'])>$no_of_old_products){
+				//$dilivery_notification=['deliveryId'=>$order->deliveryId,'notificationText'=>'del nofify','sentFrom'=>1,'orderId'=>$order->id];
+				//create array for order_pruducts table
+				$order_products=[];
+				//supplier noification
+				$supplier_notification=[];
+				
+				for($i=$no_of_old_products;$i<sizeof($order_data['product_name']);$i++){
+					//order_pruducts table
+					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order_data['product_name'][$i],'product_quantity'=>$order_data['product_quantity'][$i]];
+					$supplier_notification[$i]=['supplierId'=>$order_data['product_supplier'][$i],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];
+				}
+				
+				
+				//print_r($saving);
+				
+				
+				
+				$order_product_entities = $this->Orders->OrderProducts->newEntities($order_products);
+				$order_product_result = $this->Orders->OrderProducts->saveMany($order_product_entities);
+				
+				
+				
+				$supplier_notification_entites=$this->Orders->SupplierNotifications->newEntities($supplier_notification);
+				$supplier_notification_result=$this->Orders->SupplierNotifications->saveMany($supplier_notification_entites);
+				
+				//$dlilevery_notification_entity=$this->Orders->DeliveryNotifications->newEntity($dilivery_notification);
+				//$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
+				
+				}
+				
+				
 				$this->Flash->success ( __ ( 'The order has been saved.' ) );
 				
 				return $this->redirect ( [ 
@@ -242,6 +287,8 @@ class OrdersController extends AppController {
 			} else {
 				$this->Flash->error ( __ ( 'The order could not be saved. Please, try again.' ) );
 			}
+			
+			
 		}
 		$this->set ( compact ( 'order' ) );
 		$this->set ( '_serialize', [ 
@@ -300,6 +347,53 @@ class OrdersController extends AppController {
 				} );
 			} );
 			$this->set ( compact ( 'cities' ) );
+//get current supplier list
+/*
+ $subQuery=SELECT DISTINCT order_products.product_id,order_products.order_id,product_suppliers.supplier_id FROM `supplier_notifications` JOIN product_suppliers ON supplier_notifications.supplierId=product_suppliers.supplier_id JOIN order_products ON product_suppliers.product_id=order_products.product_id WHERE order_products.order_id=supplier_notifications.orderId
+ $products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']); 
+ * */
+			$subQuery=$this->Orders->SupplierNotifications->find('list',['fields'=>['op.product_id','op.order_id','ps.supplier_id']])->distinct(['op.product_id'])
+						->join(['table'=>'product_suppliers','alias'=>'ps','type'=>'INNER','conditions'=>'supplierId=ps.supplier_id'])
+						->join(['table'=>'order_products','alias'=>'op','type'=>'INNER','conditions'=>'ps.product_id=op.product_id']);
+			
+			$order_product_details_query=$this->Orders->OrderProducts->find('all',['conditions' =>['order_id'=>$id],'fields'=>['product_id','product_quantity','p.price','package.type','supdata.ps__supplier_id']])
+									->join([
+											'table'=>'products',
+											'alias'=>'p',
+											'type'=>'INNER',
+											'conditions' => 'product_id = p.id'
+											])
+									->join([
+											'table'=>'package_type',
+											'alias'=>'package',
+											'type'=>'INNER',
+											'conditions' => 'p.package = package.id'
+											])
+									->join([
+											'table'=>$subQuery,
+											'alias'=>'supdata',
+											'type'=>'INNER',
+											/* 'conditions' => 'supdata.product_id = product_id' */
+											'conditions' => 'op__product_id = product_id'
+									]);
+									
+			$ordered_products=$order_product_details_query->toArray();	
+			
+			//print_r($ordered_products);
+			foreach ($ordered_products as $product){				
+				$product['producttotal']=$product['p']['price']*$product['product_quantity'];
+				$product['price']=$product['p']['price'];
+				$product['package']=$product['package']['type'];
+				$product['supplier']=$product['supdata']['ps__supplier_id'];
+				$product['supplier_list']=$this->productsuppliersbyidtoEdit($product['product_id']);
+			}								
+			$this->set('ordered_products',$ordered_products);	
+
+			
+			/*  print '<pre>';
+			print_r($ordered_products);
+			
+			die(); */	 				
 	}
 	
 	/**
@@ -422,6 +516,48 @@ public function productsuppliersbyid(){
 			'suppliers'
 	] );
 	
+}
+
+
+/*get product supplier list for edit view*/
+public function productsuppliersbyidtoEdit($productid){
+	//$this->request->allowMethod ( ['post'] );
+	$productId = $productid;
+	$productSupModel=$this->loadModel('ProductSuppliers');
+
+	$product_supplier_city=$productSupModel->find('all',['conditions' =>['product_id'=>$productId]])
+	->select(['s.id','s.firstName','s.lastName','city.cname'])
+	->join([
+			'table'=>'products',
+			'alias'=>'products',
+			'type'=>'INNER',
+			'conditions'=>'products.id=product_id'
+	])
+	->join ( [
+			'table' => 'suppliers',
+			'alias' => 's',
+			'type' => 'INNER',
+			'conditions' => 'supplier_Id = s.id'
+	] )
+	->join ( [
+			'table' => 'city',
+			'alias' => 'city',
+			'type' => 'INNER',
+			'conditions' => 'city.cid = s.city'
+	] )
+	  ->formatResults ( function ($results) {
+			return $results->combine ( 's.id', function ($row) {
+					return $row ['s']['firstName'] . ' ' . $row['s'] ['lastName'].' - '.$row['city']['cname'];
+					} );
+			} );
+	  	return $product_supplier_city;
+
+/* 	//return $product_supplier_city;
+	$this->set ( 'suppliers',$product_supplier_city );
+	$this->set ( '_serialize', [
+			'suppliers'
+	]  );*/
+
 }
 
 //jquery calculae single product total ammount

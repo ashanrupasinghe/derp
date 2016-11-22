@@ -28,7 +28,7 @@ $(document).ready(function(){
 		//var productId = $('option:selected', this).text();
 		
 	    //alert(myBaseUrl+"orders/getProductSeller");
-	   // alert(productId);
+	    //alert(productId);
 	    
 	    $.post(myBaseUrl+"orders/productsuppliersbyid",
 	    	    {productId:productId},
@@ -73,7 +73,7 @@ $(document).ready(function(){
 	 
 	    $(document).on('focusout','.product-quantity',function() {
 	    	/// $(this).css("background-color", "#FFFFCC");
-	    	 var divid=$(this).closest("div").parent().attr('id');
+	    	 var divid=$(this).closest("div").parent().parent().attr('id');
 	    	 var quantity=$(this).val();
 	    	 
 	    	 //var productammount="prpayaring";
@@ -94,6 +94,7 @@ $(document).ready(function(){
 	    
 	    
 	    function displayProductPrice(divid,quantity){
+	    	//alert(divid+" : "+quantity);
 	    	//if(quantity!="" && productId!=""){
 	    	var productId=$("#"+divid).find("select#orders-products-id").val();
 	    	if(quantity && productId){

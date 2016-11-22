@@ -20,7 +20,7 @@ padding-bottom: 9px;
         <legend><?= __('Add Order') ?></legend>
 <div>        
         <?php       	
-        	
+        	echo $this->Form->input('editorder',['disabled'=>false,'type'=>'hidden','id'=>'edit-order-suppliers','default'=>0]);
             echo $this->Form->input('customerId',['value'=>$clientid,'disabled'=>'true']);
             echo $this->Form->input('customerId',['value'=>$clientid,'disabled' => false,'type'=>'hidden']);
             echo $this->Form->input('address',['value'=>$client_data['address']]);
@@ -48,7 +48,9 @@ padding-bottom: 9px;
 					
 			</div>			
 			<div class="large-1 medium-1 columns">			
-					<label>Quantity<input type="text" name="product_quantity[]" class="product-quantity"></label>
+					<!--<label>Quantity<input type="text" name="product_quantity[]" class="product-quantity"></label>-->
+					<?php echo $this->Form->input('Quantity',['class'=>'product-quantity','name'=>'product_quantity[]', 'id'=>'']);?>
+					
 			</div>
 			<div class="large-2 medium-2 columns">
 			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype', 'id'=>'']);?>	

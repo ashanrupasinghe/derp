@@ -20,7 +20,8 @@ padding-bottom: 9px;
         <legend><?= __('Add Order') ?></legend>
 <div>        
         <?php       	
-        	echo $this->Form->input('editorder',['disabled'=>false,'type'=>'hidden','value'=>'edit-order']);
+        	$no_of_old_product=sizeof($ordered_products);
+        	echo $this->Form->input('editorder',['disabled'=>false,'type'=>'hidden','id'=>'edit-order-suppliers','value'=>$no_of_old_product,'default'=>0]);
             echo $this->Form->input('customerId',['disabled'=>'true']);
             echo $this->Form->input('customerId',['disabled' => false,'type'=>'hidden']);
             echo $this->Form->input('address');
@@ -40,30 +41,33 @@ padding-bottom: 9px;
 	<div id="example-6" class="">
 	
 		<button type="button" id="btnAdd-6" class="btn btn-primary">Add Product</button>
-	
-		<div class="group large-12 medium-12 columns prod" id="x-1">
+<?php 
+$count=1;
+foreach($ordered_products as $product):?>	
+		<div class="group large-12 medium-12 columns prod" id="<?php echo 'x-'.$count;?>">
 			<div class="large-3 medium-3 columns prod-left">
 					
-					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]']);?>
+					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]','value'=>$product['product_id']]);?>
 					
 			</div>			
 			<div class="large-1 medium-1 columns">			
-					<label>Quantity<input type="text" name="product_quantity[]" class="product-quantity"></label>
+					
+					<?php echo $this->Form->input('Quantity',[ 'class'=>'product-quantity', 'id'=>'','name'=>"product_quantity[]", 'value'=>$product['product_quantity']]);?>
 			</div>
 			<div class="large-2 medium-2 columns">
-			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype', 'id'=>'']);?>	
+			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype', 'id'=>'', 'value'=>$product['package']]);?>	
 			</div>
 			
 			<div class="large-2 medium-2 columns">
-			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount', 'id'=>'']);?>	
-			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount-hidden', 'id'=>'','type'=>'hidden','name'=>'product_price[]','default'=>0]);?>
+			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount', 'id'=>'','value'=>$product['producttotal']]);?>	
+			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount-hidden', 'id'=>'','type'=>'hidden','name'=>'product_price[]','default'=>0,'value'=>$product['producttotal']]);?>
 			</div>
 			<!--<select id="DLState">-->
 			<div class="large-3 medium-3 columns sup-right">	
 			
 			<?php
 			$sup=[];
-			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select']);?>		
+			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$product['supplier_list'],'name'=>'product_supplier[]','class'=>'sup-select','value'=>$product['supplier']]);?>		
 					
 			</div>
 
@@ -71,6 +75,9 @@ padding-bottom: 9px;
 				<button type="button" class="btn btn-danger btnRemove">X</button>
 			</div>
 		</div>
+<?php 
+$count++;
+endforeach;?>		
 	</div>
 </div>
 <!--/..-->
