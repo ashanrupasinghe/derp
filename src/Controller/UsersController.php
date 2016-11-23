@@ -11,6 +11,23 @@ use Cake\Event\Event;
  */
 class UsersController extends AppController
 {
+	
+	public function isAuthorized($user)
+	{
+	
+	
+		// The owner of an article can edit and delete it
+		if (in_array($this->request->action, ['userpage'])) {
+				
+			if ($this->Auth->user()) {
+				return true;
+			}
+		}
+	
+		return parent::isAuthorized($user);
+	}
+	
+	
 	/*
 	public function beforeFilter(Event $event)
 	{
@@ -130,18 +147,48 @@ class UsersController extends AppController
 
     public function login()
     {
-        if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->Auth->setUser($user);
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-            $this->Flash->error(__('Invalid username or password, try again'));
-        }
+    	if (!$this->Auth->user()){
+    		if ($this->request->is('post')) {
+    			$user = $this->Auth->identify();
+    			if ($user) {
+    				$this->Auth->setUser($user);
+    				return $this->redirect($this->Auth->redirectUrl());
+    			}
+    			$this->Flash->error(__('Invalid username or password, try again'));
+    		}
+    	}
+    	else{
+    		
+    		return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
+    		
+    	}
+        
+        
     }
 
     public function logout()
     {
         return $this->redirect($this->Auth->logout());
+    }
+    public function userpage(){
+    	if ($this->Auth->user()){
+    		$userlevel = $this->Auth->user ( 'user_type' );
+    		if($userlevel==1){
+    			return $this->redirect(['controller' => 'Customers', 'action' => 'search']);
+    		}
+    		if($userlevel==2){
+    			return $this->redirect(['controller' => 'Customers', 'action' => 'search']);
+    		}
+    		if($userlevel==3){
+    			return $this->redirect(['controller' => 'SupplierNotifications', 'action' => 'listnotifications']);
+    		}
+    		if ($userlevel==4){
+    			return $this->redirect(['controller' => 'DeliveryNotifications', 'action' => 'listnotifications']);
+    		}
+    	}else {
+    		return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+    	}
+    	 
+    	 
     }
 }
