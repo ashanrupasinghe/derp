@@ -81,4 +81,8 @@ class SupplierNotificationsTable extends Table
 
         return $validator;
     }
+    public function isAssigned($supplierId){
+    	return $this->exists(['supplierId'=>$supplierId]);
+    }
+    
 }

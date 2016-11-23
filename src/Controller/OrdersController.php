@@ -352,7 +352,7 @@ class OrdersController extends AppController {
  $subQuery=SELECT DISTINCT order_products.product_id,order_products.order_id,product_suppliers.supplier_id FROM `supplier_notifications` JOIN product_suppliers ON supplier_notifications.supplierId=product_suppliers.supplier_id JOIN order_products ON product_suppliers.product_id=order_products.product_id WHERE order_products.order_id=supplier_notifications.orderId
  $products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']); 
  * */
-			$subQuery=$this->Orders->SupplierNotifications->find('list',['fields'=>['op.product_id','op.order_id','ps.supplier_id']])->distinct(['op.product_id'])
+			$subQuery=$this->Orders->SupplierNotifications->find('list',['fields'=>['distinct op.product_id','op.order_id','ps.supplier_id']])/* ->distinct(['op.product_id']) */
 						->join(['table'=>'product_suppliers','alias'=>'ps','type'=>'INNER','conditions'=>'supplierId=ps.supplier_id'])
 						->join(['table'=>'order_products','alias'=>'op','type'=>'INNER','conditions'=>'ps.product_id=op.product_id']);
 			

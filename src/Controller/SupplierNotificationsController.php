@@ -11,13 +11,37 @@ use App\Controller\AppController;
 class SupplierNotificationsController extends AppController
 {
 
+	public function isAuthorized($user) {
+	
+		// The owner of an article can edit and delete it
+		if (in_array ( $this->request->action, [
+				
+				'edit',				
+				'view',
+				'listnotifications',
+				
+				
+		] )) {
+			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 3) {
+				return true;
+			}
+			/* $supplier_query=$this->SupplierNotifications->suppliers->find('all',['conditions'=>['user_id'=>$user['id']]])->contain(['Users'])->first();
+			$supplier=$supplier_query->toArray();
+			if ($this->SupplierNotifications->isAssigned($supplier['id'])) {
+				return true;
+			} */
+		}
+	
+		return parent::isAuthorized ( $user );
+	}
     /**
      * Index method
      *
      * @return \Cake\Network\Response|null
      */
     public function index()
-    {
+    {   	
+    	
         $supplierNotifications = $this->paginate($this->SupplierNotifications);
 
         $this->set(compact('supplierNotifications'));
@@ -107,5 +131,31 @@ class SupplierNotificationsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    public function listnotifications(){
+/*     	$myquery="SELECT DISTINCT op.product_id,prod.name,op.product_quantity,pt.type,sn.status_s,op.order_id,ps.supplier_id ".
+    	  "FROM supplier_notifications sn ". 
+    	  "JOIN product_suppliers ps ON sn.supplierId=ps.supplier_id ". 
+    	  "JOIN order_products op ON ps.product_id=op.product_id ".     	  
+    	  "JOIN products prod ON prod.id=op.product_id ".
+    	  "JOIN package_type pt ON pt.id=prod.package ".
+    	  "WHERE op.order_id=sn.orderId"; */
+    	$user_id=$this->Auth->user('id');
+    	$supplier_query=$this->SupplierNotifications->suppliers->find('all',['conditions'=>['user_id'=>$user_id]])->contain(['Users'])->first();
+    	$supplier=$supplier_query->toArray();//get loged in supplier data
+        /*
+        $subQuery=$this->SupplierNotifications->find('list',['fields'=>['distinct op.product_id','pr.name','op.product_quantity','pt.type','status_s','op.order_id','ps.supplier_id']]) ->distinct(['op.product_id']) 
+        ->join(['table'=>'product_suppliers','alias'=>'ps','type'=>'INNER','conditions'=>'supplierId=ps.supplier_id'])
+        ->join(['table'=>'order_products','alias'=>'op','type'=>'INNER','conditions'=>'ps.product_id=op.product_id'])
+        ->join(['table'=>'products','alias'=>'pr','type'=>'INNER','conditions'=>'pr.id=op.product_id'])
+        ->join(['table'=>'package_type','alias'=>'pt','type'=>'INNER','conditions'=>'pt.id=pr.package']);
+        
+        $query=$this->SupplierNotifications->find('all')->join(['table'=>$subQuery,'alias'=>'sub','type'=>'INNER','conditions'=>'ps__supplier_id=supplierID']);
+        echo $query;
+    	*/
+        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierId'=>$supplier['id']]]);
+    	$this->set(compact('supplierNotifications'));
+    	$this->set('_serialize', ['supplierNotifications']);
     }
 }

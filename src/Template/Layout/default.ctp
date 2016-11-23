@@ -62,6 +62,11 @@ $cakeDescription = 'Direct2Door.lk';
             
             <nav class="large-2 medium-2 columns" id="actions-sidebar">
                 <ul class="side-nav">	
+                    <?php if($userLevel==3){
+                    echo $this->Html->link(__('Notifications'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications']);
+                    }else if($userLevel==4){
+                    echo $this->Html->link(__('Notifications'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications']);
+                    }else{ ?>
                     <li>
                     <?php if($userLevel==1 || $userLevel==2):
                     echo $this->Html->link(__('Dashboard'), ['controller'=>'customers', 'action' => 'search']);
@@ -94,7 +99,7 @@ $cakeDescription = 'Direct2Door.lk';
                     <li><?= $this->Html->link(__('Search Customers'), ['controller'=>'Customers','action' => 'search']) ?>
                     </li>
                     <?php endif;?>
-                    
+                    <?php }?>
                 </ul>
             </nav>
             <?php endif;?>

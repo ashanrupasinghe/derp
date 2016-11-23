@@ -1,4 +1,4 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
+<!--<nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('Edit Supplier Notification'), ['action' => 'edit', $supplierNotification->id]) ?> </li>
@@ -7,6 +7,7 @@
         <li><?= $this->Html->link(__('New Supplier Notification'), ['action' => 'add']) ?> </li>
     </ul>
 </nav>
+-->
 <div class="supplierNotifications view large-10 medium-10 columns content">
     <h3><?= h($supplierNotification->id) ?></h3>
     <table class="vertical-table">
