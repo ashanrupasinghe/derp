@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\SupplierNotification;
+use Cake\Datasource\ConnectionManager;
+use Cake\Mailer\Email;
 
 /**
  * Orders Controller
@@ -17,19 +19,23 @@ class OrdersController extends AppController {
 		// The owner of an article can edit and delete it
 		if (in_array ( $this->request->action, [ 
 				'add',
-				'edit',
+				/* 'edit', */
 				'delete',
 				'view',
 				'index',
 				'productsuppliersbyid',
 				'singlecal',
 				'countSubTotal',
-				'processdata'
+				'processdata',
+				'cancel',
+				'sendOrderemail',
+				'send'
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
 				return true;
 			}
+			
 		}
 		
 		return parent::isAuthorized ( $user );
@@ -86,10 +92,17 @@ class OrdersController extends AppController {
 	public function view($id = null) {
 		$order = $this->Orders->get ( $id, [ 
 				'contain' => [ 
-						'OrderProducts' 
+						'OrderProducts',
+						'callcenter',
+						'delivery',
+						'customers',
+						'city',
+						'OrderProducts.Products' 
 				] 
 		] );
-		
+		/* print '<pre>';
+		print_r($order);
+		die(); */
 		$this->set ( 'order', $order );
 		$this->set ( '_serialize', [ 
 				'order' 
@@ -107,8 +120,16 @@ class OrdersController extends AppController {
 		$order = $this->Orders->newEntity ();
 		$order_data=$this->request->data();
 		
+		//print '<pre>';
+		//$this->sendOrderEmail('new',$suppliers_id,$delivery_id);
+		//die();
+		//print_r($order_data);
+		//die();
+		if(!empty($client_id)){
 		if ($this->request->is ( 'post' )) {
 			$data=$this->processdata($order_data);//rearrange data sets with count total
+			$delivery_id=$order_data['deliveryId'];//send for email
+			$suppliers_id=$order_data['product_supplier'];//send for email
 			$order = $this->Orders->patchEntity ( $order, $data );	
 			$saving=$this->Orders->save ( $order );				
 				
@@ -145,7 +166,7 @@ class OrdersController extends AppController {
 				$dlilevery_notification_entity=$this->Orders->DeliveryNotifications->newEntity($dilivery_notification);
 				$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
 				
-				
+				$this->sendToAll($order->id,'new', $suppliers_id, $delivery_id);
 				
 				
 				$this->Flash->success ( __ ( 'The order has been saved.' ) );
@@ -157,6 +178,7 @@ class OrdersController extends AppController {
 				$this->Flash->error ( __ ( 'The order could not be saved. Please, try again.' ) );
 			}
 		}
+	
 		
 		$this->set ( compact ( 'order' ) );
 		$this->set ( '_serialize', [ 
@@ -178,16 +200,21 @@ class OrdersController extends AppController {
 		} );
 		$this->set ( compact ( 'callcenters' ) );
 		
-		$deliveries = $this->Orders->Delivery->find ()->select ( [ 
+		//
+		
+		
+		$deliveries = $this->Orders->Delivery->find ()->contain(['city'])->select ( [ 
 				'id',
 				'firstName',
-				'lastName' 
-		] )->formatResults ( function ($results) {
-			/* @var $results \Cake\Datasource\ResultSetInterface|\Cake\Collection\CollectionInterface */
+				'lastName',
+				'city.cname' 
+		] ) ->formatResults ( function ($results) {
+
 			return $results->combine ( 'id', function ($row) {
-				return $row ['firstName'] . ' ' . $row ['lastName'];
+				return $row ['firstName'] . ' ' . $row ['lastName'].' - '.$row['cid']['cname'];
 			} );
-		} );
+		} ); 
+
 		$this->set ( compact ( 'deliveries' ) );
 		
 		
@@ -211,6 +238,10 @@ class OrdersController extends AppController {
 			} );
 		} );
 		$this->set ( compact ( 'cities' ) );
+		
+		}else{
+			$this->redirect(['controller'=>'customers','action'=>'search']);
+		}
 		
 	}
 	
@@ -351,8 +382,13 @@ class OrdersController extends AppController {
 /*
  $subQuery=SELECT DISTINCT order_products.product_id,order_products.order_id,product_suppliers.supplier_id FROM `supplier_notifications` JOIN product_suppliers ON supplier_notifications.supplierId=product_suppliers.supplier_id JOIN order_products ON product_suppliers.product_id=order_products.product_id WHERE order_products.order_id=supplier_notifications.orderId
  $products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']); 
+ SELECT OrderProducts.product_id, OrderProducts.product_quantity , p.price , package.type, supdata.supplier_id FROM order_products OrderProducts INNER JOIN products p ON OrderProducts.product_id = p.id INNER JOIN package_type package ON p.package = package.id INNER JOIN ( SELECT distinct op.product_id, op.order_id, ps.supplier_id FROM supplier_notifications SupplierNotifications INNER JOIN product_suppliers ps ON supplierId=ps.supplier_id INNER JOIN order_products op ON ps.product_id=op.product_id ) supdata ON supdata.product_id = OrderProducts.product_id WHERE OrderProducts.order_id = 56
+  
+  $last=SELECT distinct op.product_id, op.order_id,op.product_quantity, ps.supplier_id, p.price,(op.product_quantity*p.price) as total, pt.type FROM supplier_notifications SupplierNotifications INNER JOIN product_suppliers ps ON supplierId=ps.supplier_id INNER JOIN order_products op ON ps.product_id=op.product_id INNER JOIN products p ON p.id=op.product_id INNER JOIN package_type pt ON pt.id = p.package WHERE op.order_id=56;
  * */
-			$subQuery=$this->Orders->SupplierNotifications->find('list',['fields'=>['distinct op.product_id','op.order_id','ps.supplier_id']])/* ->distinct(['op.product_id']) */
+			
+			
+/*			$subQuery=$this->Orders->SupplierNotifications->find('list',['fields'=>['distinct op.product_id','op.order_id','ps.supplier_id']])
 						->join(['table'=>'product_suppliers','alias'=>'ps','type'=>'INNER','conditions'=>'supplierId=ps.supplier_id'])
 						->join(['table'=>'order_products','alias'=>'op','type'=>'INNER','conditions'=>'ps.product_id=op.product_id']);
 			
@@ -373,20 +409,24 @@ class OrdersController extends AppController {
 											'table'=>$subQuery,
 											'alias'=>'supdata',
 											'type'=>'INNER',
-											/* 'conditions' => 'supdata.product_id = product_id' */
+											// 'conditions' => 'supdata.product_id = product_id' 
 											'conditions' => 'op__product_id = product_id'
 									]);
 									
 			$ordered_products=$order_product_details_query->toArray();	
-			
+			*/
+			$query="SELECT distinct op.product_id, op.order_id,op.product_quantity, ps.supplier_id, p.price,(op.product_quantity*p.price) as total, pt.type FROM supplier_notifications SupplierNotifications INNER JOIN product_suppliers ps ON supplierId=ps.supplier_id INNER JOIN order_products op ON ps.product_id=op.product_id INNER JOIN products p ON p.id=op.product_id INNER JOIN package_type pt ON pt.id = p.package WHERE op.order_id=".$id;
+			$connection = ConnectionManager::get('default');
+			$ordered_products = $connection->execute($query)->fetchAll('assoc');
+			/*print '<pre>';
+			print_r($ordered_products);
+			die();*/
 			//print_r($ordered_products);
-			foreach ($ordered_products as $product){				
-				$product['producttotal']=$product['p']['price']*$product['product_quantity'];
-				$product['price']=$product['p']['price'];
-				$product['package']=$product['package']['type'];
-				$product['supplier']=$product['supdata']['ps__supplier_id'];
-				$product['supplier_list']=$this->productsuppliersbyidtoEdit($product['product_id']);
-			}								
+
+			for ($i=0;$i<sizeof($ordered_products);$i++) {
+				$ordered_products[$i]['supplier_list']=$this->productsuppliersbyidtoEdit($ordered_products[$i]['product_id'])->toArray();
+				}	
+		
 			$this->set('ordered_products',$ordered_products);	
 
 			
@@ -418,6 +458,51 @@ class OrdersController extends AppController {
 		
 		return $this->redirect ( [ 
 				'action' => 'index' 
+		] );
+	}
+	
+	//cancel
+//http://stackoverflow.com/questions/28337049/how-do-i-run-transactions-in-cakephp3-while-retrieving-last-insert-id-and-work-f	
+	public function cancel($id=null){
+		
+		$this->request->allowMethod ( [
+				'patch',
+				'post',
+				'put'
+				 				
+		] );
+		/* $con=$this->Orders->connection();
+		
+		$x=$con->transactional(function (){ */
+			$order = $this->Orders->get ( $id );
+			$order->status=9;
+			if($this->Orders->save($order)){			
+			$con_sup=$this->Orders->SupplierNotifications->connection();
+			$stmt = $con_sup->execute('UPDATE supplier_notifications SET status_s = ? WHERE orderId = ?',[9, $id]);
+			
+			$con_del=$this->Orders->DeliveryNotifications->connection();
+			$stmt = $con_del->execute('UPDATE delivery_notifications SET status = ? WHERE orderId = ?',[9, $id]);
+			
+			$suppliers_id=$this->Orders->SupplierNotifications->find('list',['keyField'=>'id','valueField'=>'supplierId'],['conditions'=>['orderId'=>$id]])->toArray();
+			$delivery_id=$this->Orders->SupplierNotifications->find('list',['keyField'=>'id','valueField'=>'deliveryId'],['conditions'=>['orderId'=>$id]])->toArray();
+			$suppliers_id=array_values($suppliers_id);
+			$delivery_id=array_values($delivery_id);
+			$this->sendToAll($id,'cancel', $suppliers_id, $delivery_id);
+			/* } */
+/* 			
+		}); */
+		
+		/* echo $x.':aaa' */;
+		//die();
+		/* if ($x) { */
+			//cancel delevery and supplier notifications
+			$this->Flash->success ( __ ( 'The order has been canceled.' ) );
+			
+		} else {
+			$this->Flash->error ( __ ( 'The order could not be canceled. Please, try again.' ) );
+		}
+		return $this->redirect ( [
+				'action' => 'index'
 		] );
 	}
 	
@@ -626,7 +711,62 @@ public function processdata($data){
 	];
 	return $newdata;
 }
+/*
+ * type:cancel/new
+ * $suppliers: array with id [1,3,4]
+ * $delivery: id of the delever
+ * $products: product array, currently can send @ proceed new order, cancelation cand
+ * */
+public function sendToAll($orderId,$type,$suppliers,$delivery,$products=''){
+//admin. customer, suppliers, delever
+$delivery_email=$this->Orders->DeliveryNotifications->Delivery->find('list',['keyField'=>'id','valueField'=>'email'],['conditions'=>['id'=>$delivery]])->toArray();
+$delivery_email=array_values($delivery_email);//get only values from associative array,
 
+//print_r( $delivery_email->toArray());
+$supplier_email=$this->Orders->SupplierNotifications->Suppliers->find('list',['keyField'=>'id','valueField'=>'email'],['conditions'=>['id'=>$suppliers]])->toArray();
+$supplier_email=array_values($supplier_email);
+//print_r( $supplier_email->toArray());
+//$all_email=array_merge($delivery_email,$supplier_email);
+//print_r($all_email);
+$this->sendemail($orderId,$type,$supplier_email,'sup','');
+$this->sendemail($orderId,$type,$delivery_email,'del','');
+
+$this->redirect(['action'=>'index']);
+	 
+}
+/*
+ * $orderid:order ID
+ * $type:new/cancel
+ * $recipients:array with email address
+ * $recipient_type:sup/del
+ * $products: product array, currently can send @ proceed new order, cancelation cand
+ * */
+public function sendemail($orderid,$type='new',$recipients,$recipient_type,$products=""){
+	$subject="";
+	$message="";
+	$hello="Hello ";
+	if ($recipient_type=='del'){
+		$hello.="Delevery person,\n";
+	}elseif ($recipient_type=='sup'){
+		$hello.="Supplier,\n";
+	}
+	
+	if ($type=='new'){
+		$subject="New Order Notification";
+		$message=$hello."New order has been made,\nOrder ID: ".$orderid." \nPlease check the system for more details";
+	}
+	elseif ($type=='cancel'){
+		$subject="Order Cancellation";
+		$message=$hello."Cancelled a order,\nOrder ID: ".$orderid." \nPlease check the system for more details";
+	}
+	
+	$email = new Email('default');
+	$email->from(['spanrupasinghe11@gmail.com' => 'Direct2door.com'])
+	->to($recipients)
+	->subject($subject)
+	->send($message);
+	
+}
 
 
 }
@@ -647,3 +787,20 @@ public function processdata($data){
 //http://stackoverflow.com/questions/4260445/save-multiple-records-for-one-model-in-cakephp
 
 //http://stackoverflow.com/questions/30711705/get-last-inserted-id-after-inserting-to-associated-table
+
+/*
+ SELECT 
+  name, 
+   ( 3959 * acos( cos( radians(42.290763) ) * cos( radians( locations.lat ) ) 
+   * cos( radians(locations.lng) - radians(-71.35368)) + sin(radians(42.290763)) 
+   * sin( radians(locations.lat)))) AS distance 
+FROM locations 
+WHERE active = 1 
+HAVING distance < 10 
+ORDER BY distance;
+
+http://stackoverflow.com/questions/24370975/find-distance-between-two-points-using-latitude-and-longitude-in-mysql
+http://stackoverflow.com/questions/8599200/calculate-distance-given-2-points-latitude-and-longitude
+http://stackoverflow.com/questions/1006654/fastest-way-to-find-distance-between-two-lat-long-points
+  
+ * */

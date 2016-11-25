@@ -1,3 +1,6 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="customers view large-10 medium-10 columns content">
     <h3><?= h($customer->id) ?></h3>
     <table class="vertical-table">
@@ -13,14 +16,14 @@
             <th><?= __('Address') ?></th>
             <td><?= h($customer->address) ?></td>
         </tr>
-        <tr>
+<!--        <tr>
             <th><?= __('Latitude') ?></th>
             <td><?= h($customer->latitude) ?></td>
         </tr>
         <tr>
             <th><?= __('Longitude') ?></th>
             <td><?= h($customer->longitude) ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th><?= __('Email') ?></th>
             <td><?= h($customer->email) ?></td>
@@ -39,7 +42,7 @@
         </tr>
         <tr>
             <th><?= __('Status') ?></th>
-            <td><?= h($customer->status) ?></td>
+            <td><?= h($status[$customer->status]) ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>
@@ -47,7 +50,10 @@
         </tr>
         <tr>
             <th><?= __('City') ?></th>
-            <td><?= $this->Number->format($customer->city) ?></td>
+            <td><?= h($customer->cid->cname) ?></td>
         </tr>
+        <?php
+        
+        ?>
     </table>
 </div>

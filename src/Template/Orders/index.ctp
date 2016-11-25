@@ -1,7 +1,10 @@
 <?php
 //$availability=['0'=>'Not available','1'=>'Available'];
-$status = ['0'=>'Desabled','1'=>'Active'];
-$paymnet_status=[];   
+//$status = ['0'=>'Desabled','1'=>'Active'];
+//$paymnet_status=[];
+
+$payment_status=['1'=>'pending','2'=>'paid'];
+$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];   
 ?>
 <div class="orders index large-10 medium-10 columns content">
    <?php //if($userLevel==1):?> <div class="pull-right" style="float: right;">
@@ -47,14 +50,14 @@ $paymnet_status=[];
                 <td><?= $this->Number->format($order->discount) ?></td>
                 <td><?= h($order->couponCode) ?></td>-->
                 <td><?= $this->Number->format($order->total) ?></td>
-                <td><?= h($order->paymentStatus) ?></td>
-                <td><?= h($order->status) ?></td>
+                <td><?= h($payment_status[$order->paymentStatus]) ?></td>
+                <td><?= h($status[$order->status]) ?></td>
                <!-- <td><?= h($order->created) ?></td>
                 <td><?= h($order->modified) ?></td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $order->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $order->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $order->id], ['confirm' => __('Are you sure you want to delete # {0}?', $order->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $order->id],['class'=>'x-btn x-btn-primary']) ?>
+                    <?= $this->Form->postLink(__('Cancel'), ['action' => 'cancel', $order->id],['confirm' => __('Are you sure you want to Cancel # {0}?', $order->id),'class'=>'x-btn x-btn-warning']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $order->id], ['confirm' => __('Are you sure you want to delete # {0}?', $order->id),'class'=>'x-btn x-btn-danger']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

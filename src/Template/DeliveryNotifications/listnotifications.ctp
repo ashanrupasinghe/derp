@@ -5,7 +5,7 @@
     </ul>
 </nav>-->
 <?php
-$status=['0'=>'pending', '1'=>'took all', '2'=>'delevered'];
+$status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
 
 ?>
 <div class="deliveryNotifications index large-10 medium-10 columns content">
@@ -36,9 +36,9 @@ $status=['0'=>'pending', '1'=>'took all', '2'=>'delevered'];
                 <td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>
                 <td><?= h($status[$deliveryNotification->status]) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $deliveryNotification->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $deliveryNotification->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $deliveryNotification->id], ['confirm' => __('Are you sure you want to delete # {0}?', $deliveryNotification->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $deliveryNotification->id],['class'=>'x-btn x-btn-primary']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $deliveryNotification->id],['class'=>'x-btn x-btn-warning']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $deliveryNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $deliveryNotification->id),'class'=>'x-btn x-btn-danger']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

@@ -19,7 +19,7 @@ class CallcenterController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users']
+            'contain' => ['Users','city']
         ];
         $callcenter = $this->paginate($this->Callcenter);
 
@@ -37,7 +37,7 @@ class CallcenterController extends AppController
     public function view($id = null)
     {
         $callcenter = $this->Callcenter->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users','city']
         ]);
 
         $this->set('callcenter', $callcenter);
@@ -68,7 +68,7 @@ class CallcenterController extends AppController
         		'table' => 'users',
         		'alias' => 'u',
         		'type' => 'INNER',
-        		'conditions' => 'u.id = callcenter.user_id'
+        		'conditions' => 'u.id = user_id'
         ] );
         
         $users = $this->Callcenter->Users->find ( 'all', [
@@ -132,7 +132,7 @@ class CallcenterController extends AppController
         		'table' => 'users',
         		'alias' => 'u',
         		'type' => 'INNER',
-        		'conditions' => 'u.id = callcenter.user_id'
+        		'conditions' => 'u.id = user_id'
         ] );
         
         $users = $this->Callcenter->Users->find ( 'all', [

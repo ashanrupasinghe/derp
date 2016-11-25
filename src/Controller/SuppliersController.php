@@ -19,7 +19,8 @@ class SuppliersController extends AppController {
 	public function index() {
 		$this->paginate = [ 
 				'contain' => [ 
-						'Users' 
+						'Users',
+						'city' 
 				] 
 		];
 		$suppliers = $this->paginate ( $this->Suppliers );
@@ -41,7 +42,7 @@ class SuppliersController extends AppController {
 	public function view($id = null) {
 		$supplier = $this->Suppliers->get ( $id, [ 
 				'contain' => [ 
-						'Users' 
+						'Users','city' 
 				] 
 		] );
 		
@@ -108,7 +109,7 @@ class SuppliersController extends AppController {
 				'table' => 'users',
 				'alias' => 'u',
 				'type' => 'INNER',
-				'conditions' => 'u.id = suppliers.user_id' 
+				'conditions' => 'u.id = user_id' 
 		] );
 		
 		$users = $this->Suppliers->Users->find ( 'all', [ 
@@ -180,7 +181,7 @@ class SuppliersController extends AppController {
 				'table' => 'users',
 				'alias' => 'u',
 				'type' => 'INNER',
-				'conditions' => 'u.id = suppliers.user_id'
+				'conditions' => 'u.id = user_id'
 		] );
 		
 		$users = $this->Suppliers->Users->find ( 'all', [

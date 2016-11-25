@@ -43,31 +43,36 @@ padding-bottom: 9px;
 		<button type="button" id="btnAdd-6" class="btn btn-primary">Add Product</button>
 <?php 
 $count=1;
-foreach($ordered_products as $product):?>	
+foreach($ordered_products as $product):
+
+
+?>	
+
 		<div class="group large-12 medium-12 columns prod" id="<?php echo 'x-'.$count;?>">
 			<div class="large-3 medium-3 columns prod-left">
 					
-					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]','value'=>$product['product_id']]);?>
+					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]','value'=>$product['product_id'],'required'=>true]);?>
 					
 			</div>			
 			<div class="large-1 medium-1 columns">			
 					
-					<?php echo $this->Form->input('Quantity',[ 'class'=>'product-quantity', 'id'=>'','name'=>"product_quantity[]", 'value'=>$product['product_quantity']]);?>
+					<?php echo $this->Form->input('Qty',[ 'class'=>'product-quantity', 'id'=>'','name'=>"product_quantity[]", 'value'=>$product['product_quantity'],'required'=>true]);?>
 			</div>
 			<div class="large-2 medium-2 columns">
-			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype', 'id'=>'', 'value'=>$product['package']]);?>	
+			<?php echo $this->Form->input('Package',['disabled'=>true, 'class'=>'packagetype', 'id'=>'', 'value'=>$product['type']]);?>	
 			</div>
 			
 			<div class="large-2 medium-2 columns">
-			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount', 'id'=>'','value'=>$product['producttotal']]);?>	
-			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount-hidden', 'id'=>'','type'=>'hidden','name'=>'product_price[]','default'=>0,'value'=>$product['producttotal']]);?>
+			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount', 'id'=>'','value'=>$product['total']]);?>	
+			<?php echo $this->Form->input('Ammount',['disabled'=>true, 'class'=>'product-ammount-hidden', 'id'=>'','type'=>'hidden','name'=>'product_price[]','default'=>0,'value'=>$product['total']]);?>
 			</div>
 			<!--<select id="DLState">-->
 			<div class="large-3 medium-3 columns sup-right">	
 			
 			<?php
 			$sup=[];
-			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$product['supplier_list'],'name'=>'product_supplier[]','class'=>'sup-select','value'=>$product['supplier']]);?>		
+			
+			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$product['supplier_list'],'name'=>'product_supplier[]','class'=>'sup-select','value'=>$product['supplier_id'],'required'=>true]);?>		
 					
 			</div>
 
@@ -124,7 +129,7 @@ $(document).ready(function(){
 		btnAdd:'#btnAdd-6',
 		btnRemove:'.btnRemove'
 	});
-	
+	/*$('button.btnRemove').hide();*/
 	
 	})
 	

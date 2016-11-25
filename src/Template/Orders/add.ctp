@@ -44,12 +44,12 @@ padding-bottom: 9px;
 		<div class="group large-12 medium-12 columns prod" id="x-1">
 			<div class="large-3 medium-3 columns prod-left">
 					
-					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]']);?>
+					<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name[]','required'=>true]);?>
 					
 			</div>			
 			<div class="large-1 medium-1 columns">			
 					<!--<label>Quantity<input type="text" name="product_quantity[]" class="product-quantity"></label>-->
-					<?php echo $this->Form->input('Quantity',['class'=>'product-quantity','name'=>'product_quantity[]', 'id'=>'']);?>
+					<?php echo $this->Form->input('Qty',['class'=>'product-quantity','name'=>'product_quantity[]', 'id'=>'','required'=>true]);?>
 					
 			</div>
 			<div class="large-2 medium-2 columns">
@@ -65,7 +65,7 @@ padding-bottom: 9px;
 			
 			<?php
 			$sup=[];
-			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select']);?>		
+			 echo $this->Form->input('Orders.suppliers_id',['empty'=>'select supplier','options'=>$sup,'name'=>'product_supplier[]','class'=>'sup-select','required'=>true]);?>		
 					
 			</div>
 

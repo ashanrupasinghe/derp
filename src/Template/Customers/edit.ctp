@@ -1,3 +1,7 @@
+<?php
+
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="customers form large-10 medium-10 columns content">
     <?= $this->Form->create($customer) ?>
     <fieldset>
@@ -14,7 +18,7 @@
             echo $this->Form->input('email');
             echo $this->Form->input('mobileNo');
             //echo $this->Form->input('status');
-            $status=['1'=>'Active','0'=>'Inactive'];
+            //$status=['1'=>'Active','0'=>'Inactive'];
             echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
         ?>
     </fieldset>

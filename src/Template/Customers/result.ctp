@@ -55,9 +55,9 @@
                 <td><?= h($customer->modified) ?></td>-->
                 <td><?= h($customer->status) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $customer->id]) ?>               
-                    
-                    <?= $this->Form->postLink(__('Proceed order'), ['action' => 'check', $customer->id], ['confirm' => __('Are you sure you want to proceed an order for {0} {1}?', $customer->firstName,$customer->lastName)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $customer->id],['class'=>'x-btn x-btn-primary']) ?>               
+					<?php $cus_name=$customer->firstName.' '.$customer->lastName;?>                    
+                    <?= $this->Form->postLink(__('Proceed order'), ['action' => 'check', $customer->id], ['confirm' => __('Are you sure you want to proceed an order for {0}?', $cus_name),'class'=>'x-btn x-btn-success']) ?>
                     
                 </td>
             </tr>

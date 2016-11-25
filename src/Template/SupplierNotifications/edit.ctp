@@ -1,5 +1,5 @@
 <?php
-$status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over'];
+$status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled',];
 
 ?>
 <!--<nav class="large-3 medium-4 columns" id="actions-sidebar">

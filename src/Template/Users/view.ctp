@@ -1,3 +1,7 @@
+<?php
+$user_role=[1=>'Admin',2=>'Callcenter','Supplier','Delivery'];
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="users view large-10 medium-10 columns content">
     <h3><?= h($user->id) ?></h3>
     <table class="vertical-table">
@@ -7,19 +11,19 @@
         </tr>
         <tr>
             <th><?= __('User Type') ?></th>
-            <td><?= h($user->user_type) ?></td>
+            <td><?= h($user_role[$user->user_type]) ?></td>
         </tr>
-        <tr>
+        <!--<tr>
             <th><?= __('Password') ?></th>
             <td><?= h($user->password) ?></td>
-        </tr>
-        <tr>
+        </tr>-->
+        <!--<tr>
             <th><?= __('Remember Token') ?></th>
             <td><?= h($user->remember_token) ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th><?= __('Status') ?></th>
-            <td><?= h($user->status) ?></td>
+            <td><?= h($status[$user->status]) ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>

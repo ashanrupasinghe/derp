@@ -1,3 +1,6 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="callcenter form large-10 medium-10 columns content">
     <?= $this->Form->create($callcenter) ?>
     <fieldset>
@@ -11,7 +14,7 @@
             //echo $this->Form->input('city');
             echo $this->Form->input('city',['options'=>$cities,'empty'=>'select city']);
             echo $this->Form->input('mobileNo');
-            $status=['1'=>'Active','0'=>'Inactive'];
+            //$status=['1'=>'Active','0'=>'Inactive'];
             echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
 
         ?>

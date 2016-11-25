@@ -9,7 +9,7 @@
 </nav>-->
 <?php
 $status=['0'=>'pending', '1'=>'took all', '2'=>'delevered'];
-$status_sup=['0'=>'pending', '1'=>'available', '2'=>'not available', '3'=>'ready', '4'=>'hand overed'];
+$status_sup=['0'=>'pending', '1'=>'available', '2'=>'not available', '3'=>'ready', '4'=>'hand overed','9'=>'canceled'];
 $status_del=['0'=>'pending','1'=>'took over'];
 ?>
 <div class="deliveryNotifications view large-10 medium-10 columns content">

@@ -31,6 +31,9 @@ $cakeDescription = 'Direct2Door.lk';
         <?= $this->Html->css('custom')?>
         <script type="text/javascript">var myBaseUrl = '<?php echo $this->Url->build('/'); ?>';</script>
         <?= $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');?>
+        <?= $this->Html->script('https://use.fontawesome.com/aeb0ff1754.js');?>
+
+        
         <?= $this->Html->script('select2.min') ?>
         <?= $this->Html->script('customjs') ?>
         
@@ -63,9 +66,28 @@ $cakeDescription = 'Direct2Door.lk';
             <nav class="large-2 medium-2 columns" id="actions-sidebar">
                 <ul class="side-nav">	
                     <?php if($userLevel==3){
-                    echo $this->Html->link(__('Notifications'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications']);
+                    echo "<li>".$this->Html->link(__('Notifications'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications'])."</li>";
+                    echo "<li>".$this->Html->link(__('Pending Last 24 hours'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/new-pending'])."</li>";
+                    echo "<li>".$this->Html->link(__('Canceled Last 24 hours'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/new-canceled'])."</li>";
+                    echo "<li>".$this->Html->link(__('Pending'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/pending'])."</li>";
+                    echo "<li>".$this->Html->link(__('Available'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/available'])."</li>";
+                    echo "<li>".$this->Html->link(__('Not Available'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/not-available'])."</li>";
+                    echo "<li>".$this->Html->link(__('Ready'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/ready'])."</li>";
+                    echo "<li>".$this->Html->link(__('Delivery hand overed'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/delivery-hand-over'])."</li>";
+                    echo "<li>".$this->Html->link(__('Canceled'), ['controller'=>'SupplierNotifications', 'action' => 'listnotifications/canceled'])."</li>";
+                    
                     }else if($userLevel==4){
-                    echo $this->Html->link(__('Notifications'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications']);
+					
+                    echo "<li>".$this->Html->link(__('Notifications'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications'])."</li>";
+                    echo "<li>".$this->Html->link(__('Ready'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/ready'])."</li>";
+                    echo "<li>".$this->Html->link(__('Pending last 24 hors'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/new-pending'])."</li>";
+                    echo "<li>".$this->Html->link(__('Canceled last 24 hours'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/new-canceled'])."</li>";
+                    echo "<li>".$this->Html->link(__('Pending'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/pending'])."</li>";
+                    echo "<li>".$this->Html->link(__('Canceled'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/canceled'])."</li>";
+                    echo "<li>".$this->Html->link(__('Took-all'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/took-all'])."</li>";
+                    echo "<li>".$this->Html->link(__('Delivered'), ['controller'=>'DeliveryNotifications', 'action' => 'listnotifications/deleverd'])."</li>";
+                    
+                    
                     }else{ ?>
                     <li>
                     <?php if($userLevel==1 || $userLevel==2):

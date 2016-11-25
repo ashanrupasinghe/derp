@@ -133,7 +133,21 @@ class SupplierNotificationsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
     
-    public function listnotifications(){
+    public function listnotifications($type=""){
+    	$status="";
+    	if ($type=="pending" || $type=="new-pending"){
+    		$status=0;
+    	}elseif ($type=='available'){
+    		$status=1;
+    	}elseif ($type=='not-available'){
+    		$status=2;
+    	}elseif ($type=='ready'){
+    		$status=3;
+    	}elseif ($type=='delivery-hand-over'){
+    		$status=4;
+    	}elseif ($type=='canceled' || $type=="new-canceled"){
+    		$status=9;
+    	}
 /*     	$myquery="SELECT DISTINCT op.product_id,prod.name,op.product_quantity,pt.type,sn.status_s,op.order_id,ps.supplier_id ".
     	  "FROM supplier_notifications sn ". 
     	  "JOIN product_suppliers ps ON sn.supplierId=ps.supplier_id ". 
@@ -154,7 +168,16 @@ class SupplierNotificationsController extends AppController
         $query=$this->SupplierNotifications->find('all')->join(['table'=>$subQuery,'alias'=>'sub','type'=>'INNER','conditions'=>'ps__supplier_id=supplierID']);
         echo $query;
     	*/
-        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierId'=>$supplier['id']]]);
+    	$conditions=['SupplierId'=>$supplier['id']];
+    	if ($type!=""){
+    		$conditions['status_s']=$status;
+    	}
+    	if ($type!="" &&($type=="new-pending" || $type="new-canceled")){    		
+    		$conditions['modified >']=new \DateTime('-24 hours');
+    	}
+    	
+    	
+        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>$conditions]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

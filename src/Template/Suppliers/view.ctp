@@ -1,9 +1,12 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="suppliers view large-10 medium-10 columns content">
     <h3><?= h($supplier->id) ?></h3>
     <table class="vertical-table">
         <tr>
             <th><?= __('User') ?></th>
-            <td><?= $supplier->has('user') ? $this->Html->link($supplier->user->id, ['controller' => 'Users', 'action' => 'view', $supplier->user->id]) : '' ?></td>
+            <td><?= $supplier->has('user') ? $this->Html->link($supplier->user->username, ['controller' => 'Users', 'action' => 'view', $supplier->user->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('FirstName') ?></th>
@@ -21,14 +24,14 @@
             <th><?= __('Address') ?></th>
             <td><?= h($supplier->address) ?></td>
         </tr>
-        <tr>
+       <!-- <tr>
             <th><?= __('Latitude') ?></th>
             <td><?= h($supplier->latitude) ?></td>
         </tr>
         <tr>
             <th><?= __('Longitude') ?></th>
             <td><?= h($supplier->longitude) ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th><?= __('ContactNo') ?></th>
             <td><?= h($supplier->contactNo) ?></td>
@@ -51,7 +54,7 @@
         </tr>
         <tr>
             <th><?= __('Status') ?></th>
-            <td><?= h($supplier->status) ?></td>
+            <td><?= h($status[$supplier->status]) ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>
@@ -59,7 +62,7 @@
         </tr>
         <tr>
             <th><?= __('City') ?></th>
-            <td><?= $this->Number->format($supplier->city) ?></td>
+            <td><?= h($supplier->cid->cname) ?></td>
         </tr>
     </table>
 </div>

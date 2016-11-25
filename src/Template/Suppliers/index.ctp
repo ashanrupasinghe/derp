@@ -1,3 +1,6 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="suppliers index large-10 medium-10 columns content">
     <div class="pull-right" style="float: right;">
         <?= $this->Html->link(__('Add New Supplier'), ['controller' => 'Suppliers', 'action' => 'add']) ?>
@@ -19,15 +22,16 @@
             <?php foreach ($suppliers as $supplier): ?>
                 <tr>
                     <td><?= $this->Number->format($supplier->id) ?></td>
-                    <td><?= $supplier->has('user') ? $this->Html->link($supplier->user->id, ['controller' => 'Users', 'action' => 'view', $supplier->user->id]) : '' ?></td>
+                    <td><?= $supplier->has('user') ? $this->Html->link($supplier->user->username, ['controller' => 'Users', 'action' => 'view', $supplier->user->id]) : '' ?></td>
                     <td><?= h($supplier->firstName) ?></td>
-                    <td><?= $this->Number->format($supplier->city) ?></td>
+                    <td><?= h($supplier->cid->cname) ?></td>
                     <td><?= h($supplier->mobileNo) ?></td>
-                     <td><?= h(($supplier->status==1?'Enabled':'Disabled')) ?></td>
+<!--                     <td><?= h(($supplier->status==1?'Enabled':'Disabled')) ?></td>-->
+				<td><?= h(($supplier->status==1?'Active':'Disabled')) ?></td>
                     <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $supplier->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplier->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplier->id], ['confirm' => __('Are you sure you want to delete # {0}?', $supplier->id)]) ?>
+                        <?= $this->Html->link(__('View'), ['action' => 'view', $supplier->id],['class'=>'x-btn x-btn-primary']) ?>
+                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplier->id],['class'=>'x-btn x-btn-warning']) ?>
+                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplier->id], ['confirm' => __('Are you sure you want to delete # {0}?', $supplier->id),'class'=>'x-btn x-btn-danger']) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

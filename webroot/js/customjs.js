@@ -36,7 +36,7 @@ $(document).ready(function(){
 	    	    	//alert(data);
 	    	    	var supplier=JSON.parse(data);    	    	
 	    	    	
-	    	    	listItems= "<option value=''>select product</option>";
+	    	    	listItems= "<option value=''>select supplier</option>";
 	    	        for (var i = 0; i < supplier.length; i++){
 	    	          listItems+= "<option value='" + supplier[i].s.id + "'>" + supplier[i].s.firstName+" "+supplier[i].s.lastName+" - "+supplier[i].city.cname + "</option>";
 	    	        }

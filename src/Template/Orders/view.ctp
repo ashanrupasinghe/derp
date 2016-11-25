@@ -1,3 +1,7 @@
+<?php
+ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];
+$payment_status=['1'=>'pending','2'=>'paid'];
+?>
 <div class="orders view large-10 medium-10 columns content">
     <h3><?= h($order->id) ?></h3>
     <table class="vertical-table">
@@ -24,23 +28,25 @@
         
         <tr>
             <th><?= __('PaymentStatus') ?></th>
-            <td><?= h($order->paymentStatus) ?></td>
+            <td><?= h($payment_status[$order->paymentStatus]) ?></td>
         </tr>
         <tr>
             <th><?= __('Status') ?></th>
-            <td><?= h($order->status) ?></td>
+            <td><?= h($status[$order->status]) ?></td>
         </tr>
         <tr>
             <th><?= __('City') ?></th>
-            <td><?= $this->Number->format($order->city) ?></td>
+            <td><?= h($order->cid->cname) ?></td>
         </tr>
         <tr>
             <th><?= __('CallcenterId') ?></th>
-            <td><?= $this->Number->format($order->callcenterId) ?></td>
+            <?php $call_name=$order->callcenter->firstName.' '.$order->callcenter->lastName;?>
+            <td><?= h($call_name) ?></td>
         </tr>
         <tr>
             <th><?= __('DeliveryId') ?></th>
-            <td><?= $this->Number->format($order->deliveryId) ?></td>
+            <?php $delivery_name=$order->delivery->firstName.' '.$order->delivery->lastName; ?>
+            <td><?= h($delivery_name) ?></td>
         </tr>
         <tr>
             <th><?= __('SubTotal') ?></th>
@@ -71,6 +77,35 @@
             <td><?= h($order->modified) ?></td>
         </tr>
     </table>
+    <h4><?= __('Products Details') ?></h4>
+    <table cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th><?= __('Name') ?></th>
+                <th><?= __('Quantity') ?></th>
+                <th><?= __('Supplier') ?></th>
+                <th><?= __('Address') ?></th>
+                <th><?= __('phone') ?></th>
+                <th><?= __('status') ?></th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($order->order_products as $product): 
+           
+            ?>                       
+            <tr>
+                <td><?php echo $product['product']->name;?></td>
+                <td><?php echo $product['product_quantity']; ?></td>                
+                <td>-</td>
+				<td>-</td>
+				<td>-</td>
+                </td>             
+            </tr>
+            
+            <?php endforeach; ?>
+        </tbody>
     <!--<div class="related">
         <h4><?= __('Related Order Products') ?></h4>
         <?php if (!empty($order->order_products)): ?>

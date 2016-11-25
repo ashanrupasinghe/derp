@@ -22,17 +22,17 @@
             <?php foreach ($callcenter as $callcenter): ?>
             <tr>
                 <td><?= $this->Number->format($callcenter->id) ?></td>
-                <td><?= $callcenter->has('user') ? $this->Html->link($callcenter->user->id, ['controller' => 'Users', 'action' => 'view', $callcenter->user->id]) : '' ?></td>
+                <td><?= $callcenter->has('user') ? $this->Html->link($callcenter->user->username, ['controller' => 'Users', 'action' => 'view', $callcenter->user->id]) : '' ?></td>
                 <td><?= h($callcenter->firstName) ?></td>
                 <td><?= h($callcenter->lastName) ?></td>
                 <td><?= h($callcenter->email) ?></td>
-                <td><?= $this->Number->format($callcenter->city) ?></td>
+                <td><?= h($callcenter->cid->cname) ?></td>
                 <td><?= h($callcenter->mobileNo) ?></td>
                 <td><?= h($callcenter->status) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $callcenter->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $callcenter->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $callcenter->id], ['confirm' => __('Are you sure you want to delete # {0}?', $callcenter->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $callcenter->id],['class'=>'x-btn x-btn-primary']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $callcenter->id],['class'=>'x-btn x-btn-warning']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $callcenter->id],['confirm' => __('Are you sure you want to delete # {0}?', $callcenter->id),'class'=>'x-btn x-btn-danger']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

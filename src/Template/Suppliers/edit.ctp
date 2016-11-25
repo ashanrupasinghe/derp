@@ -1,3 +1,6 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="suppliers form large-10 medium-10 columns content">
     <?= $this->Form->create($supplier) ?>
     <fieldset>
@@ -18,7 +21,7 @@
             echo $this->Form->input('companyName');
             echo $this->Form->input('regNo');
             //echo $this->Form->input('status');
-            $status=['1'=>'Active','0'=>'Inactive'];
+            //$status=['1'=>'Active','0'=>'Inactive'];
             echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
         ?>
     </fieldset>

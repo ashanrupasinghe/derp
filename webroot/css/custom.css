@@ -81,3 +81,85 @@ margin-top: 20px;
 padding-top: 9px;
 padding-bottom: 9px;
 }
+
+/*button styling*/
+/*x-btn ,x-btn-view,x-btn-edit, x-btn-delete, x-btn-add*/
+/*
+1. #e4eaec,  #ccd5db ,  #76838f 
+2. #62a8ea,  #89bceb ,  #4e97d9 
+3. #46be8a,  #5cd29d ,  #36ab7a 
+4. #57c7d4,  #77d6e1 ,  #47b8c6
+5. #f2a654,  #f4b066 ,  #e79857
+6. #f96868,  #fa7a7a ,  #e9595b 
+   */
+.x-btn{
+padding: 2px 10px;
+line-height: 1.57142857;
+font-weight: 300;
+text-align: center;
+white-space: nowrap;
+vertical-align: middle;
+color: #FFFFFF;
+}
+.x-btn:hover,.x-btn:active,.x-btn:focus{
+color: #FFFFFF;	
+}
+.x-btn-default{
+background-color:#e4eaec;	
+}
+.x-btn-default:hover{
+background-color:#ccd5db;	
+}
+.x-btn-default:active{
+background-color:#76838f;	
+}
+
+.x-btn-primary{
+background-color:#62a8ea;
+}
+.x-btn-primary:hover{
+background-color:#89bceb; 	
+}
+.x-btn-primary:active{
+background-color:#4e97d9; 	
+}
+
+.x-btn-success{
+background-color:#46be8a;	
+}
+.x-btn-success:hover{
+background-color:#5cd29d;	
+}
+.x-btn-success:active{
+background-color:#36ab7a;	
+}
+
+.x-btn-info{
+background-color:#57c7d4;	
+}
+.x-btn-info:hover{
+background-color:#77d6e1;	
+}
+.x-btn-info:active{
+background-color:#47b8c6;	
+}
+
+.x-btn-warning{
+background-color:#f2a654;	
+}
+.x-btn-warning:hover{
+background-color:#f4b066;	
+}
+.x-btn-warning:active{
+background-color:#e79857;	
+}
+
+.x-btn-danger{
+background-color:#f96868;	
+}
+.x-btn-danger:hover{
+background-color:#fa7a7a;	
+}
+.x-btn-danger:active{
+background-color:#e9595b;	
+}

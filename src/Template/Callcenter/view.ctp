@@ -1,9 +1,12 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="callcenter view large-10 medium-10 columns content">
     <h3><?= h($callcenter->id) ?></h3>
     <table class="vertical-table">
         <tr>
             <th><?= __('User') ?></th>
-            <td><?= $callcenter->has('user') ? $this->Html->link($callcenter->user->id, ['controller' => 'Users', 'action' => 'view', $callcenter->user->id]) : '' ?></td>
+            <td><?= $callcenter->has('user') ? $this->Html->link($callcenter->user->username, ['controller' => 'Users', 'action' => 'view', $callcenter->user->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('FirstName') ?></th>
@@ -23,7 +26,7 @@
         </tr>
         <tr>
             <th><?= __('Status') ?></th>
-            <td><?= h($callcenter->status) ?></td>
+            <td><?= h($status[$callcenter->status]) ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>
@@ -31,7 +34,7 @@
         </tr>
         <tr>
             <th><?= __('City') ?></th>
-            <td><?= $this->Number->format($callcenter->city) ?></td>
+            <td><?= h($callcenter->cid->cname) ?></td>
         </tr>
     </table>
     <div class="row">
