@@ -9,35 +9,45 @@
 </nav>
 -->
 <div class="supplierNotifications view large-10 medium-10 columns content">
-    <h3><?= h($supplierNotification->id) ?></h3>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+    <h4><?= __('Notification ID: '.$supplierNotification->id) ?></h4>
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">     
     <table class="vertical-table">
+   		<tr>
+            <th><?= __('OrderId') ?></th>
+            <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
+        </tr>
         <tr>
             <th><?= __('SentFrom') ?></th>
             <td><?= h($supplierNotification->sentFrom) ?></td>
         </tr>
-        <tr>
-            <th><?= __('Created') ?></th>
-            <td><?= h($supplierNotification->created) ?></td>
-        </tr>
-        <tr>
+        
+<!--        <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($supplierNotification->id) ?></td>
-        </tr>
-        <tr>
+        </tr>-->
+<!--        <tr>
             <th><?= __('SupplierId') ?></th>
             <td><?= $this->Number->format($supplierNotification->supplierId) ?></td>
-        </tr>
+        </tr>-->
+
         <tr>
-            <th><?= __('OrderId') ?></th>
-            <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
+            <th><?= __('NotificationText') ?></th>
+            <td><?= h($supplierNotification->notificationText); ?></td>
+        </tr>
+                <tr>
+            <th><?= __('Created') ?></th>
+            <td><?= h($supplierNotification->created) ?></td>
         </tr>
         <tr>
             <th><?= __('Modified') ?></th>
             <td><?= h($supplierNotification->modified) ?></td>
         </tr>
     </table>
-    <div class="row">
+</div>    
+<!--    <div class="row">
         <h4><?= __('NotificationText') ?></h4>
         <?= $this->Text->autoParagraph(h($supplierNotification->notificationText)); ?>
-    </div>
+    </div> -->
+</div>
 </div>

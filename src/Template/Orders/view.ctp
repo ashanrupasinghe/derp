@@ -2,16 +2,17 @@
  $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];
 $payment_status=['1'=>'pending','2'=>'paid'];
 ?>
-<div class="orders view large-10 medium-10 columns content">
-    <h3><?= h($order->id) ?></h3>
+<div class="orders view large-10 medium-10 columns content ">
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+
+<h4><?= __('Order ID: '.$order->id) ?></h4>
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">    
     <table class="vertical-table">
-            <tr>
-            <th><?= __('Id') ?></th>
-            <td><?= $this->Number->format($order->id) ?></td>
-        </tr>
+      
+        
         <tr>
-            <th><?= __('CustomerId') ?></th>
-            <td><?= $this->Number->format($order->customerId) ?></td>
+            <th class="td-40"><?= __('Customer Name') ?></th>
+            <td><?= h($order->customer->firstName.' '.$order->customer->lastName) ?></td>
         </tr>
         <tr>
             <th><?= __('Address') ?></th>
@@ -25,29 +26,41 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             <th><?= __('Longitude') ?></th>
             <td><?= h($order->longitude) ?></td>
         </tr>-->
-        
-        <tr>
-            <th><?= __('PaymentStatus') ?></th>
-            <td><?= h($payment_status[$order->paymentStatus]) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Status') ?></th>
-            <td><?= h($status[$order->status]) ?></td>
-        </tr>
         <tr>
             <th><?= __('City') ?></th>
             <td><?= h($order->cid->cname) ?></td>
         </tr>
         <tr>
-            <th><?= __('CallcenterId') ?></th>
+            <th><?= __('Callcenter Name') ?></th>
             <?php $call_name=$order->callcenter->firstName.' '.$order->callcenter->lastName;?>
             <td><?= h($call_name) ?></td>
         </tr>
         <tr>
-            <th><?= __('DeliveryId') ?></th>
+            <th><?= __('Delivery name') ?></th>
             <?php $delivery_name=$order->delivery->firstName.' '.$order->delivery->lastName; ?>
             <td><?= h($delivery_name) ?></td>
         </tr>
+                <tr>
+            <th>&nbsp;</th>
+            <td></td>
+        </tr>
+          <tr>
+            <th><?= __('Created') ?></th>
+            <td><?= h($order->created) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Modified') ?></th>
+            <td><?= h($order->modified) ?></td>
+        </tr>
+        
+
+
+    </table>
+    </div>
+    <div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
+    
+    <table class="vertical-table">
+             
         <tr>
             <th><?= __('SubTotal') ?></th>
             <td><?= $this->Number->format($order->subTotal) ?></td>
@@ -68,15 +81,25 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             <th><?= __('Total') ?></th>
             <td><?= $this->Number->format($order->total) ?></td>
         </tr>
-        <tr>
-            <th><?= __('Created') ?></th>
-            <td><?= h($order->created) ?></td>
+         </tr>
+                <tr>
+            <th>&nbsp;</th>
+            <td></td>
         </tr>
         <tr>
-            <th><?= __('Modified') ?></th>
-            <td><?= h($order->modified) ?></td>
+            <th ><?= __('Order Status') ?></th>
+            <td><?= h($status[$order->status]) ?></td>
         </tr>
+        <tr>
+            <th><?= __('PaymentStatus') ?></th>
+            <td><?= h($payment_status[$order->paymentStatus]) ?></td>
+        </tr>
+        
+
     </table>
+    </div>
+    </div>
+    <div class="orders view large-12 medium-12 columns content div-left-pad-0 div-right-pad-0 div-top-pad-0">
     <h4><?= __('Products Details') ?></h4>
     <table cellpadding="0" cellspacing="0">
         <thead>
@@ -127,6 +150,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             </tr>
             <?php endforeach; ?>
         </table>
+        </div>
         <?php endif; ?>
     </div>-->
 </div>

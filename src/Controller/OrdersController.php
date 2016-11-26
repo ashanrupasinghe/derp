@@ -114,7 +114,9 @@ class OrdersController extends AppController {
 	 *
 	 * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
 	 */
-	public function add() {		
+	public function add() {
+
+		if($userLevel==1){
 		$session = $this->request->session ();
 		$client_id = $session->read ( 'Config.clientid' );		
 		$order = $this->Orders->newEntity ();
@@ -241,6 +243,10 @@ class OrdersController extends AppController {
 		
 		}else{
 			$this->redirect(['controller'=>'customers','action'=>'search']);
+		}
+		}else{
+			$this->Flash->error ( __ ( 'Please login as a callcenter, to add an order' ) );
+			$this->redirect(['controller'=>'orders','action'=>'index']);
 		}
 		
 	}

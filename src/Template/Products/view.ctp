@@ -1,27 +1,20 @@
+<?php
+$availability=['0'=>'Not available','1'=>'Available'];
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="products view large-10 medium-10 columns content">
-    <h3><?= h($product->name) ?></h3>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+    <h4><?= __('Product Name: '.$product->name) ?></h4>
+<div class="orders view large-2 medium-2 columns content div-top-pad-0 div-left-pad-0"> 
+<img src="img.jpg" height="100%">
+</div>    
+<div class="orders view large-5 medium-5 columns content div-top-pad-0 div-left-pad-0">     
     <table class="vertical-table">
-        <tr>
-            <th><?= __('Name') ?></th>
-            <td><?= h($product->name) ?></td>
-        </tr>
         <!--<tr>
-            <th><?= __('Availability') ?></th>
-            <td><?= h($product->availability) ?></td>
-        </tr>-->
-        <tr>
-            <th><?= __('Image') ?></th>
-            <td><?= h($product->image) ?></td>
-        </tr>
-        <!--<tr>
-            <th><?= __('Status') ?></th>
-            <td><?= h($product->status) ?></td>
-        </tr>
-        <tr>
             <th><?= __('Id') ?></th>
-            <td><?= $this->Number->format($product->id) ?></td>
+            <td><?= h($product->id) ?></td>
         </tr>-->
-        <tr>
+                <tr>
             <th><?= __('Price') ?></th>
             <td><?= $this->Number->format($product->price) ?></td>
         </tr>
@@ -29,19 +22,28 @@
             <th><?= __('Quantity type') ?></th>
             <td><?= h($package_type[$product->package]) ?></td>
         </tr>
-        <?php              
-        $i=1;
-        foreach($suppliers as $supplier){?>        	
-        	<tr>
-            <th><?php if($i==1):?><?= __('Suppliers') ?><?php endif;?></th>
-            <td><?php $name= $supplier->supp['firstName']." " .$supplier->supp['lastName']?>
-            <?= $this->Html->link(__($name), ['controller'=>'suppliers','action' => 'index']) ?>
-            </td>
+        <tr>
+            <th><?= __('Availability') ?></th>
+            <td><?= h($availability[$product->availability]) ?></td>
         </tr>
-      <?php 
-      $i++;
-       }
-        ?>
+        </table>
+</div>
+       <div class="orders view large-5 medium-5 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">   
+<table class="vertical-table"> 
+        <tr>
+            <th><?= __('Status') ?></th>
+            <td><?= h($status[$product->status]) ?></td>
+        </tr>
+        <!--<tr>
+            <th><?= __('Image') ?></th>
+            <td><?= h($product->image) ?></td>
+        </tr>-->
+                <tr>
+            <th><?= __('Description') ?></th>
+            <td><?= h($product->description) ?></td>
+        </tr>
+        
+        
         
        <!-- <tr>
             <th><?= __('SupplierId') ?></th>
@@ -56,10 +58,55 @@
             <td><?= h($product->modified) ?></td>
         </tr>-->
     </table>
-    <div class="row">
-        <h4><?= __('Description') ?></h4>
-        <?= $this->Text->autoParagraph(h($product->description)); ?>
-    </div>
+</div>
+</div>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+    <h4><?= __('Suppliers') ?></h4>
+    
+<?php
+$j=1;
+$size=sizeof($suppliers);
+foreach($suppliers as $supplier){
+if($j==1){?>
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">    
+<table class="vertical-table"> 
+<?php
+}
+if(($size/2)+1==$j){
+?>
+</table> 
+</div>
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">  
+<table class="vertical-table"> 
+<?php
+
+}
+?>
+<tr>
+
+            <td class="td-align-left"><?php $name= $supplier->supp['firstName']." " .$supplier->supp['lastName']?>
+            <?= $this->Html->link(__($name), ['controller'=>'suppliers','action' => 'index']) ?>
+            </td>
+        </tr>
+<?php
+if($size==$j){
+?>
+</table> 
+</div>
+
+<?php
+}
+
+$j++;
+
+}
+
+
+?>
+
+</div>
+
+
     <!--<div class="related">
         <h4><?= __('Related Order Products') ?></h4>
         <?php if (!empty($product->order_products)): ?>

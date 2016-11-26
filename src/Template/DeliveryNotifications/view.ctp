@@ -13,7 +13,9 @@ $status_sup=['0'=>'pending', '1'=>'available', '2'=>'not available', '3'=>'ready
 $status_del=['0'=>'pending','1'=>'took over'];
 ?>
 <div class="deliveryNotifications view large-10 medium-10 columns content">
-    <h4><?= __($deliveryNotification->id) ?></h4>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">  
+    <h4><?= __('Delivery Notification ID: '.$deliveryNotification->id) ?></h4>
     <table class="vertical-table">
                 <tr>
             <th><?= __('OrderId') ?></th>
@@ -23,14 +25,14 @@ $status_del=['0'=>'pending','1'=>'took over'];
             <th><?= __('SentFrom') ?></th>
             <td><?= h($deliveryNotification->sentFrom) ?></td>
         </tr>
-        <tr>
+        <!--<tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($deliveryNotification->id) ?></td>
         </tr>
         <tr>
             <th><?= __('Notification DeliveryId') ?></th>
             <td><?= $this->Number->format($deliveryNotification->deliveryId) ?></td>
-        </tr>
+        </tr>-->
 
         <tr>
             <th><?= __('Created') ?></th>
@@ -42,18 +44,20 @@ $status_del=['0'=>'pending','1'=>'took over'];
         </tr>
         <tr>
         <th><?= __('NotificationText') ?></th>
-        <td><?= $this->Text->autoParagraph(h($deliveryNotification->notificationText)); ?></td>
+        <td><?= h($deliveryNotification->notificationText); ?></td>
         </tr>
     </table>
+</div>    
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
 
-<hr>    
     <h4><?= __('Customer Details') ?></h4>
     <table class="vertical-table">
     <?php
     $name=$customer['order']['customer']['firstName']." ".$customer['order']['customer']['lastName'];
             $phone=$customer['order']['customer']['mobileNo'];
             $address=$customer['order']['address'];
-            
+            $city=$customer['order']['cid']['cname'];
+            $email=$customer['order']['customer']['email'];
             
     ?>
     <tr>
@@ -65,11 +69,21 @@ $status_del=['0'=>'pending','1'=>'took over'];
             <td><?= h($address) ?></td>
         </tr>
         <tr>
+            <th><?= __('City') ?></th>
+            <td><?= h($city) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Phone') ?></th>
             <td><?= h($phone) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Email') ?></th>
+            <td><?= h($email) ?></td>
         </tr>   
     </table>
-
+</div>
+</div>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
 <h4><?= __('Supplier Details') ?></h4>
     <table cellpadding="0" cellspacing="0">
         <thead>
@@ -106,5 +120,6 @@ $status_del=['0'=>'pending','1'=>'took over'];
             
             <?php endforeach; ?>
         </tbody>
-    </table>    
+    </table> 
+    </div>   
 </div>

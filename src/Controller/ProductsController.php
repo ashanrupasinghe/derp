@@ -45,7 +45,7 @@ class ProductsController extends AppController
      */
     public function view($id = null)
     {
-        $product = $this->Products->get($id, ['contain' => ['OrderProducts']]);
+        $product = $this->Products->get($id, ['contain' => ['OrderProducts','productSuppliers']]);
 		$package_type_query=$this->Products->packageType->find('list',['keyField'=>'id','valueField'=>'type']);
 		$package_type=$package_type_query->toArray();
 		$this->set('package_type',$package_type);
