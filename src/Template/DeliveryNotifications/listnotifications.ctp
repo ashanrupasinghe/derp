@@ -14,7 +14,7 @@ $status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('deliveryId') ?></th>
+                <!--<th><?= $this->Paginator->sort('deliveryId') ?></th>-->
                 <th><?= $this->Paginator->sort('sentFrom') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
@@ -28,8 +28,8 @@ $status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
             <?php foreach ($deliveryNotifications as $deliveryNotification): ?>
             <tr>
                 <td><?= $this->Number->format($deliveryNotification->id) ?></td>
-                <td><?= $this->Number->format($deliveryNotification->deliveryId) ?></td>
-                <td><?= h($deliveryNotification->sentFrom) ?></td>
+                <!--<td><?= $this->Number->format($deliveryNotification->deliveryId) ?></td>-->
+                <td><?php if($deliveryNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>
                 <td><?= h($deliveryNotification->created) ?></td>
                 <td><?= h($deliveryNotification->modified) ?></td>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>

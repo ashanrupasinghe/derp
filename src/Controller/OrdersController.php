@@ -47,7 +47,10 @@ class OrdersController extends AppController {
 	 * @return \Cake\Network\Response|null
 	 */
 	public function index() {
-		$orders = $this->paginate ( $this->Orders );
+		$orders = $this->paginate ( $this->Orders,['contain'=>'customers'] );
+		/* print '<pre>';
+		print_r($orders);
+		die(); */
 		$callcenter_query=$this->Orders->Callcenter->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
 							->join ( [
 				'table' => 'users',
@@ -97,12 +100,13 @@ class OrdersController extends AppController {
 						'delivery',
 						'customers',
 						'city',
-						'OrderProducts.Products' 
+						'OrderProducts.Products',
+						'OrderProducts.Products.packageType' 
 				] 
 		] );
-		/* print '<pre>';
+		/*  print '<pre>';
 		print_r($order);
-		die(); */
+		die();  */
 		$this->set ( 'order', $order );
 		$this->set ( '_serialize', [ 
 				'order' 
@@ -116,7 +120,7 @@ class OrdersController extends AppController {
 	 */
 	public function add() {
 
-		if($userLevel==1){
+		if($this->Auth->user ( 'user_type')==2){
 		$session = $this->request->session ();
 		$client_id = $session->read ( 'Config.clientid' );		
 		$order = $this->Orders->newEntity ();

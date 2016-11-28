@@ -3,7 +3,9 @@ $user_role=[1=>'Admin',2=>'Callcenter','Supplier','Delivery'];
 $status = ['0'=>'Desabled','1'=>'Active'];
 ?>
 <div class="users view large-10 medium-10 columns content">
-    <h3><?= h($user->id) ?></h3>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+    <h4><?= __('User ID: '.$user->id) ?></h4>
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">     
     <table class="vertical-table">
         <tr>
             <th><?= __('Username') ?></th>
@@ -38,7 +40,8 @@ $status = ['0'=>'Desabled','1'=>'Active'];
             <td><?= h($user->modified) ?></td>
         </tr>
     </table>
-    <div class="related">
+</div>    
+<!--    <div class="related">
         <h4><?= __('Related Callcenter') ?></h4>
         <?php if (!empty($user->callcenter)): ?>
         <table cellpadding="0" cellspacing="0">
@@ -74,8 +77,10 @@ $status = ['0'=>'Desabled','1'=>'Active'];
             <?php endforeach; ?>
         </table>
         <?php endif; ?>
+        </div>
     </div>
-    <div class="related">
+-->    
+    <!--<div class="related">
         <h4><?= __('Related Delivery') ?></h4>
         <?php if (!empty($user->delivery)): ?>
         <table cellpadding="0" cellspacing="0">
@@ -120,7 +125,8 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         </table>
         <?php endif; ?>
     </div>
-    <div class="related">
+-->    
+    <!--<div class="related">
         <h4><?= __('Related Suppliers') ?></h4>
         <?php if (!empty($user->suppliers)): ?>
         <table cellpadding="0" cellspacing="0">
@@ -169,4 +175,5 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         </table>
         <?php endif; ?>
     </div>
+    -->
 </div>

@@ -12,7 +12,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
         
         <tr>
             <th class="td-40"><?= __('Customer Name') ?></th>
-            <td><?= h($order->customer->firstName.' '.$order->customer->lastName) ?></td>
+            <td><?= $this->Html->link($order->customer->firstName.' '.$order->customer->lastName, ['controller' => 'Customers', 'action' => 'view', $order->customerId])?></td>
         </tr>
         <tr>
             <th><?= __('Address') ?></th>
@@ -33,12 +33,13 @@ $payment_status=['1'=>'pending','2'=>'paid'];
         <tr>
             <th><?= __('Callcenter Name') ?></th>
             <?php $call_name=$order->callcenter->firstName.' '.$order->callcenter->lastName;?>
-            <td><?= h($call_name) ?></td>
+            <td><?= $this->Html->link($call_name, ['controller' => 'Callcenter', 'action' => 'view', $order->callcenterId])?></td>
+
         </tr>
         <tr>
             <th><?= __('Delivery name') ?></th>
             <?php $delivery_name=$order->delivery->firstName.' '.$order->delivery->lastName; ?>
-            <td><?= h($delivery_name) ?></td>
+            <td><?= $this->Html->link($delivery_name, ['controller' => 'Delivery', 'action' => 'view', $order->deliveryId])?></td>
         </tr>
                 <tr>
             <th>&nbsp;</th>
@@ -106,6 +107,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             <tr>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Quantity') ?></th>
+                <th><?= __('Package') ?></th>
                 <th><?= __('Supplier') ?></th>
                 <th><?= __('Address') ?></th>
                 <th><?= __('phone') ?></th>
@@ -121,7 +123,8 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             <tr>
                 <td><?php echo $product['product']->name;?></td>
                 <td><?php echo $product['product_quantity']; ?></td>                
-                <td>-</td>
+                <td><?php echo $product['product']->package_type->type; ?></td>
+				<td>-</td>
 				<td>-</td>
 				<td>-</td>
                 </td>             

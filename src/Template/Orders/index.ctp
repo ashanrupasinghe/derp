@@ -20,8 +20,8 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <th><?= $this->Paginator->sort('city') ?></th>
                 <!--<th><?= $this->Paginator->sort('latitude') ?></th>
                 <th><?= $this->Paginator->sort('longitude') ?></th>-->
-                <th><?= $this->Paginator->sort('callcenterId') ?></th>
-                <th><?= $this->Paginator->sort('deliveryId') ?></th>
+                <th><?= $this->Paginator->sort('callcenter') ?></th>
+                <th><?= $this->Paginator->sort('delivery staff') ?></th>
                 <!--<th><?= $this->Paginator->sort('subTotal') ?></th>
                 <th><?= $this->Paginator->sort('tax') ?></th>
                 <th><?= $this->Paginator->sort('discount') ?></th>
@@ -37,14 +37,15 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
         <tbody>
             <?php foreach ($orders as $order): ?>
             <tr>
-                <td><?= $this->Number->format($order->id) ?></td>
-                <td><?= $this->Number->format($order->customerId) ?></td>
+                <td><?= $this->Number->format($order->id) ?></td>                
+                <td><?= $this->Html->link($order->customer['firstName'].' '.$order->customer['lastName'], ['controller' => 'Customers', 'action' => 'view', $order->customerId])?></td>
                 <!--<td><?= h($order->address) ?></td>-->
                 <td><?= h($cities[$order->city]) ?></td>
                 <!--<td><?= h($order->latitude) ?></td>
                 <td><?= h($order->longitude) ?></td>-->
-                <td><?= h($callcenters[$order->callcenterId]) ?></td>
-                <td><?=h($deliveries[$order->deliveryId]) ?></td>
+                <td><?= $this->Html->link($callcenters[$order->callcenterId], ['controller' => 'Callcenter', 'action' => 'view', $order->callcenterId])?></td>
+                
+                <td><?= $this->Html->link($deliveries[$order->deliveryId], ['controller' => 'Delivery', 'action' => 'view', $order->deliveryId])?></td>
                 <!--<td><?= $this->Number->format($order->subTotal) ?></td>
                 <td><?= $this->Number->format($order->tax) ?></td>
                 <td><?= $this->Number->format($order->discount) ?></td>
