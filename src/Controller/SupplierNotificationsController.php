@@ -63,8 +63,12 @@ class SupplierNotificationsController extends AppController
         //print '<pre>';
         //print_r($supplierNotificationx);
         //die();
-        $supplierNotification = $this->SupplierNotifications->get($id, [
+        /* $supplierNotification = $this->SupplierNotifications->get($id, [
         		'contain' => ['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType']]
+        ]); */
+        $supplierNotification = $this->SupplierNotifications->get($id, [
+        		'contain' =>['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID]],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType'],
+        		 
         ]);
         ///print_r($supplierNotification);
         //die();
@@ -109,9 +113,21 @@ class SupplierNotificationsController extends AppController
     			'contain' => ['Suppliers.OrderProducts']
     	])->orderId;
     	
-        $supplierNotification = $this->SupplierNotifications->get($id, [
+       /*  $supplierNotification = $this->SupplierNotifications->get($id, [
             'contain' => ['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType']]
-        ]);
+        ]); */
+    	
+    	$supplierNotification = $this->SupplierNotifications->get($id, [
+    			'contain' =>['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID]],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType'],
+    			
+    	]);
+        
+        
+        
+        
+       /*  print '<pre>';
+        print_r($supplierNotification);
+        die(); */
         
         if ($this->request->is(['patch', 'post', 'put'])) {
         	
@@ -198,7 +214,7 @@ class SupplierNotificationsController extends AppController
     	}
     	
     	
-        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders']]);
+        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['SupplierNotifications.created' => 'DESC']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

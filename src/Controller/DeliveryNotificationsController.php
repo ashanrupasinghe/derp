@@ -112,8 +112,8 @@ class DeliveryNotificationsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
         	
         	$data=$this->request->data();
-        	/* print '<pre>';
-        	print_r($data) */;
+        	 /* print '<pre>';
+        	print_r($data); */
         	//die();
         	
         	
@@ -127,13 +127,13 @@ class DeliveryNotificationsController extends AppController
         		//$mystatus_update[$i]=['id'=>$data['supid'][$i],'status_d'=>$data['mystatus'][$i]];
         		$mystatus_update[]=['order_id'=>$data['orderId'],'product_id'=>$data['productid'][$i],'status_d'=>$data['mystatus'][$i]];
         	}
-        	echo $data['status'];
+        	//echo $data['status'];
         	if ($count_took==sizeof($data['mystatus'])){
-        		if ($data['status']==0){
-        		$data['status']=1;//check
+        		if ($data['Order_Status']==1){
+        		$data['Order_Status']=4;//check
         		$orderstatus=4;	
         		}
-        		elseif ($data['status']==2){
+        		elseif ($data['Order_Status']==5){
         			$orderstatus=5;
         		}
         		
@@ -266,12 +266,12 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	}
     	
     	
- /*    	print '<pre>';
-    	echo $query;
-    	print_r($counted_data);
-    	echo $counted_data[56]['noOfProduct'].'<br>';
-    	echo $counted_data[56]['ready'];
-    	die(); */
+     	//print '<pre>';
+    	//echo $query;
+    	//print_r($counted_data);
+    	//echo $counted_data[56]['noOfProduct'].'<br>';
+    	//echo $counted_data[56]['ready'];
+    	//die(); 
     	$conditions=['deliveryId'=>$delivery['id']];
     	
     	if ($type!=""){
@@ -297,7 +297,7 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	//print_r( $counted_data);
     	//die();
     	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['deliveryId'=>$delivery['id']]]);
-    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['DeliveryNotifications.conditions'=>['deliveryId'=>$delivery['id']],'contain'=>['Orders']]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id']],'contain'=>['Orders'],'order' => ['DeliveryNotifications.created' => 'DESC']]);
     	/* print '<pre>';
     	print_r($deliveryNotifications);
     	die(); */

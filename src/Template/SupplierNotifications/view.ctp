@@ -68,7 +68,7 @@ $status_del=['0'=>'pending','1'=>'took over'];
 <?php        
 //print '<pre>';
 //print_r($supplierNotification->supplier->order_products[0]->supplier->order_products);
-foreach($supplierNotification->supplier->order_products[0]->supplier->order_products as $product){
+foreach($supplierNotification->supplier->order_products as $product){
 
 ?>
 

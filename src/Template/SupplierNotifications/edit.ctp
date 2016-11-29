@@ -43,8 +43,9 @@ $status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>
             </tr>
         </thead>
         <tbody>
-<?php foreach($supplierNotification->supplier->order_products[0]->supplier->order_products as $product){
-
+        
+<?php 
+foreach($supplierNotification->supplier->order_products as $product){
 ?>
 <tr><td><?= h($product['product']['id'])?></td>
 <td><?= h($product['product']['name'])?></td>

@@ -10,6 +10,20 @@ use App\Controller\AppController;
  * @property \App\Model\Table\SuppliersTable $Suppliers
  */
 class SuppliersController extends AppController {
+	public function isAuthorized($user)
+	{
+	
+	
+		// The owner of an article can edit and delete it
+		if (in_array($this->request->action, ['view'])) {
+	
+			if (isset($user['user_type']) && $user['user_type'] == 2) {
+				return true;
+			}
+		}
+	
+		return parent::isAuthorized($user);
+	}
 	
 	/**
 	 * Index method

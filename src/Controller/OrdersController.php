@@ -47,7 +47,7 @@ class OrdersController extends AppController {
 	 * @return \Cake\Network\Response|null
 	 */
 	public function index() {
-		$orders = $this->paginate ( $this->Orders,['contain'=>'customers'] );
+		$orders = $this->paginate ( $this->Orders,['contain'=>'customers','order' => ['Orders.created' => 'DESC']] );
 		/* print '<pre>';
 		print_r($orders);
 		die(); */
@@ -515,7 +515,7 @@ class OrdersController extends AppController {
 			$order->status=9;
 			if($this->Orders->save($order)){
 				$con_order_products=$this->Orders->OrderProducts->connection();
-				$stmt = $con_order_products->execute('UPDATE order_products SET status = ? WHERE order_id = ?',[9, $id]);
+				$stmt = $con_order_products->execute('UPDATE order_products SET status_s = ? WHERE order_id = ?',[9, $id]);
 /* 			$con_sup=$this->Orders->SupplierNotifications->connection();
 			$stmt = $con_sup->execute('UPDATE supplier_notifications SET status_s = ? WHERE orderId = ?',[9, $id]);
 			
