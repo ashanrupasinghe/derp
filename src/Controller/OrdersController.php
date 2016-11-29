@@ -221,17 +221,18 @@ class OrdersController extends AppController {
 		$client_data_query=$this->Orders->Customers->find('all',['conditions'=>['id'=>$client_id]])->select(['address','city'])->first();
 		$client_data=$client_data_query->toArray();
 		$this->set('client_data',$client_data);
+		
 		$callcenters = $this->Orders->Callcenter->find ()->select ( [ 
 				'id',
 				'firstName',
 				'lastName' 
-		] )->formatResults ( function ($results) {
+		] )->where(['status'=>1])->formatResults ( function ($results) {
 			/* @var $results \Cake\Datasource\ResultSetInterface|\Cake\Collection\CollectionInterface */
 			return $results->combine ( 'id', function ($row) {
 				return $row ['firstName'] . ' ' . $row ['lastName'];
 			} );
 		} );
-		$this->set ( compact ( 'callcenters' ) );
+		$this->set ( compact ( 'callcenters' ) );//callcenter staff dropdown
 		
 		//
 		
@@ -241,14 +242,14 @@ class OrdersController extends AppController {
 				'firstName',
 				'lastName',
 				'city.cname' 
-		] ) ->formatResults ( function ($results) {
+		] )->where(['status'=>1]) ->formatResults ( function ($results) {
 
 			return $results->combine ( 'id', function ($row) {
 				return $row ['firstName'] . ' ' . $row ['lastName'].' - '.$row['cid']['cname'];
 			} );
 		} ); 
 
-		$this->set ( compact ( 'deliveries' ) );
+		$this->set ( compact ( 'deliveries' ) );//delivery staff dropdown
 		
 		
 		$callcenterId = $this->Auth->user ( 'id' ); // get from session values
@@ -257,8 +258,8 @@ class OrdersController extends AppController {
 		$this->set ( compact ( 'callcenterId' ) );
 		
 		$productmodel=$this->loadModel('Products');
-		$products=$productmodel->find('list',['fields'=>['id','name']])->distinct(['name']);
-		$this->set ( 'products',$products );
+		$products=$productmodel->find('list',['fields'=>['id','name'],'conditions'=>['status'=>1]])->distinct(['name']);
+		$this->set ( 'products',$products );//product dropdown
 		
 		
 		$cities = $this->Orders->City->find ()->select ( [ 
@@ -628,7 +629,8 @@ public function productsuppliersbyid(){
 			'alias' => 'pack',
 			'type' => 'INNER',
 			'conditions' => 'products.package = pack.id'
-	] )/*  ->formatResults ( function ($results) {
+	] )
+	->where(['s.status'=>1])/*  ->formatResults ( function ($results) {
 			return $results->combine ( 'id', function ($row) {
 					return $row ['s']['firstName'] . ' ' . $row['s'] ['lastName'].' - '.$row['city']['cname'];
 					} );
