@@ -43,6 +43,10 @@ class OrderProductsTable extends Table
             'foreignKey' => 'product_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Suppliers', [
+        		'foreignKey' => 'supplier_id'
+        		
+        ]);
     }
 
     /**

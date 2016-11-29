@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-
+use Cake\Datasource\ConnectionManager;
 /**
  * SupplierNotifications Controller
  *
@@ -57,9 +57,18 @@ class SupplierNotificationsController extends AppController
      */
     public function view($id = null)
     {
+        $supplierNotification_orderID = $this->SupplierNotifications->get($id, [
+            'contain' => ['Suppliers.OrderProducts']
+        ])->orderId;
+        //print '<pre>';
+        //print_r($supplierNotificationx);
+        //die();
         $supplierNotification = $this->SupplierNotifications->get($id, [
-            'contain' => []
+        		'contain' => ['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType']]
         ]);
+        ///print_r($supplierNotification);
+        //die();
+        
 
         $this->set('supplierNotification', $supplierNotification);
         $this->set('_serialize', ['supplierNotification']);
@@ -96,12 +105,24 @@ class SupplierNotificationsController extends AppController
      */
     public function edit($id = null)
     {
+    	$supplierNotification_orderID = $this->SupplierNotifications->get($id, [
+    			'contain' => ['Suppliers.OrderProducts']
+    	])->orderId;
+    	
         $supplierNotification = $this->SupplierNotifications->get($id, [
-            'contain' => []
+            'contain' => ['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType']]
         ]);
+        
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $supplierNotification = $this->SupplierNotifications->patchEntity($supplierNotification, $this->request->data);
-            if ($this->SupplierNotifications->save($supplierNotification)) {
+        	
+        	$data=$this->request->data;
+        	$updatable_data=[];
+        	foreach ($data['mystatus'] as $product_id=>$product_status){
+        		$updatable_data[]=['order_id'=>$data['orderId'],'product_id'=>$product_id,'status_s'=>$product_status];
+        	}     
+        	$orderProductsModel=$this->loadModel('OrderProducts');
+        	$entities = $orderProductsModel->newEntities($updatable_data);//update multiple rows same time using saveMeny
+            if ($orderProductsModel->saveMany($entities)) {
                 $this->Flash->success(__('The supplier notification has been saved.'));
 
                 return $this->redirect(['action' => 'index']);

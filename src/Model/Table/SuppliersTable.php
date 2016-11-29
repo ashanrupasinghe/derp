@@ -39,6 +39,9 @@ class SuppliersTable extends Table
         $this->hasMany('productSuppliers', [
         		'foreignKey' => 'supplier_id'
         ]);
+        $this->hasMany('OrderProducts', [
+        		'foreignKey' => 'supplier_id'
+        ]);
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',

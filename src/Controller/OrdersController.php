@@ -101,8 +101,12 @@ class OrdersController extends AppController {
 						'customers',
 						'city',
 						'OrderProducts.Products',
-						'OrderProducts.Products.packageType' 
+						'OrderProducts.Products.packageType', 
+						'OrderProducts.Suppliers',
+						'OrderProducts.Suppliers.city'
 				] 
+				
+				
 		] );
 		/*  print '<pre>';
 		print_r($order);
@@ -138,24 +142,46 @@ class OrdersController extends AppController {
 			$suppliers_id=$order_data['product_supplier'];//send for email
 			$order = $this->Orders->patchEntity ( $order, $data );	
 			$saving=$this->Orders->save ( $order );				
-				
+			/* 	 print '<pre>';
+				print_r($order_data);
+				die();  */
 			if ($saving) {				
 				//$session->destroy('Config.clientid');
 				
 				//delevery notification
 				//$dilivery_id=$order->deliveryId;
+				//set delivery id, one order has one delivery person
 				$dilivery_notification=['deliveryId'=>$order->deliveryId,'notificationText'=>'del nofify','sentFrom'=>1,'orderId'=>$order->id];
 				//create array for order_pruducts table
 				$order_products=[];
 				//supplier noification
 				$supplier_notification=[];
+				$supplerids=array_values(array_unique($order_data['product_supplier']));//get uniqu values of supplier ids
 				
+			/* 	print '<pre>';
+				print_r($dilivery_notification);
+				print_r($order_products);
+				print_r($supplerids); 
+				
+				die();*/
+				//set order products array, one order has many products
 				  for($i=0;$i<sizeof($order_data['product_name']);$i++){
 				 	//order_pruducts table
-					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order_data['product_name'][$i],'product_quantity'=>$order_data['product_quantity'][$i]];
-					$supplier_notification[$i]=['supplierId'=>$order_data['product_supplier'][$i],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];					
+					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order_data['product_name'][$i],'product_quantity'=>$order_data['product_quantity'][$i],'supplier_id'=>$order_data['product_supplier'][$i]];
+										
 				}  
+				//set supplier notification array, one suplier has one notification per order
+				for($j=0; $j<sizeof($supplerids);$j++){
+					$supplier_notification[$j]=['supplierId'=>$supplerids[$j],'notificationText'=>'notify','sentFrom'=>1,'orderId'=>$order->id];
+				}
 				
+				
+	/* 			print '<pre>';
+				print_r($dilivery_notification);
+				print_r($order_products);
+				print_r($supplier_notification);
+				
+				die(); */
 				
 				//print_r($saving);
 				
@@ -172,7 +198,8 @@ class OrdersController extends AppController {
 				$dlilevery_notification_entity=$this->Orders->DeliveryNotifications->newEntity($dilivery_notification);
 				$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
 				
-				$this->sendToAll($order->id,'new', $suppliers_id, $delivery_id);
+				//$this->sendToAll($order->id,'new', $supplerids, $delivery_id);//send emails
+				$this->sendToAll2($order->id,'new', $supplerids, $delivery_id,$order_data);//send emails,product_name,product_quantity,product_supplier
 				
 				
 				$this->Flash->success ( __ ( 'The order has been saved.' ) );
@@ -486,18 +513,20 @@ class OrdersController extends AppController {
 		$x=$con->transactional(function (){ */
 			$order = $this->Orders->get ( $id );
 			$order->status=9;
-			if($this->Orders->save($order)){			
-			$con_sup=$this->Orders->SupplierNotifications->connection();
+			if($this->Orders->save($order)){
+				$con_order_products=$this->Orders->OrderProducts->connection();
+				$stmt = $con_order_products->execute('UPDATE order_products SET status = ? WHERE order_id = ?',[9, $id]);
+/* 			$con_sup=$this->Orders->SupplierNotifications->connection();
 			$stmt = $con_sup->execute('UPDATE supplier_notifications SET status_s = ? WHERE orderId = ?',[9, $id]);
 			
 			$con_del=$this->Orders->DeliveryNotifications->connection();
-			$stmt = $con_del->execute('UPDATE delivery_notifications SET status = ? WHERE orderId = ?',[9, $id]);
+			$stmt = $con_del->execute('UPDATE delivery_notifications SET status = ? WHERE orderId = ?',[9, $id]); */
 			
-			$suppliers_id=$this->Orders->SupplierNotifications->find('list',['keyField'=>'id','valueField'=>'supplierId'],['conditions'=>['orderId'=>$id]])->toArray();
+			 $suppliers_id=$this->Orders->SupplierNotifications->find('list',['keyField'=>'id','valueField'=>'supplierId'],['conditions'=>['orderId'=>$id]])->toArray();
 			$delivery_id=$this->Orders->SupplierNotifications->find('list',['keyField'=>'id','valueField'=>'deliveryId'],['conditions'=>['orderId'=>$id]])->toArray();
 			$suppliers_id=array_values($suppliers_id);
 			$delivery_id=array_values($delivery_id);
-			$this->sendToAll($id,'cancel', $suppliers_id, $delivery_id);
+			$this->sendToAll($id,'cancel', $suppliers_id, $delivery_id); 
 			/* } */
 /* 			
 		}); */
@@ -738,12 +767,230 @@ $supplier_email=array_values($supplier_email);
 //print_r( $supplier_email->toArray());
 //$all_email=array_merge($delivery_email,$supplier_email);
 //print_r($all_email);
-$this->sendemail($orderId,$type,$supplier_email,'sup','');
-$this->sendemail($orderId,$type,$delivery_email,'del','');
+$this->sendemail2($orderId,$type,$supplier_email,'sup','');
+$this->sendemail2($orderId,$type,$delivery_email,'del','');
 
 $this->redirect(['action'=>'index']);
 	 
 }
+
+
+public function deliveryEmail($orderdata){
+	
+	$orderId="<h4>Order ID: ".$orderId."</h4>";
+	$sup_string="<hr><br><table border='1'>".
+				"<tr>".
+				"<th>index</th>".
+				"<th>Product Id</th>".
+				"<th>Product name</th>".
+				"<th>Product price</th>".
+				"<th>Package</th>".
+				"<th>Quantity</th>".
+				"<th>Ammount</th>".
+				"<th>Supplier Id</th>".
+				"<th>Supplier name</th>".
+				"<th>Address</th>".
+				"<th>City</th>".
+				/* "<th>Email</th>". */
+				"<th>Contact No.</th>".
+				"<th>Mobile No.</th></tr>";
+	$sup_string_end="</table>";
+	$row="";
+	//print '<pre>';
+	$products_model=$this->loadModel('Products');
+	$suppliers_model=$this->loadModel('Suppliers');
+	//product_name,product_quantity,product_supplier
+	for($i=0;$i<sizeof($orderdata['product_name']);$i++){
+		$product_details=$products_model->get($orderdata['product_name'][$i],['contain'=>['packageType']]);
+		$quntity=$orderdata['product_quantity'][$i];
+		$supplier_details=$suppliers_model->get($orderdata['product_supplier'][$i],['contain'=>'city']);
+		
+		$row.="<tr style='min-height:35px'>";
+		$row.="<td>".($i+1)."</td>";
+		$row.="<td>".$product_details->id."</td>";//product id
+		$row.="<td>".$product_details->name."</td>";//name
+		$row.="<td>".$product_details->price."</td>";//price of a unit
+		$row.="<td>".$product_details->package_type->type."</td>";//unit
+		$row.="<td>".$quntity."</td>";//number of unit ordered
+		$row.="<td>".$product_details->price*$quntity."</td>";//price for the orderd quantity
+		$row.="<td>".$supplier_details->id."</td>";//price for the orderd quantity
+		$row.="<td>".$supplier_details->firstName." ".$supplier_details->lastName."</td>";//name
+		$row.="<td>".$supplier_details->address."</td>";//address
+		$row.="<td>".$supplier_details->cid->cname."</td>";//city
+		/* $row.="<td>".$supplier_details->email."</td>";//email */
+		$row.="<td>".$supplier_details->contactNo."</td>";//contact
+		$row.="<td>".$supplier_details->mobileNo."</td>";//mobile
+		$row.="</tr>";		
+}
+	$countedval=$this->processdata($orderdata);
+	
+		
+	$sub_total=$countedval['subTotal'];
+	$total=$countedval['total'];
+	$tax=$countedval['tax'];
+	$discount=$countedval['discount'];
+	$tax=$countedval['tax'];
+	
+	$total_string="<br><table border='1'><tr>".
+				"<th>Sub Total</th>".
+				"<td>".$sub_total."</td></tr>".
+				"<tr><th>Tax</th>".
+				"<td>".$tax."</td></tr>".
+				"<tr><th>Discount</th>".
+				"<td>".$discount."</td></tr>".
+				"<tr><th>Total</th>".
+				"<td>".$total."</td></tr>".
+				  "</tr></table><br><hr>";
+	
+	echo $orderId.$sup_string.$row.$sup_string_end.$total_string;
+	
+	die();
+	
+	
+/*	
+	
+	//admin. customer, suppliers, delever
+	$delivery_email=$this->Orders->DeliveryNotifications->Delivery->find('list',['keyField'=>'id','valueField'=>'email'],['conditions'=>['id'=>$delivery]])->toArray();
+	$delivery_email=array_values($delivery_email);//get only values from associative array,
+
+	//print_r( $delivery_email->toArray());
+	$supplier_email=$this->Orders->SupplierNotifications->Suppliers->find('list',['keyField'=>'id','valueField'=>'email'],['conditions'=>['id'=>$suppliers]])->toArray();
+	$supplier_email=array_values($supplier_email);
+	//print_r( $supplier_email->toArray());
+	//$all_email=array_merge($delivery_email,$supplier_email);
+	//print_r($all_email);
+	$this->sendemail($orderId,$type,$supplier_email,'sup','');
+	$this->sendemail($orderId,$type,$delivery_email,'del','');
+
+	$this->redirect(['action'=>'index']);
+*/
+}
+
+//new order information email
+public function sendToAll2($orderId,$trype,$suppliers,$delivery,$orderdata){
+	
+	
+	$products_model=$this->loadModel('Products');
+	$suppliers_model=$this->loadModel('Suppliers');
+	$delivery_model=$this->loadModel('Delivery');
+	
+	$countedval=$this->processdata($orderdata);
+	
+	
+	$sub_total=$countedval['subTotal'];
+	$total=$countedval['total'];
+	$tax=$countedval['tax'];
+	$discount=$countedval['discount'];
+	$tax=$countedval['tax'];
+	
+	$total_string="<br><table border='1'><tr>".
+			"<th>Sub Total</th>".
+			"<td>".$sub_total."</td></tr>".
+			"<tr><th>Tax</th>".
+			"<td>".$tax."</td></tr>".
+			"<tr><th>Discount</th>".
+			"<td>".$discount."</td></tr>".
+			"<tr><th>Total</th>".
+			"<td>".$total."</td></tr>".
+			"</tr></table><br><hr>";
+	
+	$orderId="<h4>Order ID: ".$orderId."</h4>";
+	$sup_string="<hr><br><table border='1'>".
+			"<tr>".
+			/* "<th>#</th>". */
+			"<th>Supplier Id</th>".
+			"<th>Supplier name</th>".
+			"<th>Address</th>".
+			"<th>City</th>".
+			/* "<th>Email</th>". */
+			"<th>Contact No.</th>".
+			"<th>Mobile No.</th>".
+			"<th>Product Id</th>".
+			"<th>Product name</th>".
+			"<th>Product price</th>".
+			"<th>Package</th>".
+			"<th>Quantity</th>".
+			"<th>Ammount</th>".
+			"</tr>";
+	$sup_string_end="</table>";
+	$row="";
+	$supliers_email=[];
+	$delivery_mail=[];
+	$delivery_mail_string=$orderId.$sup_string;
+	
+	foreach ($suppliers as $suplier){
+		$count=1;
+		$sup_email="";
+		for($i=0;$i<sizeof($orderdata['product_name']);$i++){
+			if($suplier==$orderdata['product_supplier'][$i]){
+				$product_details=$products_model->get($orderdata['product_name'][$i],['contain'=>['packageType']]);
+				$quntity=$orderdata['product_quantity'][$i];
+				$supplier_details=$suppliers_model->get($orderdata['product_supplier'][$i],['contain'=>'city']);
+				
+				
+		$row.="<tr style='min-height:35px'>";
+		$colspan=1;
+		if ($count==1){
+			
+		/* $row.="<td rowspan='2'>".($i+1)."</td>"; */
+		
+		
+			$row.="<td rowspan='".$colspan."'>".$supplier_details->id."</td>";//price for the orderd quantity
+			$row.="<td rowspan='".$colspan."'>".$supplier_details->firstName." ".$supplier_details->lastName."</td>";//name
+			$row.="<td rowspan='".$colspan."'>".$supplier_details->address."</td>";//address
+			$row.="<td rowspan='".$colspan."'>".$supplier_details->cid->cname."</td>";//city
+			/* $row.="<td>".$supplier_details->email."</td>";//email */
+			$row.="<td rowspan='".$colspan."'>".$supplier_details->contactNo."</td>";//contact
+			$row.="<td rowspan='".$colspan."'>".$supplier_details->mobileNo."</td>";//mobile
+			$sup_email=$supplier_details->email;
+		}else{
+			$row.="<td></td><td></td><td></td><td></td><td></td><td></td>";
+		}
+		
+		$row.="<td>".$product_details->id."</td>";//product id
+		$row.="<td>".$product_details->name."</td>";//name
+		$row.="<td>".$product_details->price."</td>";//price of a unit
+		$row.="<td>".$product_details->package_type->type."</td>";//unit
+		$row.="<td>".$quntity."</td>";//number of unit ordered
+		$row.="<td>".$product_details->price*$quntity."</td>";//price for the orderd quantity
+		 
+		$row.="</tr>";
+					
+				
+				 $count++;
+			}
+			
+		}
+		$colspan=$count;
+		$delivery_mail_string.=$row;
+		$supliers_email[$sup_email]= $orderId.$sup_string.$row.$sup_string_end;
+		$row="";
+	}
+	$delivery_mail_string.=$sup_string_end.$total_string;
+	$delivery_mail_addrrss=$delivery_model->get($delivery,['fields'=>['email']]);
+	//echo $delivery_mail_addrrss['email'];
+	
+	$delivery_mail[$delivery_mail_addrrss['email']]=$delivery_mail_string;
+	/* print_r($emails[4]);
+	print_r($emails[3]);
+	echo $delivery_mail_string; 
+	die();
+	*/
+	/*  print '<pre>';
+	 
+	print_r(['del'=>$delivery_mail,'sup'=>$supliers_email]);
+	die();  */
+	
+	//return ['del'=>$delivery_mail,'sup'=>$supliers_email];
+/* 	print_r($supliers_email);
+	print_r($delivery_mail); */
+	
+	$this->sendemail('new', $supliers_email, 'sup');//suppliers email
+	$this->sendemail('new', $delivery_mail, 'del');//delivery email
+	//die();
+	
+}
+
 /*
  * $orderid:order ID
  * $type:new/cancel
@@ -751,9 +998,10 @@ $this->redirect(['action'=>'index']);
  * $recipient_type:sup/del
  * $products: product array, currently can send @ proceed new order, cancelation cand
  * */
-public function sendemail($orderid,$type='new',$recipients,$recipient_type,$products=""){
+public function sendemail($type='new',$recipients,$recipient_type){
 	$subject="";
 	$message="";
+	$message_full="";
 	$hello="Hello ";
 	if ($recipient_type=='del'){
 		$hello.="Delevery person,\n";
@@ -763,19 +1011,68 @@ public function sendemail($orderid,$type='new',$recipients,$recipient_type,$prod
 	
 	if ($type=='new'){
 		$subject="New Order Notification";
+		$message=$hello."New order has been made,\n";
+	}
+	elseif ($type=='cancel'){
+		$subject="Order Cancellation";
+		$message=$hello."Cancelled a order,\n";
+	}
+	$message_end="\nPlease check the system for more details";
+	
+	foreach ($recipients as $email_add=>$message_body){
+		$message_full=$message.$message_body.$message_end;
+		
+		//echo 'xxx'.$email.'<br>'.$message_full;
+		
+		 $email = new Email('default');
+		$email->from(['spanrupasinghe11@gmail.com' => 'Direct2door.com'])
+		->to($email_add)
+		->subject($subject)
+		->emailFormat('html')
+		->send($message_full); 
+		$message_full="";
+	}
+	
+	
+	
+	
+	
+	
+}
+
+
+/*
+ * $orderid:order ID
+ * $type:new/cancel
+ * $recipients:array with [email=>message] address
+ * $recipient_type:sup/del
+ * $products: product array, currently can send @ proceed new order, cancelation cand
+ * */
+public function sendemail2($orderid,$type='new',$recipients,$recipient_type){
+	$subject="";
+	$message="";
+	$hello="Hello ";
+	if ($recipient_type=='del'){
+		$hello.="Delevery person,\n";
+	}elseif ($recipient_type=='sup'){
+		$hello.="Supplier,\n";
+	}
+
+	if ($type=='new'){
+		$subject="New Order Notification";
 		$message=$hello."New order has been made,\nOrder ID: ".$orderid." \nPlease check the system for more details";
 	}
 	elseif ($type=='cancel'){
 		$subject="Order Cancellation";
 		$message=$hello."Cancelled a order,\nOrder ID: ".$orderid." \nPlease check the system for more details";
 	}
-	
+
 	$email = new Email('default');
 	$email->from(['spanrupasinghe11@gmail.com' => 'Direct2door.com'])
 	->to($recipients)
 	->subject($subject)
 	->send($message);
-	
+
 }
 
 

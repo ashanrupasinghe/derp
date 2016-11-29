@@ -111,7 +111,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
                 <th><?= __('Supplier') ?></th>
                 <th><?= __('Address') ?></th>
                 <th><?= __('phone') ?></th>
-                <th><?= __('status') ?></th>
+<!--                <th><?= __('status') ?></th>-->
 
 
             </tr>
@@ -124,10 +124,11 @@ $payment_status=['1'=>'pending','2'=>'paid'];
                 <td><?php echo $product['product']->name;?></td>
                 <td><?php echo $product['product_quantity']; ?></td>                
                 <td><?php echo $product['product']->package_type->type; ?></td>
-				<td>-</td>
-				<td>-</td>
-				<td>-</td>
-                </td>             
+				
+				<td><?php echo $this->Html->link($product['supplier']->firstName.' '.$product['supplier']->lastName, ['controller' => 'Suppliers', 'action' => 'view', $product['supplier']->id])?></td>
+				<td><?php echo $product['supplier']->address.'<br><br>'.$product['supplier']->cid->cname; ?></td>
+				<td><?php echo $product['supplier']->contactNo.'<br>'.$product['supplier']->mobileNo; ?></td>
+                            
             </tr>
             
             <?php endforeach; ?>

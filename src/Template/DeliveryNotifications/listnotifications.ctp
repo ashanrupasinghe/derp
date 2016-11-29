@@ -19,8 +19,8 @@ $status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <th><?= __('Ready') ?></th>
-                <th><?= $this->Paginator->sort('status') ?></th>
+                <!--<th><?= __('Ready') ?></th>-->
+                <!--<th><?= $this->Paginator->sort('status') ?></th>-->
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -33,8 +33,8 @@ $status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
                 <td><?= h($deliveryNotification->created) ?></td>
                 <td><?= h($deliveryNotification->modified) ?></td>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
-                <td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>
-                <td><?= h($status[$deliveryNotification->status]) ?></td>
+                <!--<td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>-->
+                <!--<td><?= h($status[$deliveryNotification->status]) ?></td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $deliveryNotification->id],['class'=>'x-btn x-btn-primary']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $deliveryNotification->id],['class'=>'x-btn x-btn-warning']) ?>

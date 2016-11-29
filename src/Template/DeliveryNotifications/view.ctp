@@ -90,28 +90,28 @@ $status_del=['0'=>'pending','1'=>'took over'];
             <tr>
                 <th><?= __('Supplier name') ?></th>
                 <th><?= __('Address') ?></th>
-                <th><?= __('City') ?></th>
+                <!--<th><?= __('City') ?></th>-->
                 <th><?= __('Phone') ?></th>
                 <th><?= __('product name') ?></th>
                 <th><?= __('Quantity') ?></th>
+                <th><?= __('Package')?></th>
                 <th><?= __('Supplier status') ?></th>
                 <th><?= __('My Status') ?></th>
 
             </tr>
         </thead>
         <tbody>
-            <?php foreach($suppliers['order']['supplier_notifications'] as $supplier): 
+            <?php foreach($suppliers['order']['order_products'] as $supplier): 
            
             ?>                       
             <tr>
                 <td><?php echo $supplier['supplier']['firstName']." ".$supplier['supplier']['lastName'];?></td>
-                <td><?php echo $supplier['supplier']['address']; ?></td>
-                <td><?php echo $supplier['supplier']['cid']['cname']; ?></td>
+                <td><?php echo $supplier['supplier']['address']."<br><br>".$supplier['supplier']['cid']['cname']; ?></td>
+                <!--<td><?php echo $supplier['supplier']['cid']['cname']; ?></td>-->
                 <td><?php echo $supplier['supplier']['mobileNo']."<br>".$supplier['supplier']['contactNo'];?></td>
-                
-                
-                <td>-</td>
-                <td>-</td>
+                <td><?php echo $supplier['product']['name']; ?></td>
+                <td><?php echo $supplier['product_quantity']; ?></td>
+                <td><?php echo $supplier['product']['package_type']['type']; ?></td>
                 <td><?php echo $this->Form->input('suplier status',['options'=>$status_sup,'default'=>$supplier['status_s'],'disabled'=>true,'disabled'=>true]);?></td>                
                 <td><?php echo $this->Form->input('my status',['options'=>$status_del,'default'=>$supplier['status_d'],'name'=>'mystatus[]','disabled'=>true]);?>
                 

@@ -10,7 +10,7 @@
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <th><?= $this->Paginator->sort('status') ?></th>
+                <!--<th><?= $this->Paginator->sort('status') ?></th>-->
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -23,7 +23,7 @@
                 <td><?= h($supplierNotification->created) ?></td>
                 <td><?= h($supplierNotification->modified) ?></td>
                 <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
-                <td><?= h($status[$supplierNotification->status_s]) ?></td>
+                <!--<td><?= h($status[$supplierNotification->status_s]) ?></td>-->
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning']) ?>
