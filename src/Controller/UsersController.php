@@ -151,10 +151,15 @@ class UsersController extends AppController
     		if ($this->request->is('post')) {
     			$user = $this->Auth->identify();
     			if ($user) {
+    				if ($user['status']==1){
     				$this->Auth->setUser($user);
     				return $this->redirect($this->Auth->redirectUrl());
-    			}
+    				}else{
+    					$this->Flash->error(__('Your account has been disabled'));
+    				}
+    			}else{
     			$this->Flash->error(__('Invalid username or password, try again'));
+    			}
     		}
     	}
     	else{
