@@ -237,22 +237,35 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     		$where=" WHERE t.noOfProduct=t.ready";
     		
     	}
-    	$query="SELECT t.* FROM (SELECT dn.*,count(*) noOfProduct,".
+    	/* $query="SELECT t.* FROM (SELECT dn.*,count(*) noOfProduct,".
     			"sum(case when sn.status_s = 3 then 1 else 0 end) ready,".
     			" sum(case when sn.status_s = 4 then 1 else 0 end) handovered".
     			" FROM delivery_notifications dn".
     			" JOIN supplier_notifications sn ON dn.orderId=sn.orderId".
     			" WHERE dn.deliveryId=".$delivery['id'].
     			" group by sn.orderId) as t".
+    			$where; */
+    	
+    	$query="SELECT t.* FROM (SELECT dn.*,count(*) noOfProduct,".
+    			"sum(case when op.status_s = 3 then 1 else 0 end) ready,".
+    			" sum(case when op.status_s = 4 then 1 else 0 end) handovered".
+    			" FROM delivery_notifications dn".
+    			" JOIN order_products op ON dn.orderId=op.order_id".
+    			" WHERE dn.deliveryId=".$delivery['id'].
+    			" group by op.order_id) as t".
     			$where;
+    	
     	
     	$connection = ConnectionManager::get('default');
     	$results = $connection->execute($query)->fetchAll('assoc');
     	
     	$counted_data=[];
-    	foreach ($results as $result){
+    	//print '<pre>';
+    	foreach ($results as $result){    		
     		$counted_data[$result['orderId']]=$result;
     	}
+    	
+    	
  /*    	print '<pre>';
     	echo $query;
     	print_r($counted_data);
