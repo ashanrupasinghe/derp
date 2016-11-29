@@ -198,7 +198,7 @@ class SupplierNotificationsController extends AppController
     	}
     	
     	
-        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>$conditions]);
+        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

@@ -1,4 +1,7 @@
-<?php $status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled'];?>
+<?php 
+//$status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled'];
+$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed', '9'=>'canceled'];
+?>
 <div class="supplierNotifications index large-10 medium-10 columns content">
     <h3><?= __('Supplier Notifications') ?></h3>
     <table cellpadding="0" cellspacing="0">
@@ -10,7 +13,7 @@
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <!--<th><?= $this->Paginator->sort('status') ?></th>-->
+                <th><?= $this->Paginator->sort('status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
@@ -23,7 +26,8 @@
                 <td><?= h($supplierNotification->created) ?></td>
                 <td><?= h($supplierNotification->modified) ?></td>
                 <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
-                <!--<td><?= h($status[$supplierNotification->status_s]) ?></td>-->
+                <?php ?><td><?= h($status[$supplierNotification['order']->status]) ?></td><?php ?>
+                
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning']) ?>

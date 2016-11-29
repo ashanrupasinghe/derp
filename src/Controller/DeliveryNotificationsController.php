@@ -297,7 +297,7 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	//print_r( $counted_data);
     	//die();
     	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['deliveryId'=>$delivery['id']]]);
-    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>$conditions]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['DeliveryNotifications.conditions'=>['deliveryId'=>$delivery['id']],'contain'=>['Orders']]);
     	/* print '<pre>';
     	print_r($deliveryNotifications);
     	die(); */
