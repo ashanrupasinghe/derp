@@ -18,6 +18,47 @@ padding-bottom: 9px;
     <?= $this->Form->create($order,['id'=>'order']) ?>
     <fieldset>
         <legend><?= __('Add Order') ?></legend>
+        
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+<?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name_list[]','required'=>true,'multiple'=>'multiple', 'id'=>'product-list']);?>
+
+</div> 
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+<div class="orders view large-10 medium-10 columns content div-top-pad-0 div-left-pad-0"> 
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
+			<div class="dynamic-fields-product-list"></div>			
+</div>
+<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">	
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">		
+			<?php
+            echo $this->Form->input('subTotal',['disabled'=>true]);
+            echo $this->Form->input('tax',['disabled'=>true]);
+            echo $this->Form->input('discount',['disabled'=>true]);?>
+	            
+          <?php  echo $this->Form->input('couponCode');
+            
+            echo $this->Form->input('total',['disabled'=>true]);
+
+        ?>
+</div>        
+<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
+			 <?php
+			            $payment_status=['1'=>'pending','2'=>'paid'];
+            //echo $this->Form->input('paymentStatus');
+            echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);
+            //echo $this->Form->input('status');
+            $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];
+            echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
+			echo $this->Form->input('callcenterId',['empty'=>'select callcenter','options'=>$callcenters,'disabled' => true,'default' =>$callcenterId,'name'=>'callcenterIdDisables','id'=>'callcenterIdDisables']);
+			echo $this->Form->input('callcenterId',['empty'=>'select callcenter','options'=>$callcenters,'disabled' => false,'type'=>'hidden','default' =>$callcenterId]);
+			echo $this->Form->input('deliveryId',['empty'=>'select deliver','options'=>$deliveries]);
+			?>
+			
+</div>
+</div>        
+</div> 
+
+<div class="orders view large-2 medium-2 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
 <div>        
         <?php       	
         	echo $this->Form->input('editorder',['disabled'=>false,'type'=>'hidden','id'=>'edit-order-suppliers','default'=>0]);
@@ -29,13 +70,15 @@ padding-bottom: 9px;
             echo $this->Form->input('longitude');
             //echo $this->Form->input('callcenterId');
             //echo $this->Form->input('deliveryId');			
-			echo $this->Form->input('callcenterId',['empty'=>'select callcenter','options'=>$callcenters,'disabled' => true,'default' =>$callcenterId,'name'=>'callcenterIdDisables','id'=>'callcenterIdDisables']);
-			echo $this->Form->input('callcenterId',['empty'=>'select callcenter','options'=>$callcenters,'disabled' => false,'type'=>'hidden','default' =>$callcenterId]);
-			echo $this->Form->input('deliveryId',['empty'=>'select deliver','options'=>$deliveries]);
-			
+
 			?>
-</div>			
+</div>
+</div>
+
+</div>       
+			
 			<!--dinamic fields-->
+<?php /* ?>			
 <div class="large-12 medium-12 columns" style="padding-left: 0px;padding-right: 0px;">			
 	<div id="example-6" class="">
 	
@@ -75,24 +118,9 @@ padding-bottom: 9px;
 		</div>
 	</div>
 </div>
+<?php */?>
 <!--/..-->
-<div>			
-			<?php
-            echo $this->Form->input('subTotal',['disabled'=>true]);
-            echo $this->Form->input('tax',['disabled'=>true]);
-            echo $this->Form->input('discount',['disabled'=>true]);?>
-	            
-          <?php  echo $this->Form->input('couponCode');
-            
-            echo $this->Form->input('total',['disabled'=>true]);
-            $payment_status=['1'=>'pending','2'=>'paid'];
-            //echo $this->Form->input('paymentStatus');
-            echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);
-            //echo $this->Form->input('status');
-            $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];
-            echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
-        ?>
-</div>        
+       
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>
@@ -118,6 +146,52 @@ padding-bottom: 9px;
 		btnAdd:'#btnAdd-6',
 		btnRemove:'.btnRemove'
 	});
+	
+	
+  $('select').select2();
+ /* 
+  $(function () {
+  $('#product-list').on('change', function(e) {
+    var cacheEle = $('.dynamic-fields-product-list');
+    
+    $(this).find('option').each(function(index, element) {
+      if (element.selected) {
+        if (cacheEle.find('input[name="product_name\\[' + element.value + '\\]"]').length == 0) {
+        
+       // alert(element.value);
+          var row='<div class="group large-12 medium-12 columns prod" id="x-'+element.value+'">'+
+          			'<div class="large-3 medium-3 columns prod-left">'+
+          				'<input type="text" name="product_name[' + element.value + ']" value="' + element.text + '" disabled>'+
+          				'<select name="product_name[]" hidden><option value="'+element.value+'" selected>'+element.text+'</option></select>'+
+          			'</div>'+
+          			'<div class="large-2 medium-2 columns">'+
+          				'<input name="product_quantity[]" class="product-quantity" required="required" type="text">'+
+          			'</div>'+
+          			'<div class="large-2 medium-2 columns">'+
+          				'<input name="Package" disabled="disabled" class="packagetype" id="" type="text">'+
+          			'</div>'+
+          			'<div class="large-2 medium-2 columns">'+
+          				'<input name="Ammount" disabled="disabled" class="product-ammount" id="" type="text">'+
+          			'</div>'+
+          			'<div class="large-3 medium-3 columns sup-right">'+
+          				'<input type="text" name="product_supplier[]">'+
+          			'</div>'+
+          		   '</div>';
+          cacheEle.append(row)
+          //cacheEle.append('<select name="product_name[]"><option value="'+element.value+'">element.text</option></select>')
+        }
+      }  else {
+      
+      //alert(element.value+"-fuck");
+        var x=cacheEle.find('input[name="product_name\\[' + element.value + '\\]"]');
+        x.parent().parent().remove();
+        
+      }
+    });
+  });
+});
+*/
+
 </script>
 
 <!-- Place this tag right after the last button or just before your close body tag. -->

@@ -210,3 +210,6 @@ background-color:#e9595b;
 .td-align-left{
 	text-align: left !important;
 }
+
+input[type="text"].hiddenclass{display:none;}
+input[type="text"].showclass{display:block;}
