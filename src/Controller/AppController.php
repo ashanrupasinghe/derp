@@ -65,6 +65,7 @@ class AppController extends Controller
         $this->loadComponent('Auth',['authorize' => ['Controller']]);
 		$this->set('authUser', $this->Auth->user());//set a variable for view, for check userloged in or not
 		$this->set('userLevel', $this->Auth->user('user_type'));
+		$this->set('userName', $this->Auth->user('username'));
     }
     
 //    public function beforeFilter() {

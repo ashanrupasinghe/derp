@@ -1,35 +1,90 @@
-<div class="customers form large-10 medium-10 columns content">
-    <?= $this->Form->create(null, ['url' => ['action' => 'result']]) ?>
-    
-    <fieldset>
-        <legend><?= __('Search Customer') ?></legend>
-        <div class="large-10 medium-10 columns content">
-        <?php
-            echo $this->Form->input('Phone/ Name',['name'=>'s','id'=>'s','class'=>'big-search','style'=>'height: 100px;font-size: 50pt;']);            
-        ?>
-         </div>
-        <div class="large-2 medium-2 columns content">
-    <?= $this->Form->button(__('Search'),['style'=>'margin-top: 20px;height: 100px;padding-left: 45px;padding-right: 45px;']) ?>
-   </div>
-    
-    </fieldset>
-    
-    
-    <?= $this->Form->end() ?>
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Search Customer') ?><small> enter name or phone</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+<?= $this->Form->create(null, ['url' => ['action' => 'result']]) ?>
+<div class="form-group">
+                        
+
+                        <div class="col-sm-12">
+                          <div class="input-group">
+                            <input type="text" name="s" class="form-control big-search" style="height: 100px;font-size: 50pt;">
+                            <span class="input-group-btn">
+                                              
+                            <button class="btn btn-primary" style="height: 100px;padding-left: 45px;padding-right: 45px;" type="submit">Search</button>                  
+                                          </span>
+                          </div>
+                        </div>
+                      </div>
+
+
+<?php
+/*echo $this->Form->input('Phone/ Name',['name'=>'s','id'=>'s','class'=>'big-search','style'=>'height: 100px;font-size: 50pt;']);            
+?>   
+   
+<?= $this->Form->button(__('Search'),['style'=>'margin-top: 20px;height: 100px;padding-left: 45px;padding-right: 45px;']) ?>
+<?php */?>
+ <?= $this->Form->end() ?>  
+
+                  </div>
+                </div>
+              </div> 
+
+
+
 
 <?php
 $payment_status=['1'=>'pending','2'=>'paid'];
 $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];   
 ?>
 
-<?php //if($userLevel==1):?> <div class="pull-right" style="float: right;">
-        
-    </div><?php //endif;?>
-    <h3><?= __('Orders') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th><?= $this->Paginator->sort('id') ?></th>
+
+   
+    
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Orders') ?> <small>resently updated</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('customerId') ?></th>
                 <!--<th><?= $this->Paginator->sort('address') ?></th>-->
                 <th><?= $this->Paginator->sort('city') ?></th>
@@ -47,10 +102,10 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <!--<th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>-->
                 <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($orders as $order): ?>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($orders as $order): ?>
             <tr>
                 <td><?= $this->Number->format($order->id) ?></td>                
                 <td><?= $this->Html->link($order->customer['firstName'].' '.$order->customer['lastName'], ['controller' => 'Customers', 'action' => 'view', $order->customerId])?></td>
@@ -71,21 +126,29 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                <!-- <td><?= h($order->created) ?></td>
                 <td><?= h($order->modified) ?></td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $order->id],['class'=>'x-btn x-btn-primary']) ?>
-                    <?= $this->Form->postLink(__('Cancel'), ['action' => 'cancel', $order->id],['confirm' => __('Are you sure you want to Cancel # {0}?', $order->id),'class'=>'x-btn x-btn-warning']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $order->id], ['confirm' => __('Are you sure you want to delete # {0}?', $order->id),'class'=>'x-btn x-btn-danger']) ?>
+                    <?= $this->Html->link(__('View'), ['controller'=>'orders','action' => 'view', $order->id],['class'=>'x-btn x-btn-primary']) ?>
+                    <?= $this->Form->postLink(__('Cancel'), ['controller'=>'orders','action' => 'cancel', $order->id],['confirm' => __('Are you sure you want to Cancel # {0}?', $order->id),'class'=>'x-btn x-btn-warning']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['controller'=>'orders','action' => 'delete', $order->id], ['confirm' => __('Are you sure you want to delete # {0}?', $order->id),'class'=>'x-btn x-btn-danger']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
+                      </tbody>
+                    </table>
+                    
+                    <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->prev('< ' . __('previous')) ?>
             <?= $this->Paginator->numbers() ?>
             <?= $this->Paginator->next(__('next') . ' >') ?>
         </ul>
         <p><?= $this->Paginator->counter() ?></p>
-    </div>
+    </div>			  
 
-</div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
