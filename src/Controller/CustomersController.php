@@ -145,6 +145,42 @@ class CustomersController extends AppController {
 		$this->set ( compact ( 'cities' ) );
 	}
 	public function search() {
+		$ordersModel=$this->loadModel('Orders');
+		$orders = $this->paginate ( $ordersModel,['contain'=>'customers','order' => ['Orders.modified' => 'DESC'],'conditions'=>['Orders.status NOT IN'=>[6,9]]] );
+		/* print '<pre>';
+		 print_r($orders);
+		die(); */
+		$callcenter_query=$ordersModel->Callcenter->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
+		->join ( [
+				'table' => 'users',
+				'alias' => 'users',
+				'type' => 'INNER',
+				'conditions' => 'user_id = users.id'
+		] );
+		$callcenters=$callcenter_query->toArray();
+		
+		$this->set('callcenters',$callcenters);
+			
+		$delivery_query=$ordersModel->Delivery->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
+		->join ( [
+				'table' => 'users',
+				'alias' => 'users',
+				'type' => 'INNER',
+				'conditions' => 'user_id = users.id'
+		] );
+		$deliveries=$delivery_query->toArray();
+		
+		$this->set('deliveries',$deliveries);
+		
+		
+		$cities_query=$ordersModel->City->find('list',['keyField'=>'cid','valueField'=>'cname']);
+		$city=$cities_query->toArray();
+		$this->set('cities',$city);
+		
+		$this->set ( compact ( 'orders' ) );
+		$this->set ( '_serialize', [
+				'orders'
+		] );
 		
 		/*
 		 * $customer = $this->Customers->get($phone_name);

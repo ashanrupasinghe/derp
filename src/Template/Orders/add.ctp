@@ -117,8 +117,15 @@ padding-bottom: 9px;
 		</div>
 	</div>
 </div>
+
 <?php */?>
 <!--/..-->
+<div class="large-12 medium-12 columns" style="padding-left: 0px;padding-right: 0px;">
+<div class="orders view large-4 medium-4 columns content div-top-pad-0 div-left-pad-0"><input type="date" name="del-date"></div>		
+<div class="orders view large-4 medium-4 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0"><input type="text" name="del-time"></div>
+<div class="orders view large-4 medium-4 columns content div-top-pad-0 div-right-pad-0"><textarea name="del-note">he</textarea></div>
+
+<div>
        
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

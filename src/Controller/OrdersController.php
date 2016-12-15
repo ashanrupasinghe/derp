@@ -748,6 +748,9 @@ public function processdata($data){
 			'couponCode'=>$data['couponCode'],
 			
 			'total'=>$total,
+			'deliveryDate'=>$data['del-date'],
+			'deliveryTime'=>$data['del-time'],
+			'note'=>$data['del-note'],
 			'paymentStatus'=>$data['paymentStatus'],
 			'status'=>$data['status']
 	];
