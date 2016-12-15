@@ -21,15 +21,11 @@ padding-bottom: 9px;
         
 <div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
 <?php echo $this->Form->input('Orders.products_id',['empty'=>'select product','options'=>$products,'name'=>'product_name_list[]','required'=>true,'multiple'=>'multiple', 'id'=>'product-list']);?>
-
+			<div class="dynamic-fields-product-list"></div>
 </div> 
 <div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
-<div class="orders view large-10 medium-10 columns content div-top-pad-0 div-left-pad-0"> 
-<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
-			<div class="dynamic-fields-product-list"></div>			
-</div>
-<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">	
-<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">		
+
+<div class="orders view large-4 medium-4 columns content div-top-pad-0 div-left-pad-0">		
 			<?php
             echo $this->Form->input('subTotal',['disabled'=>true]);
             echo $this->Form->input('tax',['disabled'=>true]);
@@ -41,7 +37,7 @@ padding-bottom: 9px;
 
         ?>
 </div>        
-<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
+<div class="orders view large-4 medium-4 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
 			 <?php
 			            $payment_status=['1'=>'pending','2'=>'paid'];
             //echo $this->Form->input('paymentStatus');
@@ -55,11 +51,9 @@ padding-bottom: 9px;
 			?>
 			
 </div>
-</div>        
-</div> 
 
-<div class="orders view large-2 medium-2 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">
-<div>        
+<div class="orders view large-4 medium-4 columns content div-top-pad-0 div-right-pad-0">
+     
         <?php       	
         	echo $this->Form->input('editorder',['disabled'=>false,'type'=>'hidden','id'=>'edit-order-suppliers','default'=>0]);
             echo $this->Form->input('customerId',['value'=>$clientid,'disabled'=>'true']);
@@ -72,8 +66,13 @@ padding-bottom: 9px;
             //echo $this->Form->input('deliveryId');			
 
 			?>
+
 </div>
-</div>
+
+
+
+
+
 
 </div>       
 			

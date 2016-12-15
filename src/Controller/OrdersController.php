@@ -630,7 +630,8 @@ public function productsuppliersbyid(){
 			'type' => 'INNER',
 			'conditions' => 'products.package = pack.id'
 	] )
-	->where(['s.status'=>1])/*  ->formatResults ( function ($results) {
+	->where(['s.status'=>1])
+	->order(['s.rate' =>'DESC'])/*  ->formatResults ( function ($results) {
 			return $results->combine ( 'id', function ($row) {
 					return $row ['s']['firstName'] . ' ' . $row['s'] ['lastName'].' - '.$row['city']['cname'];
 					} );

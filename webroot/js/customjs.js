@@ -87,13 +87,15 @@ $(document).ready(function(){
 	    	 
 	    });
 	    
+		
+	    
 	    $(document).on('focusout','.product-quantity-x',function() {
-	    	alert('xxxx');
+	    	//alert('xxxx');
 	    	/// $(this).css("background-color", "#FFFFCC");
 	    	 var divid=$(this).closest("div").parent().attr('id');
-	    	 alert(divid);
+	    	 //alert(divid);
 	    	 var quantity=$(this).val();
-	    	 alert(quantity);
+	    	 //alert(quantity);
 	    	 
 	    	 //var productammount="prpayaring";
 	    	 
@@ -104,6 +106,13 @@ $(document).ready(function(){
 	    	 
 	    	 
 	    	 
+	    });
+	    //show next sibbling fields
+	    $(document).on('focusin','.product-quantity-x',function() {	
+	    	//alert("pakayoo");
+	    	$(this).parent().parent().next().children(".prod-left").siblings().show();
+	    	//$("div#x-"+element.value+" div.prod-left").siblings().hide();
+	    	
 	    });
 	    
 	   /* $( ".btnRemove" ).click(function() {
@@ -131,10 +140,10 @@ $(document).ready(function(){
 	    }
 	    
 	    function displayProductPrice2(divid,quantity){
-	    	alert(divid+" : "+quantity);
+	    	//alert(divid+" : "+quantity);
 	    	//if(quantity!="" && productId!=""){
 	    	var productId=$("#"+divid).find("select.orders-products-id").val();
-	    	alert(productId);
+	    	//alert(productId);
 	    	if(quantity && productId){
 		    	 $.post(myBaseUrl+"orders/singlecal",
 		 	    	    {"productId":productId,"quantity":quantity},
@@ -227,6 +236,34 @@ $(document).ready(function(){
 			          		   '</div>';
 			          cacheEle.append(row);
 			          $('select').select2();
+			          $("div.prod-left span.select2-container").css({"display": "none"});
+			        if(cacheEle.find('div.prod').length>1){
+			        	  $("div#x-"+element.value+" div.prod-left").siblings().hide();
+			        	  var previusQTY=$("div#x-"+element.value).prev().find("input.product-quantity-x").val();
+			        	  if(previusQTY){
+			        		  $("div#x-"+element.value+" div.prod-left").siblings().show();
+			        	  }
+		            }
+			        /*var numOfQtyPlusOne=parseInt($('input.product-quantity-x:visible').length)+parseInt(1); 
+			        
+			        if(cacheEle.find('div.prod').length==2 && !numOfQtyPlusOne){
+			        	$("div#x-"+element.value+" div.prod-left").siblings().show();
+			        } */
+				          //var y =parseInt($('input.product-quantity-x:visible').length);
+			       /* else if(cacheEle.find('div.prod').length==numOfQtyPlusOne){
+		            			$("div#x-"+element.value+" div.prod-left").siblings().show();
+			        		 // alert("hukk");
+			        } */ 
+
+			        //check priveus qty
+			        
+			        
+			          
+			          
+			          
+			          
+			    
+			          
 /*			          if(cacheEle.find('div.prod').length>1){
 			          $('span#select2-sup-'+element.value+'-container').parent().hide();
 			          }*/
@@ -268,6 +305,8 @@ function getSupplierList(productId){
     	        
     	    });
 }		
+
+
 
 	    
 	    
