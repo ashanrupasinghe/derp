@@ -27,16 +27,21 @@ $cakeDescription = 'Direct2Door.lk';
 
 
 <!-- Bootstrap -->
-    <link href="/direct2door.erp/icing/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/vendors/bootstrap/dist/css/bootstrap.min') ?>
     <!-- Font Awesome -->
-    <link href="/direct2door.erp/icing/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/vendors/font-awesome/css/font-awesome.min') ?>
     <!-- NProgress -->
-    <link href="/direct2door.erp/icing/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/vendors/nprogress/nprogress.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/vendors/nprogress/nprogress') ?>
     <!-- iCheck -->
-    <link href="/direct2door.erp/icing/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/vendors/iCheck/skins/flat/green.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/vendors/iCheck/skins/flat/green') ?>
     
     <!-- Animate.css for login page-->
-    <link href="/direct2door.erp/icing/vendors/animate.css/animate.min.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/vendors/animate.css/animate.min.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/vendors/animate.css/animate.min') ?>
 
 
 
@@ -44,12 +49,18 @@ $cakeDescription = 'Direct2Door.lk';
         <?= $this->Html->css('select2.min') ?>
          <?= $this->Html->css('custom')?><?php */?>
              <!-- Select2 -->
-    <link href="/direct2door.erp/icing/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/vendors/select2/dist/css/select2.min.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/vendors/select2/dist/css/select2.min') ?>
+    
         <!-- Custom Theme Style -->
-    <link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">-->
+    <?= $this->Html->css('/icing/build/css/custom.min') ?>
+    
     
     <!--date picker styles-->
-    <link href="/direct2door.erp/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <!--<link href="/direct2door.erp/css/bootstrap-datetimepicker.css" rel="stylesheet">-->
+    <?= $this->Html->css('bootstrap-datetimepicker') ?>
+    
     
         <script type="text/javascript">var myBaseUrl = '<?php echo $this->Url->build('/'); ?>';</script>
         
@@ -80,7 +91,7 @@ $cakeDescription = 'Direct2Door.lk';
             <!-- menu profile quick info -->
             <div class="profile clearfix">
               <div class="profile_pic">
-                <img src="/direct2door.erp/icing/production/images/img.jpg" alt="..." class="img-circle profile_img">
+                <?=$this->Html->image('/icing/production/images/img.jpg',['class'=>'img-circle profile_img', 'alt'=>'...'])?>
               </div>
               <div class="profile_info">
                 <span>Welcome,</span>
@@ -260,7 +271,9 @@ $cakeDescription = 'Direct2Door.lk';
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="/direct2door.erp/icing/production/images/img.jpg" alt=""><?php echo $userName;?>
+                    <!--<img src="/direct2door.erp/icing/production/images/img.jpg" alt="">-->
+                    <?=$this->Html->image('/icing/production/images/img.jpg')?>
+                    <?php echo $userName;?>
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -407,28 +420,35 @@ $cakeDescription = 'Direct2Door.lk';
     </div>
 
     <!-- jQuery -->
-    <script src="/direct2door.erp/icing/vendors/jquery/dist/jquery.min.js"></script>
+    <!--<script src="/direct2door.erp/icing/vendors/jquery/dist/jquery.min.js"></script>-->
+    <?= $this->Html->script('/icing/vendors/jquery/dist/jquery.min'); ?>
     <!-- Bootstrap -->
-    <script src="/direct2door.erp/icing/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!--<script src="/direct2door.erp/icing/vendors/bootstrap/dist/js/bootstrap.min.js"></script>-->
+    <?= $this->Html->script('/icing/vendors/bootstrap/dist/js/bootstrap.min'); ?>
     <!-- FastClick -->
-    <script src="/direct2door.erp/icing/vendors/fastclick/lib/fastclick.js"></script>
+    <!--<script src="/direct2door.erp/icing/vendors/fastclick/lib/fastclick.js"></script>-->
+    <?= $this->Html->script('/icing/vendors/fastclick/lib/fastclick'); ?>
     <!-- NProgress -->
-    <script src="/direct2door.erp/icing/vendors/nprogress/nprogress.js"></script>
+    <!--<script src="/direct2door.erp/icing/vendors/nprogress/nprogress.js"></script>-->
+    <?= $this->Html->script('/icing/vendors/nprogress/nprogress'); ?>
     <!-- iCheck -->
-    <script src="/direct2door.erp/icing/vendors/iCheck/icheck.min.js"></script>
+    <!--<script src="/direct2door.erp/icing/vendors/iCheck/icheck.min.js"></script>-->
+    <?= $this->Html->script('/icing/vendors/iCheck/icheck.min'); ?>
 
   <!-- Select2 -->
-    <script src="/direct2door.erp/icing/vendors/select2/dist/js/select2.full.min.js"></script>
+    <!--<script src="/direct2door.erp/icing/vendors/select2/dist/js/select2.full.min.js"></script>-->
+    <?= $this->Html->script('/icing/vendors/select2/dist/js/select2.full.min'); ?>
    
    <!--date picker js-->
-   <script src="/direct2door.erp/js/bootstrap-datetimepicker.js"></script>
-   
+   <!--<script src="/direct2door.erp/js/bootstrap-datetimepicker.js"></script>-->
+   		<?= $this->Html->script('bootstrap-datetimepicker'); ?>
    
         <?= $this->Html->script('customjs') ?>
         
         
     <!-- Custom Theme Scripts -->
-    <script src="/direct2door.erp/icing/build/js/custom.min.js"></script>
+    <!--<script src="/direct2door.erp/icing/build/js/custom.min.js"></script>-->
+    		<?= $this->Html->script('/icing/build/js/custom.min'); ?>
     
     <script type="text/javascript">
   $('select').select2({tags: true});
