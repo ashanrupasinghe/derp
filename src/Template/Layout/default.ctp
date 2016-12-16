@@ -48,6 +48,9 @@ $cakeDescription = 'Direct2Door.lk';
         <!-- Custom Theme Style -->
     <link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">
     
+    <!--date picker styles-->
+    <link href="/direct2door.erp/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    
         <script type="text/javascript">var myBaseUrl = '<?php echo $this->Url->build('/'); ?>';</script>
         
         <?= $this->Html->script('https://use.fontawesome.com/aeb0ff1754.js');?>
@@ -416,7 +419,13 @@ $cakeDescription = 'Direct2Door.lk';
 
   <!-- Select2 -->
     <script src="/direct2door.erp/icing/vendors/select2/dist/js/select2.full.min.js"></script>
+   
+   <!--date picker js-->
+   <script src="/direct2door.erp/js/bootstrap-datetimepicker.js"></script>
+   
+   
         <?= $this->Html->script('customjs') ?>
+        
         
     <!-- Custom Theme Scripts -->
     <script src="/direct2door.erp/icing/build/js/custom.min.js"></script>
@@ -424,6 +433,29 @@ $cakeDescription = 'Direct2Door.lk';
     <script type="text/javascript">
   $('select').select2({tags: true});
   $(".js-example-basic-multiple").select2();
+  
+  
+  	$('.form_date').datetimepicker({
+        language:  'en',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
+    	$('.form_time').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
+    });
 </script>
 
   </body>

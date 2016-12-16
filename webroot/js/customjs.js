@@ -215,23 +215,23 @@ $(document).ready(function(){
 		            	        }
 		            	        
 		            	        
-		      		          var row='<div class="group large-12 medium-12 columns prod" id="x-'+element.value+'">'+
-			          			'<div class="large-3 medium-3 columns prod-left">'+
-			          				'<input type="text" name="product_name[' + element.value + ']" value="' + element.text + '" disabled>'+
-			          				'<select name="product_name[]" class="select2-display-none orders-products-id"><option value="'+element.value+'" selected>'+element.text+'</option></select>'+
+		      		          var row='<div class="group col-lg-12 col-md-12 columns prod" id="x-'+element.value+'" style="padding-left:0px; padding-right:0px;">'+
+			          			'<div class="col-lg-3 col-md-3 columns prod-left form-group">'+
+			          				'<input type="text" class="form-control" name="product_name[' + element.value + ']" value="' + element.text + '" disabled>'+
+			          				'<select name="product_name[]" class="form-control select2-display-none orders-products-id"><option value="'+element.value+'" selected>'+element.text+'</option></select>'+
 			          			'</div>'+
-			          			'<div class="large-1 medium-1 columns">'+
-			          				'<input name="product_quantity[]" class="product-quantity-x '+hiddenClass+'" required="required" type="text">'+
+			          			'<div class="col-lg-1 col-md-1 columns form-group">'+
+			          				'<input name="product_quantity[]" class="form-control product-quantity-x '+hiddenClass+'" required="required" type="text">'+
 			          			'</div>'+
-			          			'<div class="large-2 medium-2 columns">'+
-			          				'<input name="Package" disabled="disabled" class="packagetype '+hiddenClass+'" id="" type="text" value="'+' X '+supplier[0].pack.type+'">'+
+			          			'<div class="col-lg-2 col-md-2 columns form-group">'+
+			          				'<input name="Package" disabled="disabled" class="form-control packagetype '+hiddenClass+'" id="" type="text" value="'+' X '+supplier[0].pack.type+'">'+
 			          			'</div>'+
-			          			'<div class="large-3 medium-3 columns">'+
-			          				'<input name="Ammount" disabled="disabled" class="product-ammount '+hiddenClass+'" id="" type="text">'+
-			          				'<input name="product_price[]" disabled="disabled" class="product-ammount-hidden" id="" value="0" type="hidden">'+
+			          			'<div class="col-lg-3 col-md-3 columns form-group">'+
+			          				'<input name="Ammount" disabled="disabled" class="form-control product-ammount '+hiddenClass+'" id="" type="text">'+
+			          				'<input name="product_price[]" disabled="disabled" class="form-control product-ammount-hidden" id="" value="0" type="hidden">'+
 			          			'</div>'+
-			          			'<div class="large-3 medium-3 columns sup-right">'+
-			          				'<select id="sup-'+element.value+'" name="product_supplier[]" class="orders-suppliers-id '+hiddenClass+'">'+listItems+'</select>'+
+			          			'<div class="col-lg-3 col-md-3 columns sup-right form-group">'+
+			          				'<select id="sup-'+element.value+'" name="product_supplier[]" class="form-control orders-suppliers-id '+hiddenClass+'">'+listItems+'</select>'+
 			          			'</div>'+
 			          		   '</div>';
 			          cacheEle.append(row);
