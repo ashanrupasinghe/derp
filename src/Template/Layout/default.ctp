@@ -38,18 +38,24 @@ $cakeDescription = 'Direct2Door.lk';
     <!-- Animate.css for login page-->
     <link href="/direct2door.erp/icing/vendors/animate.css/animate.min.css" rel="stylesheet">
 
-    <!-- Custom Theme Style -->
-    <link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">
 
 
+<?php /*?>
         <?= $this->Html->css('select2.min') ?>
-        <?= $this->Html->css('custom')?>
+         <?= $this->Html->css('custom')?><?php */?>
+             <!-- Select2 -->
+    <link href="/direct2door.erp/icing/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
+        <!-- Custom Theme Style -->
+    <link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">
+    
         <script type="text/javascript">var myBaseUrl = '<?php echo $this->Url->build('/'); ?>';</script>
         <?= $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');?>
         <?= $this->Html->script('https://use.fontawesome.com/aeb0ff1754.js');?>
 
-        
-        <?= $this->Html->script('select2.min') ?>
+  <?php /*?>      
+        <?= $this->Html->script('select2.min') ?><?php */?>
+            <!-- Select2 -->
+    <script src="/direct2door.erp/icing/vendors/select2/dist/js/select2.full.min.js"></script>
         <?= $this->Html->script('customjs') ?>
         
         
@@ -338,7 +344,9 @@ $cakeDescription = 'Direct2Door.lk';
           </div>
         </div>
         <?php endif; ?>
+        <?php if(!$authUser){?>
          <?= $this->Flash->render() ?>
+        <?php }?> 
         <!-- /top navigation -->
 		<!-- /top navigation -->
 		
@@ -370,6 +378,9 @@ $cakeDescription = 'Direct2Door.lk';
             <div class="col-md-12">
                 <div class="x_content">
                         <!-- content starts here -->
+        <?php if($authUser){?>
+         <?= $this->Flash->render() ?>
+        <?php }?>                         
  <?= $this->fetch('content') ?>
                         <!-- content ends here -->
                     </div>
