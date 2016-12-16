@@ -49,14 +49,12 @@ $cakeDescription = 'Direct2Door.lk';
     <link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">
     
         <script type="text/javascript">var myBaseUrl = '<?php echo $this->Url->build('/'); ?>';</script>
-        <?= $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js');?>
+        
         <?= $this->Html->script('https://use.fontawesome.com/aeb0ff1754.js');?>
 
   <?php /*?>      
         <?= $this->Html->script('select2.min') ?><?php */?>
-            <!-- Select2 -->
-    <script src="/direct2door.erp/icing/vendors/select2/dist/js/select2.full.min.js"></script>
-        <?= $this->Html->script('customjs') ?>
+          
         
         
 
@@ -404,10 +402,7 @@ $cakeDescription = 'Direct2Door.lk';
         <!-- /footer content -->
       </div>
     </div>
-<script type="text/javascript">
-  $('select').select2({tags: true});
-  $(".js-example-basic-multiple").select2();
-</script>
+
     <!-- jQuery -->
     <script src="/direct2door.erp/icing/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
@@ -419,7 +414,17 @@ $cakeDescription = 'Direct2Door.lk';
     <!-- iCheck -->
     <script src="/direct2door.erp/icing/vendors/iCheck/icheck.min.js"></script>
 
+  <!-- Select2 -->
+    <script src="/direct2door.erp/icing/vendors/select2/dist/js/select2.full.min.js"></script>
+        <?= $this->Html->script('customjs') ?>
+        
     <!-- Custom Theme Scripts -->
     <script src="/direct2door.erp/icing/build/js/custom.min.js"></script>
+    
+    <script type="text/javascript">
+  $('select').select2({tags: true});
+  $(".js-example-basic-multiple").select2();
+</script>
+
   </body>
 </html>

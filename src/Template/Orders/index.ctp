@@ -6,14 +6,32 @@
 $payment_status=['1'=>'pending','2'=>'paid'];
 $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];   
 ?>
-<div class="orders index large-10 medium-10 columns content">
-   <?php //if($userLevel==1):?> <div class="pull-right" style="float: right;">
-        <?= $this->Html->link(__('Add New Order'), ['controller' => 'Orders', 'action' => 'add','class'=>'btn btn-default']) ?>
-    </div><?php //endif;?>
-    <h3><?= __('Orders') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Orders') ?><small><?= __('Orders') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                    <li><?= $this->Html->link(__('Add New Order'), ['controller' => 'Orders', 'action' => 'add','class'=>'btn btn-default']) ?><li>
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('customerId') ?></th>
                 <!--<th><?= $this->Paginator->sort('address') ?></th>-->
@@ -32,9 +50,9 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <!--<th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>-->
                 <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
+                        </tr>
+                      </thead>
+                      <tbody>
             <?php foreach ($orders as $order): ?>
             <tr>
                 <td><?= $this->Number->format($order->id) ?></td>                
@@ -62,14 +80,18 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 </td>
             </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
+                      </tbody>
+                    </table>
+                    
+                    <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->prev('< ' . __('previous')) ?>
             <?= $this->Paginator->numbers() ?>
             <?= $this->Paginator->next(__('next') . ' >') ?>
         </ul>
         <p><?= $this->Paginator->counter() ?></p>
-    </div>
-</div>
+    </div>			  
+
+                  </div>
+                </div>
+              </div>
