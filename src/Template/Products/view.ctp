@@ -2,14 +2,34 @@
 $availability=['0'=>'Not available','1'=>'Available'];
 $status = ['0'=>'Desabled','1'=>'Active'];
 ?>
-<div class="products view large-10 medium-10 columns content">
-<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
-    <h4><?= __('Product Name: '.$product->name) ?></h4>
-<div class="orders view large-2 medium-2 columns content div-top-pad-0 div-left-pad-0"> 
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Product Name: '.$product->name) ?><small>product details</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+               			  <div class="row">
+<div class="orders col-lg-2 col-md-2 columns content div-top-pad-0 div-left-pad-0"> 
 <img src="img.jpg" height="100%">
 </div>    
-<div class="orders view large-5 medium-5 columns content div-top-pad-0 div-left-pad-0">     
-    <table class="vertical-table">
+<div class="orders  col-lg-5 col-md-5 columns content div-top-pad-0 div-left-pad-0">     
+    <table class="table table-hover">
         <!--<tr>
             <th><?= __('Id') ?></th>
             <td><?= h($product->id) ?></td>
@@ -28,8 +48,8 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         </tr>
         </table>
 </div>
-       <div class="orders view large-5 medium-5 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">   
-<table class="vertical-table"> 
+       <div class="orders col-md-5 col-lg-5 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">   
+<table class="table table-hover"> 
         <tr>
             <th><?= __('Status') ?></th>
             <td><?= h($status[$product->status]) ?></td>
@@ -59,25 +79,53 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         </tr>-->
     </table>
 </div>
+
 </div>
-<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
-    <h4><?= __('Suppliers') ?></h4>
+
+                  </div>
+                </div>
+              </div>
+              
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Suppliers') ?> <small><?= __($product->name.' suppliers') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+               			  <div class="row">
+    
     
 <?php
 $j=1;
 $size=sizeof($suppliers);
 foreach($suppliers as $supplier){
 if($j==1){?>
-<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">    
-<table class="vertical-table"> 
+<div class="orders col-lg-6 col-md-6 columns content div-top-pad-0 div-left-pad-0">    
+<table class="table table-hover"> 
 <?php
 }
 if(($size/2)+1==$j){
 ?>
 </table> 
 </div>
-<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">  
-<table class="vertical-table"> 
+<div class="orders col-lg-6 col-md-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">  
+<table class="table table-hover"> 
 <?php
 
 }
@@ -106,28 +154,7 @@ $j++;
 
 </div>
 
+                  </div>
+                </div>
+              </div>              
 
-    <!--<div class="related">
-        <h4><?= __('Related Order Products') ?></h4>
-        <?php if (!empty($product->order_products)): ?>
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <th><?= __('Order Id') ?></th>
-                <th><?= __('Product Id') ?></th>
-                <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-            <?php foreach ($product->order_products as $orderProducts): ?>
-            <tr>
-                <td><?= h($orderProducts->order_id) ?></td>
-                <td><?= h($orderProducts->product_id) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'OrderProducts', 'action' => 'view', $orderProducts->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'OrderProducts', 'action' => 'edit', $orderProducts->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'OrderProducts', 'action' => 'delete', $orderProducts->id], ['confirm' => __('Are you sure you want to delete # {0}?', $orderProducts->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-        <?php endif; ?>
-    </div>-->
-</div>
