@@ -1,25 +1,45 @@
 <?php
 $status = ['0'=>'Desabled','1'=>'Active'];
 ?>
-<div class="suppliers index large-10 medium-10 columns content">
-    <div class="pull-right" style="float: right;">
-        <?= $this->Html->link(__('Add New Supplier'), ['controller' => 'Suppliers', 'action' => 'add']) ?>
-    </div>
-    <h3><?= __('Suppliers') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th><?= $this->Paginator->sort('id') ?></th>
+
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Suppliers') ?> <small><?= __('add new suppliers') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><?= $this->Html->link(__('Add New Supplier'), ['controller' => 'Suppliers', 'action' => 'add']) ?></li>
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+  			  		<table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('user_id') ?></th>
                 <th><?= $this->Paginator->sort('firstName') ?></th>
                 <th><?= $this->Paginator->sort('city') ?></th>
                 <th><?= $this->Paginator->sort('mobileNo') ?></th>
                 <th><?= $this->Paginator->sort('status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($suppliers as $supplier): ?>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($suppliers as $supplier): ?>
                 <tr>
                     <td><?= $this->Number->format($supplier->id) ?></td>
                     <td><?= $supplier->has('user') ? $this->Html->link($supplier->user->username, ['controller' => 'Users', 'action' => 'view', $supplier->user->id]) : '' ?></td>
@@ -35,9 +55,10 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                     </td>
                 </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
+                      </tbody>
+                    </table>
+                    
+                    <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->prev('< ' . __('previous')) ?>
             <?= $this->Paginator->numbers() ?>
@@ -45,4 +66,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         </ul>
         <p><?= $this->Paginator->counter() ?></p>
     </div>
+                  </div>
+                </div>
 </div>
+
