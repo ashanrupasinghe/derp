@@ -1,3 +1,6 @@
+<?php
+$status = ['0'=>'Desabled','1'=>'Active'];
+?>
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
@@ -45,7 +48,7 @@
                 <td><?= h($callcenter->email) ?></td>
                 <td><?= h($callcenter->cid->cname) ?></td>
                 <td><?= h($callcenter->mobileNo) ?></td>
-                <td><?= h($callcenter->status) ?></td>
+                <td><?= h($status[$callcenter->status]) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $callcenter->id],['class'=>'x-btn x-btn-primary']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $callcenter->id],['class'=>'x-btn x-btn-warning']) ?>
