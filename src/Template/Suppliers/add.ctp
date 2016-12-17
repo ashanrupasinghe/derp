@@ -150,7 +150,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                              <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success']) ?>
                         </div>
                       </div>
-    <?= $this->Form->end() ?>
+    
   			  		    <?= $this->Form->end() ?>
                   </div>
                 </div>
