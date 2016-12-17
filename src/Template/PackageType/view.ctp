@@ -1,22 +1,45 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Package Type'), ['action' => 'edit', $packageType->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Package Type'), ['action' => 'delete', $packageType->id], ['confirm' => __('Are you sure you want to delete # {0}?', $packageType->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Package Type'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Package Type'), ['action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="packageType view large-9 medium-8 columns content">
-    <h3><?= h($packageType->id) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th><?= __('Type') ?></th>
-            <td><?= h($packageType->type) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Id') ?></th>
-            <td><?= $this->Number->format($packageType->id) ?></td>
-        </tr>
-    </table>
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Package Type Details') ?> <small><?= __('package id: '.$packageType->id) ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+  			  		<div class="row">
+  			  		<div class="col-md-4 col-sm-4">
+  			  		<table class="table table-hover">
+                      <tbody>
+                        <tr>
+                          <th scope="row"><?= __('Type') ?></th>
+                          <td><?= h($packageType->type) ?></td>
+                        </tr>
+                        <tr>
+                          <th scope="row"><?= __('Id') ?></th>
+                          <td><?= $this->Number->format($packageType->id) ?></td>
+                        </tr>
+                        
+                      </tbody>
+                    </table>
+                    </div>
+                    </div>
+                    
+                  </div>
+                </div>
 </div>
+
+
