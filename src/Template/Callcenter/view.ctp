@@ -1,11 +1,33 @@
 <?php
 $status = ['0'=>'Desabled','1'=>'Active'];
 ?>
-<div class="callcenter view large-10 medium-10 columns content">
-<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
-    <h4><?= __('CallCenter Staff ID: '.$callcenter->id) ?></h4>
-    <div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0"> 
-    <table class="vertical-table">
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('CallCenter Staff ID: '.$callcenter->id) ?> <small>staff details</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+               			  
+<div class="row">
+    
+    <div class="orders col-lg-6 col-md-6 columns content div-top-pad-0 div-left-pad-0"> 
+    <table class="table table-hover">
         <tr>
             <th><?= __('User Name') ?></th>
             <td><?= $callcenter->has('user') ? $this->Html->link($callcenter->user->username, ['controller' => 'Users', 'action' => 'view', $callcenter->user->id]) : '' ?></td>
@@ -28,8 +50,8 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         </tr>
         </table>
        </div>
-       <div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">   
-<table class="vertical-table">  
+       <div class="orders col-lg-6 col-md-6 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0">   
+<table class="table table-hover">  
         <tr>
             <th><?= __('Email') ?></th>
             <td><?= h($callcenter->email) ?></td>
@@ -46,4 +68,11 @@ $status = ['0'=>'Desabled','1'=>'Active'];
     </table>
     </div>
 </div>    
-</div>
+
+               			  
+
+                  </div>
+                </div>
+              </div>
+              
+              

@@ -2,45 +2,82 @@
 $user_role=[1=>'Admin',2=>'Callcenter','Supplier','Delivery'];
 $status = ['0'=>'Desabled','1'=>'Active'];
 ?>
-<div class="users view large-10 medium-10 columns content">
-<div class="orders view large-12 medium-12 columns content div-top-pad-0 div-left-pad-0 div-right-pad-0 ">
-    <h4><?= __('User ID: '.$user->id) ?></h4>
-<div class="orders view large-6 medium-6 columns content div-top-pad-0 div-left-pad-0">     
-    <table class="vertical-table">
-        <tr>
-            <th><?= __('Username') ?></th>
+
+ <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('User ID: '.$user->id) ?> <small><?= __('user details') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                  	<div class="col-md-6 col-sm-6 col-xs-12">
+                  	<table class="table table-hover">
+                      <tbody>
+                        <tr>
+            <th scope="row"><?= __('Username') ?></th>
             <td><?= h($user->username) ?></td>
         </tr>
         <tr>
-            <th><?= __('User Type') ?></th>
+            <th scope="row"><?= __('User Type') ?></th>
             <td><?= h($user_role[$user->user_type]) ?></td>
         </tr>
-        <!--<tr>
+        <!--<tr scope="row">
             <th><?= __('Password') ?></th>
             <td><?= h($user->password) ?></td>
         </tr>-->
-        <!--<tr>
+        <!--<tr scope="row">
             <th><?= __('Remember Token') ?></th>
             <td><?= h($user->remember_token) ?></td>
         </tr>-->
         <tr>
-            <th><?= __('Status') ?></th>
+            <th scope="row"><?= __('Status') ?></th>
             <td><?= h($status[$user->status]) ?></td>
         </tr>
         <tr>
-            <th><?= __('Id') ?></th>
+            <th scope="row"><?= __('Id') ?></th>
             <td><?= $this->Number->format($user->id) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Created') ?></th>
+        </tr>           
+                      </body>
+                    </table>  
+                  	</div>
+                  	<div class="col-md-6 col-sm-6 col-xs-12">
+					<table class="table table-hover">
+                      <tbody>
+                              <tr>
+            <th scope="row"><?= __('Created') ?></th>
             <td><?= h($user->created) ?></td>
         </tr>
         <tr>
-            <th><?= __('Modified') ?></th>
+            <th scope="row"><?= __('Modified') ?></th>
             <td><?= h($user->modified) ?></td>
         </tr>
-    </table>
-</div>    
+                      </body>
+                    </table> 
+                  	</div>  			  		
+                  </div>
+                </div>
+</div>
+
+
+
+
+
+  
 <!--    <div class="related">
         <h4><?= __('Related Callcenter') ?></h4>
         <?php if (!empty($user->callcenter)): ?>
@@ -176,4 +213,4 @@ $status = ['0'=>'Desabled','1'=>'Active'];
         <?php endif; ?>
     </div>
     -->
-</div>
+
