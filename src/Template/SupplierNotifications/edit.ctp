@@ -2,63 +2,148 @@
 $status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled',];
 
 ?>
-<!--<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $supplierNotification->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Supplier Notifications'), ['action' => 'index']) ?></li>
-    </ul>
-</nav>
--->
-<div class="supplierNotifications form large-10 medium-10 columns content">
-
-    <?= $this->Form->create($supplierNotification) ?>
-    <fieldset>
-        <legend><?= __('Edit Supplier Notification') ?></legend>
-        <?php
-            echo $this->Form->input('supplierId',['disabled'=>true]);
-            echo $this->Form->input('supplierId',['disabled'=>false,'type'=>'hidden']);
-            echo $this->Form->input('notificationText',['disabled'=>true]);
-            echo $this->Form->input('sentFrom',['disabled'=>true]);
-            echo $this->Form->input('orderId',['disabled'=>true]);
-            echo $this->Form->input('orderId',['disabled'=>false,'type'=>'hidden']);
-            //echo $this->Form->input('status',['options'=>$status]);
+<?= $this->Form->create($supplierNotification,['class'=>'form-horizontal form-label-left']) ?>
+<div class="row">
+	<div class="col-md-5 col-sm-5 col-xs-12">
+	
+	
+	<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Notification ID: '.$supplierNotification->id) ?> <small><?= __('order details') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                  
+  			  		
+  			  		
+  			  		<div class="form-group">
+                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="supplierId">Supplie Id<span class="required">*</span></label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('supplierId',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
+                        </div>
+                      </div>                      
+  			  		
+            <?php echo $this->Form->input('supplierId',['disabled'=>false,'type'=>'hidden']); ?>
             
-        ?>
-        <legend><?= __('Supplier Details') ?></legend>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th><?= __('Product Id') ?></th>
+              			  		<div class="form-group">
+                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="notificationText">Notification Text<span class="required">*</span></label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('notificationText',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
+                        </div>
+                      </div> 
+                      
+                      <div class="form-group">
+                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sentFrom">Sent From<span class="required">*</span></label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('sentFrom',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
+                        </div>
+                      </div> 
+                      
+                      <div class="form-group">
+                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderId">Order Id<span class="required">*</span></label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('orderId',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
+                        </div>
+                      </div> 
+            <?php echo $this->Form->input('orderId',['disabled'=>false,'type'=>'hidden']); ?>
+            <?php //echo $this->Form->input('status',['options'=>$status]); ?>
+            
+       
+  			  		
+  			  		
+  			  		
+  			  		
+    
+  			  		
+                  </div>
+                </div>
+</div>
+	
+	
+	</div>
+	<div class="col-md-7 col-sm-7 col-xs-12">
+	
+	<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Notification ID: '.$supplierNotification->id) ?> <small><?= __('product details for EDIT') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                  <?= $this->Form->create($supplierNotification,['class'=>'form-horizontal form-label-left']) ?>
+
+  			  		<table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th><?= __('Product Id') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Package') ?></th>
                 <th><?= __('My Status') ?></th>
-
-            </tr>
-        </thead>
-        <tbody>
-        
-<?php 
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php 
 foreach($supplierNotification->supplier->order_products as $product){
 ?>
 <tr><td><?= h($product['product']['id'])?></td>
 <td><?= h($product['product']['name'])?></td>
 <td><?= h($product['product_quantity'])?></td>
 <td><?= h($product['product']['package_type']->type)?></td>
-<td><?php echo $this->Form->input('my status',['options'=>$status,'default'=>$product['status_s'],'name'=>'mystatus['.$product['product']['id'].']']);?></td></tr>
+<td><?php echo $this->Form->input('my status',['label' => false,'options'=>$status,'default'=>$product['status_s'],'name'=>'mystatus['.$product['product']['id'].']']);?></td></tr>
 <?php }
 ?>
-        </tbody>
-	</table>
-    </fieldset>
+                      </tbody>
+                    </table>
+  			  		
+  			  		
+  			  		<div class="ln_solid"></div>
+    				  <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">                          
+                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success']) ?>
+                        </div>
+                      </div>
     
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
-   
+  			  		
+                  </div>
+                </div>
 </div>
+	
+	</div>
+</div>
+
+<?= $this->Form->end() ?>
+
+
+
