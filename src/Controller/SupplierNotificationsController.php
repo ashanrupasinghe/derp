@@ -138,7 +138,7 @@ class SupplierNotificationsController extends AppController
         	foreach ($data['mystatus'] as $product_id=>$product_status){
         		$current_status=$orderProductsModel->get([$data['orderId'],$product_id],['fields'=>['status_s']])->toArray();//$current_status['status_s']
         		if($current_status['status_s']==$product_status){
-        			break ;//if current tatus equals to new status return
+        			continue ;//if current tatus equals to new status return
         		}
         		$updatable_data[]=['order_id'=>$data['orderId'],'product_id'=>$product_id,'status_s'=>$product_status];
         	} 

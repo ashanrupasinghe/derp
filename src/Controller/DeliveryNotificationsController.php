@@ -116,7 +116,7 @@ class DeliveryNotificationsController extends AppController
         	print_r($data); */
         	//die();
         	
-        	
+        	$orderProductsModel=$this->loadModel('OrderProducts');
         	$mystatus_update=[]; //status_d, orderproducts   
         	$count_took=0;  //tooked products
         	$orderstatus=0;  //order table status	
@@ -124,9 +124,21 @@ class DeliveryNotificationsController extends AppController
         		if($data['mystatus'][$i]==1){
         			$count_took++;
         		}
+        		
+        		
+        		$current_status=$orderProductsModel->get([$data['orderId'],$data['productid'][$i]],['fields'=>['status_d']])->toArray();//$current_status['status_s']
+        		//print_r($current_status);
+        		 if($current_status['status_d']==$data['mystatus'][$i]){
+        			continue ;//if current tatus equals to new status return
+        		} 
+        		
         		//$mystatus_update[$i]=['id'=>$data['supid'][$i],'status_d'=>$data['mystatus'][$i]];
         		$mystatus_update[]=['order_id'=>$data['orderId'],'product_id'=>$data['productid'][$i],'status_d'=>$data['mystatus'][$i]];
         	}
+        	
+       /*  print '<pre>';
+        	print_r($mystatus_update);
+        	die();  */
         	//echo $data['status'];
         	if ($count_took==sizeof($data['mystatus'])){
         		if ($data['Order_Status']==1){
@@ -149,7 +161,35 @@ class DeliveryNotificationsController extends AppController
         	
             //$deliveryNotification = $this->DeliveryNotifications->patchEntity($deliveryNotification, $data);
             //if ($this->DeliveryNotifications->save($deliveryNotification)) {
-        	$orderProductsModel=$this->loadModel('OrderProducts');
+        	if(sizeof($mystatus_update)==0){
+        		
+        		$ordermodel=$this->loadModel('Orders');
+        		$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
+        		/* print_r($orderstatus.'||'.$current_order_status['status'].'||'.$orderstatus);
+        		print '<pre>';print_r($data);
+        		die(); */
+        		
+        		if ($current_order_status['status']!=$data['Order_Status']){
+        			/* print '<pre>'; */
+        			//change order table
+        			 
+        			$order=$ordermodel->get($data['orderId']);
+        			//print_r($order);
+        			/* echo $data['orderId']; */
+        			$order->status=$data['Order_Status'];
+        			$result=$ordermodel->save($order);
+        			/* echo $result;
+        			 die(); */
+        		
+        			if($result){
+        				$this->Flash->success(__('The delivery notification has been saved.'));
+        				 
+        				return $this->redirect(['action' => 'index']);
+        			}
+        		}
+        		
+        		$this->Flash->error(__('The delivery notification could not be saved. Please, change dropdown values.'));
+        	}else{
         	$entities = $orderProductsModel->newEntities($mystatus_update);//update multiple rows same time using saveMeny
         	if ($orderProductsModel->saveMany($entities)) {
             	
@@ -163,12 +203,14 @@ class DeliveryNotificationsController extends AppController
             	/* echo $orderstatus;
             	echo $data['orderId'];
             	//die(); */
-            	if ($orderstatus!=0){
+        		$ordermodel=$this->loadModel('Orders');
+            	$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
+            	if ($orderstatus!=0 && $current_order_status['status']!=$orderstatus){
             		/* print '<pre>'; */
             		//change order table
-            		$ordermodel=$this->loadModel('Orders');
+            		
             		$order=$ordermodel->get($data['orderId']);
-            		print_r($order);
+            		//print_r($order);
             		/* echo $data['orderId']; */
             		$order->status=$orderstatus;
             		$result=$ordermodel->save($order);
@@ -183,6 +225,8 @@ class DeliveryNotificationsController extends AppController
             } else {
                 $this->Flash->error(__('The delivery notification could not be saved. Please, try again.'));
             }
+            
+        }
         }
         $customer=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.customers','Orders.city']]);
        // $suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers','Orders.SupplierNotifications.Suppliers.city']]);
