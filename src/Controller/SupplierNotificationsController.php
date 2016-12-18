@@ -133,10 +133,22 @@ class SupplierNotificationsController extends AppController
         	
         	$data=$this->request->data;
         	$updatable_data=[];
-        	foreach ($data['mystatus'] as $product_id=>$product_status){
-        		$updatable_data[]=['order_id'=>$data['orderId'],'product_id'=>$product_id,'status_s'=>$product_status];
-        	}     
         	$orderProductsModel=$this->loadModel('OrderProducts');
+        	
+        	foreach ($data['mystatus'] as $product_id=>$product_status){
+        		$current_status=$orderProductsModel->get([$data['orderId'],$product_id],['fields'=>['status_s']])->toArray();//$current_status['status_s']
+        		if($current_status['status_s']==$product_status){
+        			break ;//if current tatus equals to new status return
+        		}
+        		$updatable_data[]=['order_id'=>$data['orderId'],'product_id'=>$product_id,'status_s'=>$product_status];
+        	} 
+
+        	/*  print '<pre>';
+        	print_r($updatable_data);
+        	die(); */
+        	if(sizeof($updatable_data)==0){
+        		$this->Flash->error(__('The supplier notification could not be saved. Please, change dropdown values.'));
+        	}else{
         	$entities = $orderProductsModel->newEntities($updatable_data);//update multiple rows same time using saveMeny
             if ($orderProductsModel->saveMany($entities)) {
                 $this->Flash->success(__('The supplier notification has been saved.'));
@@ -145,6 +157,7 @@ class SupplierNotificationsController extends AppController
             } else {
                 $this->Flash->error(__('The supplier notification could not be saved. Please, try again.'));
             }
+        }
         }
         $this->set(compact('supplierNotification'));
         $this->set('_serialize', ['supplierNotification']);
