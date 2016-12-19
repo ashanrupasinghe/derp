@@ -290,68 +290,42 @@ $cakeDescription = 'Direct2Door.lk';
                   </ul>
                 </li>
 
-                <li role="presentation" class="dropdown">
+                <li role="presentation" class="dropdown" id="notify">
                   <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">6</span>
+                    <span class="badge bg-green"><?php echo $notificationCount; ?></span>
                   </a>
-                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                    <li>
+                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list notification-ul" role="menu">
+                  <!---->
+                    <?php foreach($notificationContent as $notification){
+                    //print_r($notification);
+                    ?>
+                    <li id="<?= $notification->id ?>" class="notify-seen">
                       <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                        <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
                         <span>
-                          <span><?php echo $userName;?></span>
-                          <span class="time">3 mins ago</span>
+                          <!--<span>user name</span>-->
+                          <span><?php echo 'Order ID: '.$notification->orderId; ?></span>
+                          <span class="time"><?php echo $notification->created;?></span>
                         </span>
                         <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                          <?php echo $notification->notification;?>
+                          <span class="see-sow"></span>
                         </span>
+                       
                       </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span><?php echo $userName;?></span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span><?php echo $userName;?></span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                        <span>
-                          <span><?php echo $userName;?></span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
+                    </li>                   
+                    <?php }?>
+                    
                     <li>
                       <div class="text-center">
-                        <a>
-                          <strong>See All Alerts</strong>
+                        <a href="<?php echo $this->Url->build('/user-notifications/mynotifications/'.$userId); ?>";>
+                          <strong>See All Notifications</strong>
                           <i class="fa fa-angle-right"></i>
                         </a>
                       </div>
                     </li>
+                    <!---->
                   </ul>
                 </li>
               </ul>

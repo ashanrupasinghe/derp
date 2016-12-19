@@ -10,6 +10,12 @@ use Cake\Datasource\ConnectionManager;
  */
 class DeliveryNotificationsController extends AppController
 {
+	public function initialize()
+	{
+		parent::initialize();
+		$this->loadComponent('Notification');
+	
+	}
 	
 	public function isAuthorized($user) {
 	
@@ -132,8 +138,11 @@ class DeliveryNotificationsController extends AppController
         			continue ;//if current tatus equals to new status return
         		} 
         		
+        		
         		//$mystatus_update[$i]=['id'=>$data['supid'][$i],'status_d'=>$data['mystatus'][$i]];
         		$mystatus_update[]=['order_id'=>$data['orderId'],'product_id'=>$data['productid'][$i],'status_d'=>$data['mystatus'][$i]];
+        		/*Notification function xxx yy z*/
+        		$this->Notification->setNotification('','',$data['mystatus'][$i],$data['orderId'],$data['productid'][$i],'','');//sent notification
         	}
         	
        /*  print '<pre>';
@@ -180,6 +189,9 @@ class DeliveryNotificationsController extends AppController
         			$result=$ordermodel->save($order);
         			/* echo $result;
         			 die(); */
+        			
+        			/*Notification function xxx yy z*/
+        			$this->Notification->setNotification($data['Order_Status'],'','',$data['orderId'],'','','');//sent notification
         		
         			if($result){
         				$this->Flash->success(__('The delivery notification has been saved.'));
@@ -216,6 +228,9 @@ class DeliveryNotificationsController extends AppController
             		$result=$ordermodel->save($order);
             		/* echo $result;
             		die(); */
+            		
+            		/*Notification function xxx yy z*/
+            		$this->Notification->setNotification($orderstatus,'','',$data['orderId'],'','','');//sent notification
             	}
             	//$suppliers_noti_model->get($primaryKey);
             	

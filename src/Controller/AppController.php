@@ -17,6 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 
+
 /**
  * Application Controller
  *
@@ -61,16 +62,28 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Notification');
 		//$this->loadComponent('Auth');
         $this->loadComponent('Auth',['authorize' => ['Controller']]);
 		$this->set('authUser', $this->Auth->user());//set a variable for view, for check userloged in or not
 		$this->set('userLevel', $this->Auth->user('user_type'));
 		$this->set('userName', $this->Auth->user('username'));
+		$this->set('userId', $this->Auth->user('id'));
     }
     
-//    public function beforeFilter() {
+    public function beforeFilter(\Cake\Event\Event $event) {
 //       // $this->Auth->allow('login');
-//    }
+//echo("ajshahsjh");
+			//$notify=$this->loadModel('UserNotifications');
+    		//$this->set('UserNotificationCount', $notify->getNotificationCount());
+    		if($this->Auth->user()){
+    		$notificationCount=$this->Notification->getNotificationCount($this->Auth->user('id'));
+    		$notificationContent=$this->Notification->getLatestNotifications($this->Auth->user('id'));
+    	 	$this->set('notificationCount', $notificationCount);    	
+    		$this->set('notificationContent', $notificationContent);
+    		
+    		}
+    }
     /**
      * Before render callback.
      *

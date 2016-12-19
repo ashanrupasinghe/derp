@@ -306,6 +306,25 @@ function getSupplierList(productId){
     	    });
 }		
 
+/*$('li#notify').click(function(){
+	alert("pako");
+})
+*/
+$( ".notify-seen" ).mouseover(function() {	  
+	var notificationId=$(this).attr('id');
+	
+	   $.post(myBaseUrl+"UserNotifications/updateSeen",
+	    	    {"id":notificationId},
+	    	    function(data, status){
+	    	    	var newdata=JSON.parse(data); 
+	    	    		newdata['notificationCount'];	    	    		
+	    	        $("#notify a span.badge").html(newdata['notificationCount'])
+	    	        $("li#"+notificationId+" a span.message span.see-sow").html('&#40;Seen&#41;');
+	    	        $("tr#"+notificationId+" td.see-sow").html('Seen');
+	    	    });
+	
+	
+	});
 
 
 	    

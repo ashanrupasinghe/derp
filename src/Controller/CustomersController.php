@@ -11,6 +11,17 @@ use App\Controller\AppController;
  */
 class CustomersController extends AppController {
 	
+	// In a controller
+	// Make the new component available at $this->Math,
+	// as well as the standard $this->Csrf
+	/* public function initialize()
+	{
+		parent::initialize();
+		$this->loadComponent('Notification');
+		
+	} */
+	
+	
 	public function isAuthorized($user)
 	{
 		
@@ -32,6 +43,11 @@ class CustomersController extends AppController {
 	 * @return \Cake\Network\Response|null
 	 */
 	public function index() {
+		
+		/* $this->Notification->setNotification();
+		
+		die(); */
+		
 		$customers = $this->paginate ( $this->Customers );
 		
 		$this->set ( compact ( 'customers' ) );
@@ -41,6 +57,8 @@ class CustomersController extends AppController {
 		$this->set ( '_serialize', [ 
 				'customers' 
 		] );
+		
+		
 	}
 	
 	/**

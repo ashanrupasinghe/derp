@@ -10,7 +10,12 @@ use Cake\Datasource\ConnectionManager;
  */
 class SupplierNotificationsController extends AppController
 {
-
+	public function initialize()
+	{
+		parent::initialize();
+		$this->loadComponent('Notification');
+	
+	}
 	public function isAuthorized($user) {
 	
 		// The owner of an article can edit and delete it
@@ -41,6 +46,7 @@ class SupplierNotificationsController extends AppController
      */
     public function index()
     {   	
+    	
     	
         $supplierNotifications = $this->paginate($this->SupplierNotifications);
 
@@ -140,7 +146,11 @@ class SupplierNotificationsController extends AppController
         		if($current_status['status_s']==$product_status){
         			continue ;//if current tatus equals to new status return
         		}
+        		/*Notification function xxx yy z*/
+        		//$this->Notification->setNotification();die();
         		$updatable_data[]=['order_id'=>$data['orderId'],'product_id'=>$product_id,'status_s'=>$product_status];
+        		$user_id=$this->Auth->user('id');
+        		$this->Notification->setNotification('',$product_status,'',$data['orderId'] ,$product_id,$user_id,'');//send notification
         	} 
 
         	/*  print '<pre>';
@@ -184,6 +194,9 @@ class SupplierNotificationsController extends AppController
     }
     
     public function listnotifications($type=""){
+    	/* $user_id=$this->Auth->user('id');
+    	$this->Notification->setNotification('',4,'',174,6,$user_id,'');die(); */
+    	
     	$status="";
     	if ($type=="pending" || $type=="new-pending"){
     		$status=0;

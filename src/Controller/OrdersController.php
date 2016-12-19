@@ -14,6 +14,13 @@ use Cake\Mailer\Email;
  */
 class OrdersController extends AppController {
 	
+	public function initialize()
+	{
+		parent::initialize();
+		$this->loadComponent('Notification');
+	
+	}
+	
 	public function isAuthorized($user) {
 		
 		// The owner of an article can edit and delete it
@@ -129,6 +136,7 @@ class OrdersController extends AppController {
 		$client_id = $session->read ( 'Config.clientid' );		
 		$order = $this->Orders->newEntity ();
 		$order_data=$this->request->data();
+		$order_id="";
 		
 		//print '<pre>';
 		//$this->sendOrderEmail('new',$suppliers_id,$delivery_id);
@@ -145,7 +153,8 @@ class OrdersController extends AppController {
 			/* 	 print '<pre>';
 				print_r($order_data);
 				die();  */
-			if ($saving) {				
+			if ($saving) {			
+				$order_id=$order->id;
 				//$session->destroy('Config.clientid');
 				
 				//delevery notification
@@ -198,8 +207,12 @@ class OrdersController extends AppController {
 				$dlilevery_notification_entity=$this->Orders->DeliveryNotifications->newEntity($dilivery_notification);
 				$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
 				
+				/*Notification function xxx yy z*/
+				$this->Notification->setNotification($data['status'],'','',$order_id,'','','');
+				
 				//$this->sendToAll($order->id,'new', $supplerids, $delivery_id);//send emails
 				$this->sendToAll2($order->id,'new', $supplerids, $delivery_id,$order_data);//send emails,product_name,product_quantity,product_supplier
+				
 				
 				
 				$this->Flash->success ( __ ( 'The order has been saved.' ) );
@@ -517,6 +530,8 @@ class OrdersController extends AppController {
 			if($this->Orders->save($order)){
 				$con_order_products=$this->Orders->OrderProducts->connection();
 				$stmt = $con_order_products->execute('UPDATE order_products SET status_s = ? WHERE order_id = ?',[9, $id]);
+				/*Notification function xxx yy z*/
+				$this->Notification->setNotification(9,'','',$id,'','','');//send notifications
 /* 			$con_sup=$this->Orders->SupplierNotifications->connection();
 			$stmt = $con_sup->execute('UPDATE supplier_notifications SET status_s = ? WHERE orderId = ?',[9, $id]);
 			
@@ -537,6 +552,8 @@ class OrdersController extends AppController {
 		/* if ($x) { */
 			//cancel delevery and supplier notifications
 			$this->Flash->success ( __ ( 'The order has been canceled.' ) );
+			
+			
 			
 		} else {
 			$this->Flash->error ( __ ( 'The order could not be canceled. Please, try again.' ) );
@@ -1117,3 +1134,6 @@ http://stackoverflow.com/questions/8599200/calculate-distance-given-2-points-lat
 http://stackoverflow.com/questions/1006654/fastest-way-to-find-distance-between-two-lat-long-points
   
  * */
+
+
+/*http://stackoverflow.com/questions/26772946/how-to-access-one-controller-action-inside-another-controller-action*/
