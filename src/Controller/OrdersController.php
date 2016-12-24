@@ -7,6 +7,7 @@ use App\Model\Entity\SupplierNotification;
 use Cake\Datasource\ConnectionManager;
 use Cake\Mailer\Email;
 use Cake\I18n\Time;
+use Cake\Core\Configure;
 /**
  * Orders Controller
  *
@@ -18,6 +19,7 @@ class OrdersController extends AppController {
 	{
 		parent::initialize();
 		$this->loadComponent('Notification');
+		$this->loadComponent('RequestHandler');
 	
 	}
 	
@@ -36,7 +38,8 @@ class OrdersController extends AppController {
 				'processdata',
 				'cancel',
 				'sendOrderemail',
-				'send'
+				'send',
+				'viewpdf'
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -115,6 +118,15 @@ class OrdersController extends AppController {
 				
 				
 		] );
+		
+		//for pdf genarate;
+		$this->viewBuilder()->options([
+				'pdfConfig' => [
+						'orientation' => 'landscape',
+						'filename' => 'Order-' . $id.'.pdf'
+				]
+		]);
+		
 		/*  print '<pre>';
 		print_r($order);
 		die();  */

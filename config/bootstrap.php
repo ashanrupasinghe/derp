@@ -213,3 +213,4 @@ if (Configure::read('debug')) {
 Plugin::load('Migrations');
 
 Plugin::load('Search');
+Plugin::load('CakePdf', ['bootstrap' => true]);
