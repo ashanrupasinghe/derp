@@ -16,7 +16,8 @@ class UserNotificationsController extends AppController
 		// The owner of an article can edit and delete it
 		if (in_array ( $this->request->action, [
 				'mynotifications',
-				'updateSeen'
+				'updateSeen',
+				'genarateUrl'
 				
 		] )) {
 				
@@ -189,5 +190,58 @@ class UserNotificationsController extends AppController
 		$number = $query->count();
 		//return $number;
     	 
+    }
+    
+    public function genarateUrl($notificationId,$userlevel,$userId){
+    	$controler="";
+    	$action="";
+    	$id="";//order id/notification id
+    	
+    	switch ($userlevel){
+    		case 1:
+    			$controler="orders";
+    			$action="view";
+    			$id=$this->UserNotifications->get($notificationId,['fields'=>['orderId']])->toArray();
+    			$id=$id['orderId'];//orderid
+    			break;
+    		case 2:
+    			$controler="orders";
+    			$action="view";
+    			$id=$this->UserNotifications->get($notificationId,['fields'=>['orderId']])->toArray();
+    			$id=$id['orderId'];//orderid
+    			break;
+    		case 3:
+    			$controler="SupplierNotifications";
+    			$action="edit";
+    			$sup_id_query=$this->UserNotifications->get($notificationId,['contain'=>['Users.Suppliers']]);    			
+    			$sup_id=$sup_id_query['user']->suppliers[0]->id;//delever id
+    			$orderId=$sup_id_query['orderId'];
+    			//get notification id
+    			$supplierModel=$this->loadModel('SupplierNotifications');
+    			$sup_notifi_id=$supplierModel->find('all',['fields'=>['id'],'conditions'=>['supplierId'=>$sup_id,'orderId'=>$orderId]])->toArray(); 
+    			$sup_notifi_id=$sup_notifi_id[0]->id;//delivery notification id
+    			$id=$sup_notifi_id;
+    			
+    			break;
+    		case 4:
+    			$controler="DeliveryNotifications";
+    			$action="edit";
+    			$del_id_query=$this->UserNotifications->get($notificationId,['contain'=>['Users.Delivery']]);
+    			$del_id=$del_id_query['user']->delivery[0]->id;//delever id
+    			$orderId=$del_id_query['orderId'];
+    			//get notification id
+    			$deliveryModel=$this->loadModel('DeliveryNotifications');
+    			$del_notifi_id=$deliveryModel->find('all',['fields'=>['id'],'conditions'=>['deliveryId'=>$del_id,'orderId'=>$orderId]])->toArray(); 
+    			$del_notifi_id=$del_notifi_id[0]->id;//delivery notification id
+    			$id=$del_notifi_id;
+    		break;
+    		default:return; 
+    		
+    		
+    			
+    			
+    			
+    	}    	
+    	$this->redirect(['controller'=>$controler,'action'=>$action,$id]);
     }
 }

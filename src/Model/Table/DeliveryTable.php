@@ -41,6 +41,9 @@ class DeliveryTable extends Table
             'joinType' => 'INNER'
         ]);
         $this->belongsTo('city',['foreignKey'=>'city','propertyName'=>'cid']);
+        $this->hasMany('DeliveryNotifications', [
+        		'foreignKey' => 'deliveryId'
+        ]);
     }
 
     /**

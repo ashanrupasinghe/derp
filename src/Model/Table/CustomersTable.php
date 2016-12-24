@@ -97,10 +97,13 @@ class CustomersTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
+
+    /* comment acording to client request
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['email']));
 
         return $rules;
     }
+    */
 }

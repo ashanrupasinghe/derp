@@ -144,6 +144,7 @@ class NotificationComponent extends Component
 		//$msg9_order_canceled="order ".$order_id."is canceled";
 		//$msg10_order_compleated="order ".$order_id." is compleated";
 		$message="";//final message
+		$url="";//url for the order or notification
 		
 		if($type==1 || $type==9){
 			//echo 'ashan';
@@ -174,7 +175,7 @@ class NotificationComponent extends Component
 			}else{
 				$message="order ID: ".$order_id." is canceled";
 			}
-			
+			//$url="/orders/view/".$order_id;
 			
 			
 		}

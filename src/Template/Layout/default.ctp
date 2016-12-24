@@ -301,7 +301,13 @@ $cakeDescription = 'Direct2Door.lk';
                     //print_r($notification);
                     ?>
                     <li id="<?= $notification->id ?>" class="notify-seen">
-                      <a>
+                      <a href="<?php echo $this->url->build('/user-notifications/genarateUrl/'.$notification->id.'/'.$userLevel.'/'.$userId);?>">
+                      <!--
+                      ex: supplier: http://localhost/direct2door.erp/supplier-notifications/edit/233[notifyid]
+                      	  delivery: http://localhost/direct2door.erp/delivery-notifications/edit/x[notifyid]
+                      	  callcenter: http://localhost/direct2door.erp/orders/view/179[orderid]
+                      	  			  
+                      -->
                         <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
                         <span>
                           <!--<span>user name</span>-->

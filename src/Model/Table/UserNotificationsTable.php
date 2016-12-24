@@ -35,6 +35,11 @@ class UserNotificationsTable extends Table
         $this->primaryKey('id');
         
         $this->addBehavior('Timestamp');
+        //relation with, usertable
+        $this->belongsTo('Users', [
+        		'foreignKey' => 'userId',
+        		'joinType' => 'INNER'
+        ]);
     }
 
     /**

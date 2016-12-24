@@ -6,7 +6,7 @@ use App\Controller\AppController;
 use App\Model\Entity\SupplierNotification;
 use Cake\Datasource\ConnectionManager;
 use Cake\Mailer\Email;
-
+use Cake\I18n\Time;
 /**
  * Orders Controller
  *
@@ -255,7 +255,7 @@ class OrdersController extends AppController {
 				'firstName',
 				'lastName',
 				'city.cname' 
-		] )->where(['status'=>1]) ->formatResults ( function ($results) {
+		] )->where(['status'=>1])->order(['rate' =>'DESC']) ->formatResults ( function ($results) {
 
 			return $results->combine ( 'id', function ($row) {
 				return $row ['firstName'] . ' ' . $row ['lastName'].' - '.$row['cid']['cname'];
@@ -285,6 +285,11 @@ class OrdersController extends AppController {
 			} );
 		} );
 		$this->set ( compact ( 'cities' ) );
+		$current_date_hidden=date('Y-m-d');	
+		$current_date_show=date('d F Y');	
+						
+		$this->set('current_date_hidden',$current_date_hidden);		
+		$this->set('current_date_show',$current_date_show);
 		
 		}else{
 			$this->redirect(['controller'=>'customers','action'=>'search']);

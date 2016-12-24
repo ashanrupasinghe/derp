@@ -56,11 +56,11 @@
 <div class="form-group">
                 <label for="dtp_input2" class="col-md-3 control-label">Delivery Date</label>
                 <div class="input-group date form_date col-md-9" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                    <input class="form-control" type="text" value="" readonly>
+                    <input class="form-control" type="text" value="<?= $current_date_show ?>" readonly>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
-				<input type="hidden" id="dtp_input2" value="" name="del-date" /><br/>
+				<input type="hidden" id="dtp_input2" value="<?= $current_date_hidden ?>" name="del-date" /><br/>
             </div>
 <div class="form-group">
                 <label for="dtp_input3" class="col-md-3 control-label">Delivery Time</label>
@@ -162,7 +162,7 @@
 <div class="form-group">
 <label class="control-label col-md-4 col-sm-4 col-xs-12">Delivery Staff</label>
 <div class="col-md-8 col-sm-8 col-xs-12">
-	<?php echo $this->Form->input('deliveryId',['label' => false,'class'=>'form-control','empty'=>'select deliver','options'=>$deliveries]); ?>
+	<?php echo $this->Form->input('deliveryId',['label' => false,'class'=>'form-control','options'=>$deliveries]); ?>
 </div>
 </div>			
 
