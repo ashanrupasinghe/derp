@@ -181,6 +181,9 @@ $cakeDescription = 'Direct2Door.lk';
                  <li><a href="<?php echo $this->Url->build('/products/index'); ?>"><i class="fa fa-laptop"></i>Products</a></li>
                  <li><a href="<?php echo $this->Url->build('/package-type/index'); ?>"><i class="fa fa-laptop"></i>Packages</a></li>
                  <li><a href="<?php echo $this->Url->build('/orders/index'); ?>"><i class="fa fa-laptop"></i>Orders</a></li>
+                 <?php if($userLevel==2):?>
+                 <li><a href="<?php echo $this->Url->build('/orders/schedule'); ?>"><i class="fa fa-laptop"></i>Order Schedule</a></li>
+                 <?php endif;?>
                  <?php if($userLevel==1):?>
                 <li><a href="<?php echo $this->Url->build('/callcenter/index'); ?>"><i class="fa fa-laptop"></i>Call Centre Staff</a></li>   
                 <li><a href="<?php echo $this->Url->build('/suppliers/index'); ?>"><i class="fa fa-laptop"></i>Suppliers</a></li>   

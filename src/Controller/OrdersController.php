@@ -8,6 +8,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Mailer\Email;
 use Cake\I18n\Time;
 use Cake\Core\Configure;
+use Cake\I18n\Date;
 /**
  * Orders Controller
  *
@@ -39,7 +40,8 @@ class OrdersController extends AppController {
 				'cancel',
 				'sendOrderemail',
 				'send',
-				'viewpdf'
+				'viewpdf',
+				'schedule'
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -1113,6 +1115,45 @@ public function sendemail2($orderid,$type='new',$recipients,$recipient_type){
 	->subject($subject)
 	->send($message);
 
+}
+
+
+public function schedule() {
+	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status <'=>5],'order' => ['Orders.deliveryDate' => 'DESC','Orders.deliveryTime' => 'DESC']] );
+	/* print '<pre>';
+		print_r($orders);
+	die(); */
+	$callcenter_query=$this->Orders->Callcenter->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
+	->join ( [
+			'table' => 'users',
+			'alias' => 'users',
+			'type' => 'INNER',
+			'conditions' => 'user_id = users.id'
+	] );
+	$callcenters=$callcenter_query->toArray();
+
+	$this->set('callcenters',$callcenters);
+		
+	$delivery_query=$this->Orders->Delivery->find('list',['keyField'=>'id','valueField'=>'users.username'])->select(['id','users.username'])
+	->join ( [
+			'table' => 'users',
+			'alias' => 'users',
+			'type' => 'INNER',
+			'conditions' => 'user_id = users.id'
+	] );
+	$deliveries=$delivery_query->toArray();
+
+	$this->set('deliveries',$deliveries);
+
+
+	$cities_query=$this->Orders->City->find('list',['keyField'=>'cid','valueField'=>'cname']);
+	$city=$cities_query->toArray();
+	$this->set('cities',$city);
+
+	$this->set ( compact ( 'orders' ) );
+	$this->set ( '_serialize', [
+			'orders'
+	] );
 }
 
 
