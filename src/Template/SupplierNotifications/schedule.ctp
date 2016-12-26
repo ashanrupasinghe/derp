@@ -1,15 +1,14 @@
-
-<?php
-//$status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
-//$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];
+<?php 
+//$status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled'];
 $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed', '9'=>'canceled'];
-
 ?>
+
+
 
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Delivery Notifications') ?> <small><?= __('delivery notification list') ?></small></h2>
+                    <h2><?= __('Supplier Notifications') ?> <small><?= __('order by date') ?></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -32,49 +31,47 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                       <thead>
                         <tr>
                           <th><?= $this->Paginator->sort('id') ?></th>
-                <!--<th><?= $this->Paginator->sort('deliveryId') ?></th>-->
+                <!--<th><?= $this->Paginator->sort('supplierId') ?></th>-->
                 <th><?= $this->Paginator->sort('sentFrom') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <th><?= __('Ready') ?></th>
+                <th><?= $this->Paginator->sort('deliveryDate') ?></th>
+                <th><?= $this->Paginator->sort('deliveryTime') ?></th>
                 <th><?= $this->Paginator->sort('status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                       </thead>
                       <tbody>
-                         <?php foreach ($deliveryNotifications as $deliveryNotification): 
-            
-            ?>
+                        <?php foreach ($supplierNotifications as $supplierNotification): ?>
             <tr>
-                <td><?= $this->Number->format($deliveryNotification->id) ?></td>
-                <!--<td><?= $this->Number->format($deliveryNotification->deliveryId) ?></td>-->
-                <td><?php if($deliveryNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>
-                <td><?= h($deliveryNotification->created) ?></td>
-                <td><?= h($deliveryNotification->modified) ?></td>
-                <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
-                <td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>
-                <?php ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php ?>
+                <td><?= $this->Number->format($supplierNotification->id) ?></td>
+                <!--<td><?= $this->Number->format($supplierNotification->supplierId) ?></td>-->
+                <td><?= h($supplierNotification->sentFrom) ?></td>
+                <td><?= h($supplierNotification->created) ?></td>
+                <td><?= h($supplierNotification->modified) ?></td>
+                <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
+                <?php ?> <td><?= $this->Time->format($supplierNotification['order']->deliveryDate,'yyyy-MM-dd') ?></td><?php ?>
+                <?php ?> <td><?= $this->Time->format($supplierNotification['order']->deliveryTime,'HH:mm:ss') ?></td><?php ?>                
+                <?php ?><td><?= h($status[$supplierNotification['order']->status]) ?></td><?php ?>
                 
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $deliveryNotification->id],['class'=>'x-btn x-btn-primary']) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $deliveryNotification->id],['class'=>'x-btn x-btn-warning']) ?>
-                    <!--<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $deliveryNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $deliveryNotification->id),'class'=>'x-btn x-btn-danger']) ?>-->
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning']) ?>
+                    <!--<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplierNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id),'class'=>'x-btn x-btn-danger']) ?>-->
                 </td>
             </tr>
             <?php endforeach; ?>
-                        
                       </tbody>
                     </table>
-<div class="paginator">
+                    <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->prev('< ' . __('previous')) ?>
             <?= $this->Paginator->numbers() ?>
             <?= $this->Paginator->next(__('next') . ' >') ?>
         </ul>
         <p><?= $this->Paginator->counter() ?></p>
-    </div>                    
+    </div>
                   </div>
                 </div>
 </div>
-

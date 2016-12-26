@@ -166,8 +166,11 @@ $cakeDescription = 'Direct2Door.lk';
                 <ul class="nav side-menu">
                 <?php if($userLevel==3){?>
                  <li><a href="<?php echo $this->Url->build('/supplier-notifications/listnotifications'); ?>"><i class="fa fa-laptop"></i>Notifications</a></li>
+                 <li><a href="<?php echo $this->Url->build('/supplier-notifications/schedule'); ?>"><i class="fa fa-laptop"></i>Order Schedule</a></li>
+                                  
                 <?php }else if($userLevel==4){?>
                  <li><a href="<?php echo $this->Url->build('/delivery-notifications/listnotifications'); ?>"><i class="fa fa-laptop"></i>Notifications</a></li>
+                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/schedule'); ?>"><i class="fa fa-laptop"></i>Order Schedule</a></li>
                 <?php   }else{ ?> 
                 
                  <li>

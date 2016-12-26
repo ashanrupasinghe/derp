@@ -25,6 +25,7 @@ class DeliveryNotificationsController extends AppController
 				'edit',
 				'view',
 				'listnotifications',
+				'schedule'
 				
 	
 	
@@ -362,5 +363,98 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	die(); */
         $this->set(compact('deliveryNotifications','counted_data'));
         $this->set('_serialize', ['deliveryNotifications']);
+    }
+    
+    
+    public function schedule($type=""){
+    	$status="";
+    	if ($type=="pending" || $type=="new-pending" || $type=='ready'){
+    		$status=0;
+    	}elseif ($type=='took-all'){
+    		$status=1;
+    	}elseif ($type=='delivered'){
+    		$status=2;
+    	}elseif ($type=='canceled' || $type=="new-canceled"){
+    		$status=9;
+    	}
+    	/*
+    	 SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end) ready, sum(case when sn.status_s = 4 then 1 else 0 end) handovered FROM delivery_notifications dn JOIN supplier_notifications sn ON dn.orderId=sn.orderId WHERE dn.deliveryId=4 group by sn.orderId
+    	 * */
+    	$user_id=$this->Auth->user('id');
+    	$delivery_query=$this->DeliveryNotifications->delivery->find('all',['conditions'=>['user_id'=>$user_id]])->contain(['Users'])->first();
+    	$delivery=$delivery_query->toArray();
+    	//
+    	$where="";
+    	 
+    	if ($type=="ready"){
+    		$where=" WHERE t.noOfProduct=t.ready";
+    
+    	}
+    	/* $query="SELECT t.* FROM (SELECT dn.*,count(*) noOfProduct,".
+    	 "sum(case when sn.status_s = 3 then 1 else 0 end) ready,".
+    	 " sum(case when sn.status_s = 4 then 1 else 0 end) handovered".
+    	 " FROM delivery_notifications dn".
+    	 " JOIN supplier_notifications sn ON dn.orderId=sn.orderId".
+    	 " WHERE dn.deliveryId=".$delivery['id'].
+    	 " group by sn.orderId) as t".
+    	 $where; */
+    	 
+    	$query="SELECT t.* FROM (SELECT dn.*,count(*) noOfProduct,".
+    			"sum(case when op.status_s = 3 then 1 else 0 end) ready,".
+    			" sum(case when op.status_s = 4 then 1 else 0 end) handovered".
+    			" FROM delivery_notifications dn".
+    			" JOIN order_products op ON dn.orderId=op.order_id".
+    			" WHERE dn.deliveryId=".$delivery['id'].
+    			" group by op.order_id) as t".
+    			$where;
+    	 
+    	 
+    	$connection = ConnectionManager::get('default');
+    	$results = $connection->execute($query)->fetchAll('assoc');
+    	 
+    	$counted_data=[];
+    	//print '<pre>';
+    	foreach ($results as $result){
+    		$counted_data[$result['orderId']]=$result;
+    	}
+    	 
+    	 
+    	//print '<pre>';
+    	//echo $query;
+    	//print_r($counted_data);
+    	//echo $counted_data[56]['noOfProduct'].'<br>';
+    	//echo $counted_data[56]['ready'];
+    	//die();
+    	$conditions=['deliveryId'=>$delivery['id']];
+    	 
+    	if ($type!=""){
+    		$conditions['status']=$status;
+    	}
+    	if ($type=="new-pending" || $type=="new-canceled"){
+    		$conditions['modified >']=new \DateTime('-24 hours');
+    	}
+    	if ($type=="ready"){
+    		$idlist=array_column($results,'id');//list of notification id readyProduct=no of products
+    
+    		if (!empty($idlist)){
+    			$conditions['id IN']=$idlist;
+    		}else {
+    			$conditions['id IN']=[0];//privent error,if empty idlist array, return an sql error
+    		}
+    	}
+    	 
+    	//print_r($conditions);
+    	 
+    	 
+    	//print '<pre>';
+    	//print_r( $counted_data);
+    	//die();
+    	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['deliveryId'=>$delivery['id']]]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id']],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'DESC','Orders.deliveryTime' => 'DESC']]);
+    	/* print '<pre>';
+    	 print_r($deliveryNotifications);
+    	die(); */
+    	$this->set(compact('deliveryNotifications','counted_data'));
+    	$this->set('_serialize', ['deliveryNotifications']);
     }
 }

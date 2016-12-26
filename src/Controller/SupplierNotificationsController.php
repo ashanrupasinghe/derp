@@ -24,6 +24,7 @@ class SupplierNotificationsController extends AppController
 				'edit',				
 				'view',
 				'listnotifications',
+				'schedule'
 				
 				
 		] )) {
@@ -241,6 +242,59 @@ class SupplierNotificationsController extends AppController
     	
     	
         $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['SupplierNotifications.created' => 'DESC']]);
+    	$this->set(compact('supplierNotifications'));
+    	$this->set('_serialize', ['supplierNotifications']);
+    }
+    
+    
+    public function schedule($type=""){
+    	/* $user_id=$this->Auth->user('id');
+    	 $this->Notification->setNotification('',4,'',174,6,$user_id,'');die(); */
+    	 
+    	$status="";
+    	if ($type=="pending" || $type=="new-pending"){
+    		$status=0;
+    	}elseif ($type=='available'){
+    		$status=1;
+    	}elseif ($type=='not-available'){
+    		$status=2;
+    	}elseif ($type=='ready'){
+    		$status=3;
+    	}elseif ($type=='delivery-hand-over'){
+    		$status=4;
+    	}elseif ($type=='canceled' || $type=="new-canceled"){
+    		$status=9;
+    	}
+    	/*     	$myquery="SELECT DISTINCT op.product_id,prod.name,op.product_quantity,pt.type,sn.status_s,op.order_id,ps.supplier_id ".
+    	 "FROM supplier_notifications sn ".
+    	 "JOIN product_suppliers ps ON sn.supplierId=ps.supplier_id ".
+    	 "JOIN order_products op ON ps.product_id=op.product_id ".
+    	 "JOIN products prod ON prod.id=op.product_id ".
+    	 "JOIN package_type pt ON pt.id=prod.package ".
+    	 "WHERE op.order_id=sn.orderId"; */
+    	$user_id=$this->Auth->user('id');
+    	$supplier_query=$this->SupplierNotifications->suppliers->find('all',['conditions'=>['user_id'=>$user_id]])->contain(['Users'])->first();
+    	$supplier=$supplier_query->toArray();//get loged in supplier data
+    	/*
+    	 $subQuery=$this->SupplierNotifications->find('list',['fields'=>['distinct op.product_id','pr.name','op.product_quantity','pt.type','status_s','op.order_id','ps.supplier_id']]) ->distinct(['op.product_id'])
+    	 ->join(['table'=>'product_suppliers','alias'=>'ps','type'=>'INNER','conditions'=>'supplierId=ps.supplier_id'])
+    	 ->join(['table'=>'order_products','alias'=>'op','type'=>'INNER','conditions'=>'ps.product_id=op.product_id'])
+    	 ->join(['table'=>'products','alias'=>'pr','type'=>'INNER','conditions'=>'pr.id=op.product_id'])
+    	 ->join(['table'=>'package_type','alias'=>'pt','type'=>'INNER','conditions'=>'pt.id=pr.package']);
+    
+    	 $query=$this->SupplierNotifications->find('all')->join(['table'=>$subQuery,'alias'=>'sub','type'=>'INNER','conditions'=>'ps__supplier_id=supplierID']);
+    	 echo $query;
+    	*/
+    	$conditions=['SupplierId'=>$supplier['id']];
+    	if ($type!=""){
+    		$conditions['status_s']=$status;
+    	}
+    	if ($type!="" &&($type=="new-pending" || $type=="new-canceled")){
+    		$conditions['modified >']=new \DateTime('-24 hours');
+    	}
+    	 
+    	 
+    	$supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'DESC','Orders.deliveryTime' => 'DESC']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

@@ -37,6 +37,8 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('orderId') ?></th>
+                <th><?= $this->Paginator->sort('deliveryDate') ?></th>
+                <th><?= $this->Paginator->sort('deliveryTime') ?></th>
                 <th><?= __('Ready') ?></th>
                 <th><?= $this->Paginator->sort('status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
@@ -53,13 +55,15 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <td><?= h($deliveryNotification->created) ?></td>
                 <td><?= h($deliveryNotification->modified) ?></td>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
+                <?php ?> <td><?= $this->Time->format($deliveryNotification['order']->deliveryDate,'yyyy-MM-dd') ?></td><?php ?>
+                <?php ?> <td><?= $this->Time->format($deliveryNotification['order']->deliveryTime,'HH:mm:ss') ?></td><?php ?>
                 <td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>
                 <?php ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php ?>
                 
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $deliveryNotification->id],['class'=>'x-btn x-btn-primary']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $deliveryNotification->id],['class'=>'x-btn x-btn-warning']) ?>
-                    <!--<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $deliveryNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $deliveryNotification->id),'class'=>'x-btn x-btn-danger']) ?>-->
+                   <!-- <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $deliveryNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $deliveryNotification->id),'class'=>'x-btn x-btn-danger']) ?>-->
                 </td>
             </tr>
             <?php endforeach; ?>

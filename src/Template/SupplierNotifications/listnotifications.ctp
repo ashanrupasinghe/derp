@@ -54,7 +54,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplierNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id),'class'=>'x-btn x-btn-danger']) ?>
+                    <!--<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplierNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id),'class'=>'x-btn x-btn-danger']) ?>-->
                 </td>
             </tr>
             <?php endforeach; ?>
