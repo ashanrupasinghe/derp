@@ -214,3 +214,4 @@ Plugin::load('Migrations');
 
 Plugin::load('Search');
 Plugin::load('CakePdf', ['bootstrap' => true]);
+Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);

@@ -21,6 +21,14 @@ class ProductsController extends AppController
 		return parent::isAuthorized($user);
 	}
 	
+	public function initialize()
+	{
+		parent::initialize();
+		$this->loadComponent('Cewi/Excel.Import');
+		ini_set('memory_limit', '256M');
+		//set_time_limit(0); Infinite
+	}
+	
     /**
      * Index method
      *
@@ -259,5 +267,57 @@ class ProductsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    public function import(){
+    	 
+    	if ($this->request->is('post')) {
+    		
+    		$file= $this->request->data('productsSheet.tmp_name');
+    		//echo $file;
+    		 
+    		$data = $this->Import->prepareEntityData($file, ['append'=> true]);
+    		$products=[];
+    		$count=0;
+    		foreach ($data as $product){
+    			$products[$count]['name']=$product['name'];
+    			$products[$count]['sku']=$product['sku'];
+    			$products[$count]['description']=$product['description'];
+    			$products[$count]['price']=$product['price'];
+    			$products[$count]['image']=$product['small_image'];
+    			if (isset($product['package'])){
+    				$products[$count]['package']=$product['package'];
+    			}else{
+    				$products[$count]['package']=1;
+    			}
+    			if (isset($product['availability'])){
+    				$products[$count]['availability']=$product['availability'];
+    			}
+    			else{
+    				$products[$count]['availability']=1;
+    			}
+    			if (isset($product['status'])){
+    				$products[$count]['status']=$product['status'];
+    			}else{
+    				$products[$count]['status']=1;
+    			}
+    			$count++;
+    
+    		}
+    	
+    		$entities = $this->Products->newEntities($products);
+    	
+    		if($this->Products->saveMany($entities,['checkExisting' => true])){
+    			$this->Flash->success(__('Products imported successfully.'));
+    			return $this->redirect(['action' => 'import']);
+    
+    		}else{
+    			$this->Flash->error(__('Products could not be imported. Please, try again.'));
+    			return $this->redirect(['action' => 'import']);
+    		}
+    		 
+    	}
+    	 //http://stackoverflow.com/questions/22590957/how-do-i-best-avoid-inserting-duplicate-records-in-cakephp
+    	 //https://github.com/cewi/excel
     }
 }

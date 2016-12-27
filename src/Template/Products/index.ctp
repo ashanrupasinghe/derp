@@ -10,7 +10,9 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                     <ul class="nav navbar-right panel_toolbox">
                       <?php if($userLevel==1):?>
         <li><?= $this->Html->link(__('Add New Product'), ['controller' => 'Products', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('Import Product'), ['controller' => 'Products', 'action' => 'import']) ?></li>
 <?php endif;?>
+
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">

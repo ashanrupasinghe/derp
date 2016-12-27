@@ -12,7 +12,9 @@
         "cakephp/plugin-installer": "*",
         "friendsofcake/search": "^2.3",
         "friendsofcake/CakePdf": "^3.2",
-        "dompdf/dompdf": "^0.7.0"
+        "dompdf/dompdf": "^0.7.0",
+        "Cewi/Excel": "dev-master"
+        
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -40,5 +42,11 @@
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump"
     },
     "minimum-stability": "beta",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [
+         {
+            "type": "vcs",
+            "url": "https://github.com/cewi/excel"
+        }
+    ] 
 }

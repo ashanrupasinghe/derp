@@ -56,7 +56,7 @@ Configure::write('CakePdf', [
 'orientation' => 'landscape',
 'download' => true
 ]);
-
+Router::extensions('xlsx');
 Router::scope('/', function (RouteBuilder $routes) {
 		
     /**
