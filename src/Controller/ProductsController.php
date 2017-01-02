@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-
+use Cake\Datasource\ConnectionManager;
 /**
  * Products Controller
  *
@@ -269,22 +269,40 @@ class ProductsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
     
+    /**
+     * import data from a excel sheet
+     */
     public function import(){
-    	 
+    	
     	if ($this->request->is('post')) {
+    		if (!empty($this->request->productsSheet)){
     		
     		$file= $this->request->data('productsSheet.tmp_name');
     		//echo $file;
+    		/* $skufinder=$this->Products->find('all',['conditions'=>['sku'=>'Kolikuttu banana'],'fields'=>['id']]);
+    		$skucount=$skufinder->count();
+    		echo $skucount;
+    		die(); */
     		 
     		$data = $this->Import->prepareEntityData($file, ['append'=> true]);
     		$products=[];
     		$count=0;
     		foreach ($data as $product){
+    			$skufinder=$this->Products->find('all',['conditions'=>['sku'=>$product['sku']]]);
+    			$skucount=$skufinder->count();
+    			/* print '<pre>';
+    			print_r($skufinder->toArray()); */
+    			//echo $skucount."<br>";
+    			//echo $product['name']."<br>";
+    			
+    			if ($skucount>0){
+    				$currentsku=$skufinder->first();
+    				$products[$count]['id']=$currentsku->id;
+    			}
     			$products[$count]['name']=$product['name'];
     			$products[$count]['sku']=$product['sku'];
     			$products[$count]['description']=$product['description'];
     			$products[$count]['price']=$product['price'];
-    			$products[$count]['image']=$product['small_image'];
     			if (isset($product['package'])){
     				$products[$count]['package']=$product['package'];
     			}else{
@@ -296,6 +314,9 @@ class ProductsController extends AppController
     			else{
     				$products[$count]['availability']=1;
     			}
+    			
+    			$products[$count]['image']=$product['small_image'];    			
+    			
     			if (isset($product['status'])){
     				$products[$count]['status']=$product['status'];
     			}else{
@@ -303,11 +324,16 @@ class ProductsController extends AppController
     			}
     			$count++;
     
-    		}
-    	
-    		$entities = $this->Products->newEntities($products);
-    	
-    		if($this->Products->saveMany($entities,['checkExisting' => true])){
+    		}   		
+    		
+    		
+    		 
+    		$entities = $this->Products->newEntities($products);    		
+    		
+    		/* print '<pre>';
+    		print_r($productsx);
+    		die(); */
+    		if($this->Products->saveMany($entities)){
     			$this->Flash->success(__('Products imported successfully.'));
     			return $this->redirect(['action' => 'import']);
     
@@ -315,6 +341,11 @@ class ProductsController extends AppController
     			$this->Flash->error(__('Products could not be imported. Please, try again.'));
     			return $this->redirect(['action' => 'import']);
     		}
+    		
+    	}else{
+    		$this->Flash->error(__('Please select an EXCEl file'));
+    		return $this->redirect(['action' => 'import']);
+    	}
     		 
     	}
     	 //http://stackoverflow.com/questions/22590957/how-do-i-best-avoid-inserting-duplicate-records-in-cakephp
