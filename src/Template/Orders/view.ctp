@@ -7,7 +7,8 @@ $payment_status=['1'=>'pending','2'=>'paid'];
                 <div class="x_panel">
                   <div class="x_title">
                     <h2><?= __('View Order') ?> <small><?= __('Order ID: '.$order->id) ?></small></h2>
-                    <ul class="nav navbar-right panel_toolbox">
+                    <ul class="nav navbar-right panel_toolbox">                      
+                      <li><?= $this->Html->link('Get PDF', ['controller' => 'Orders', 'action' => 'view', $order->id.'.pdf'])?></li>
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
