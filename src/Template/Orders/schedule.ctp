@@ -78,7 +78,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                <!-- <td><?= h($order->created) ?></td>
                 <td><?= h($order->modified) ?></td>-->
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $order->id],['class'=>'x-btn x-btn-primary']) ?>                    
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $order->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>                    
                 </td>
             </tr>
             <?php endforeach; ?>

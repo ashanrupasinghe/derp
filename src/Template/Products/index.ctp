@@ -60,12 +60,12 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                     <!--<td><?= h($product->created) ?></td>-->
                     <!--<td><?= h($product->modified) ?></td>-->
                     <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $product->id],['class'=>'x-btn x-btn-primary']) ?>
-                       <?php if($userLevel==1||$userLevel==2):?> <?= $this->Html->link(__('Edit'), ['action' => 'edit', $product->id],['class'=>'x-btn x-btn-warning']) ?>
+                        <?= $this->Html->link(__('View'), ['action' => 'view', $product->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
+                       <?php if($userLevel==1||$userLevel==2):?> <?= $this->Html->link(__('Edit'), ['action' => 'edit', $product->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                         
                         <?php endif;?>
                                                <?php if($userLevel==1):?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $product->id],['confirm' => __('Are you sure you want to delete # {0}?', $product->id),'class'=>'x-btn x-btn-danger']) ?>
+                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $product->id],['confirm' => __('Are you sure you want to delete # {0}?', $product->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
                         <?php endif;?>
                     </td>
                 </tr>

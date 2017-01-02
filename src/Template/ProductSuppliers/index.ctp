@@ -24,9 +24,9 @@
                 <td><?= $productSupplier->has('product') ? $this->Html->link($productSupplier->product->name, ['controller' => 'Products', 'action' => 'view', $productSupplier->product->id]) : '' ?></td>
                 <td><?= $productSupplier->has('supplier') ? $this->Html->link($productSupplier->supplier->id, ['controller' => 'Suppliers', 'action' => 'view', $productSupplier->supplier->id]) : '' ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $productSupplier->product_id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $productSupplier->product_id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $productSupplier->product_id], ['confirm' => __('Are you sure you want to delete # {0}?', $productSupplier->product_id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $productSupplier->product_id],['class'=>'btn btn-danger btn-xs']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $productSupplier->product_id],['class'=>'btn btn-danger btn-xs']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $productSupplier->product_id], ['confirm' => __('Are you sure you want to delete # {0}?', $productSupplier->product_id),'class'=>'btn btn-danger btn-xs']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

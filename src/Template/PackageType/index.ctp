@@ -35,9 +35,9 @@
                 <td><?= $this->Number->format($packageType->id) ?></td>
                 <td><?= h($packageType->type) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $packageType->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $packageType->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $packageType->id], ['confirm' => __('Are you sure you want to delete # {0}?', $packageType->id)]) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $packageType->id],['class'=>'btn btn-info btn-xs']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $packageType->id],['class'=>'btn btn-warning btn-xs']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $packageType->id], ['confirm' => __('Are you sure you want to delete # {0}?', $packageType->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

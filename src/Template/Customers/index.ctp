@@ -58,11 +58,11 @@ $status=['0'=>'Disabled','1'=>'Active'];
                 <td><?= h($customer->modified) ?></td>-->
                 <td><?= h($status[$customer->status]) ?></td>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $customer->id],['class'=>'x-btn x-btn-primary']) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $customer->id],['class'=>'x-btn x-btn-warning']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $customer->id],['confirm' => __('Are you sure you want to delete # {0}?', $customer->id),'class'=>'x-btn x-btn-danger']) ?>
+                    <?= $this->Html->link(__('View'), ['action' => 'view', $customer->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
+                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $customer->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
+                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $customer->id],['confirm' => __('Are you sure you want to delete # {0}?', $customer->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
 					<?php $cus_name=$customer->firstName.' '.$customer->lastName;?>                    
-                    <?= $this->Form->postLink(__('Proceed order'), ['action' => 'check', $customer->id], ['confirm' => __('Are you sure you want to proceed an order for {0}?', $cus_name),'class'=>'x-btn x-btn-success']) ?>
+                    <?= $this->Form->postLink(__('Proceed order'), ['action' => 'check', $customer->id], ['confirm' => __('Are you sure you want to proceed an order for {0}?', $cus_name),'class'=>'x-btn x-btn-success btn btn-success btn-xs']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>
