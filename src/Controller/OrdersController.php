@@ -124,7 +124,7 @@ class OrdersController extends AppController {
 		//for pdf genarate;
 		$this->viewBuilder()->options([
 				'pdfConfig' => [
-						'orientation' => 'landscape',
+						'orientation' => 'portrait',
 						'filename' => 'Order-' . $id.'.pdf'
 				]
 		]);
