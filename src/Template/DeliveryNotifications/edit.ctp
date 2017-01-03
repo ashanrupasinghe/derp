@@ -4,6 +4,16 @@
 $status_sup=['0'=>'pending', '1'=>'available', '2'=>'not available', '3'=>'ready', '4'=>'hand overed','9'=>'canceled'];
 $status_del=['0'=>'pending','1'=>'took over'];
 
+//butons activate or disabled
+
+if($customer['order']['status']==5||$customer['order']['status']==6||$customer['order']['status']==9){
+$toggle_activity="disabled";
+$submit_activity=true;
+}
+else{
+$toggle_activity="";
+$submit_activity=false;
+}
 ?>
 <?= $this->Form->create($deliveryNotification,['class'=>'form-horizontal form-label-left']) ?>
 <div class="row">
@@ -68,7 +78,10 @@ $status_del=['0'=>'pending','1'=>'took over'];
                                                                                                              <div class="form-group">
                                                                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="Order_Status">Order Status<span class="required">*</span></label>                        
 						<div class="col-md-7 col-sm-7 col-xs-12">                          
-                          <?php echo $this->Form->input('Order_Status',['label' => false,'options'=>$status,'default'=>0,'value'=>$customer['order']['status'],'class'=>'form-control col-md-7 col-xs-12']);?>
+                          <?php //echo $this->Form->input('Order_Status',['label' => false,'options'=>$status,'default'=>0,'value'=>$customer['order']['status'],'class'=>'form-control col-md-7 col-xs-12']);?>
+                          
+                          <input <?= $toggle_activity ?> class="tog del" data-on="Collected" data-off="Delivered" data-size="small" <?php if(!($customer['order']['status']==5||$customer['order']['status']==6)){echo "checked";} ?> data-toggle="toggle" data-onstyle="info" data-offstyle="warning" type="checkbox" name='order_Status_toggle' id='' class="order_Status_toggle">
+							<input value="<?php if(!($customer['order']['status']==5||$customer['order']['status']==6)){echo 4;}else{ echo 5;} ?>" type="hidden" name='Order_Status' id='Order_Status'>
                                                     
                         </div>
                       </div> 
@@ -210,8 +223,11 @@ $status_del=['0'=>'pending','1'=>'took over'];
                 <th><?= __('product name') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Package')?></th>
+                <?php /*?>
                 <th><?= __('Supplier status') ?></th>
                 <th><?= __('My Status') ?></th>
+                */ ?>
+                
                         </tr>
                       </thead>
                       <tbody>
@@ -226,11 +242,12 @@ $status_del=['0'=>'pending','1'=>'took over'];
                 <td><?php echo $supplier['product']['name']; ?></td>
                 <td><?php echo $supplier['product_quantity']; ?></td>
                 <td><?php echo $supplier['product']['package_type']['type']; ?></td>
-                
-                <td><?php echo $this->Form->input('suplier status',['label' => false,'options'=>$status_sup,'default'=>$supplier['status_s'],'disabled'=>true]);?></td>                
-                <td><?php echo $this->Form->input('my status',['label' => false,'options'=>$status_del,'default'=>$supplier['status_d'],'name'=>'mystatus[]']);?>
                 <?php echo $this->Form->input('supid',['value'=>$supplier['product']['id'],'name'=>'productid[]','type'=>'hidden']);?>
-                </td>             
+                <?php /*?>
+                <td><?php echo $this->Form->input('suplier status',['label' => false,'options'=>$status_sup,'default'=>$supplier['status_s'],'disabled'=>true]);?></td>                
+                <td><?php echo $this->Form->input('my status',['label' => false,'options'=>$status_del,'default'=>$supplier['status_d'],'name'=>'mystatus[]']);?>                
+                </td>
+                <?php */?>             
             </tr>
             
             <?php endforeach; ?>
@@ -240,8 +257,8 @@ $status_del=['0'=>'pending','1'=>'took over'];
                     <div class="ln_solid"></div>
     				  <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">                          
-                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success']) ?>
-                        </div>
+                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success','disabled'=>$submit_activity]) ?>
+                        </div>                        
                       </div>
                   </div>
                 </div>

@@ -139,6 +139,10 @@ class SupplierNotificationsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
         	
         	$data=$this->request->data;
+        	 /*  print '<pre>';
+        	 print_r($data);
+        	 die(); */ 
+        	
         	$updatable_data=[];
         	$orderProductsModel=$this->loadModel('OrderProducts');
         	

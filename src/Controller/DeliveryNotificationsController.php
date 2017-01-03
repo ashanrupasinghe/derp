@@ -119,131 +119,64 @@ class DeliveryNotificationsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
         	
         	$data=$this->request->data();
-        	 /* print '<pre>';
-        	print_r($data); */
-        	//die();
-        	
-        	$orderProductsModel=$this->loadModel('OrderProducts');
-        	$mystatus_update=[]; //status_d, orderproducts   
-        	$count_took=0;  //tooked products
-        	$orderstatus=0;  //order table status	
-        	for($i=0;$i<sizeof($data['mystatus']);$i++){
-        		if($data['mystatus'][$i]==1){
-        			$count_took++;
-        		}
-        		
-        		
-        		$current_status=$orderProductsModel->get([$data['orderId'],$data['productid'][$i]],['fields'=>['status_d']])->toArray();//$current_status['status_s']
-        		//print_r($current_status);
-        		 if($current_status['status_d']==$data['mystatus'][$i]){
-        			continue ;//if current tatus equals to new status return
-        		} 
-        		
-        		
-        		//$mystatus_update[$i]=['id'=>$data['supid'][$i],'status_d'=>$data['mystatus'][$i]];
-        		$mystatus_update[]=['order_id'=>$data['orderId'],'product_id'=>$data['productid'][$i],'status_d'=>$data['mystatus'][$i]];
-        		/*Notification function xxx yy z*/
-        		$this->Notification->setNotification('','',$data['mystatus'][$i],$data['orderId'],$data['productid'][$i],'','');//sent notification
-        	}
-        	
-       /*  print '<pre>';
-        	print_r($mystatus_update);
-        	die();  */
-        	//echo $data['status'];
-        	if ($count_took==sizeof($data['mystatus'])){
-        		if ($data['Order_Status']==1){
-        		$data['Order_Status']=4;//check
-        		$orderstatus=4;	
-        		}
-        		elseif ($data['Order_Status']==5){
-        			$orderstatus=5;
-        		}
-        		
-        	}
-         /* 	 print '<pre>';
-        	echo $data['status'];
-        	print_r($mystatus_update);
-        	echo $count_took;
-        	echo $orderstatus;
-        	
-        	echo 'xxxx'.$orderstatus;
+        	 /*  print '<pre>';
+        	print_r($data); 
         	die(); */
         	
-            //$deliveryNotification = $this->DeliveryNotifications->patchEntity($deliveryNotification, $data);
-            //if ($this->DeliveryNotifications->save($deliveryNotification)) {
-        	if(sizeof($mystatus_update)==0){
+        	$order_id=$data['orderId'];
+        	$new_order_status=$data['Order_Status'];
+        	
+        	$ordermodel=$this->loadModel('Orders');
+        	$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
+        	        	
+        	if ($current_order_status['status']!=$data['Order_Status']){
         		
-        		$ordermodel=$this->loadModel('Orders');
-        		$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
-        		/* print_r($orderstatus.'||'.$current_order_status['status'].'||'.$orderstatus);
-        		print '<pre>';print_r($data);
-        		die(); */
-        		
-        		if ($current_order_status['status']!=$data['Order_Status']){
-        			/* print '<pre>'; */
-        			//change order table
-        			 
-        			$order=$ordermodel->get($data['orderId']);
-        			//print_r($order);
-        			/* echo $data['orderId']; */
-        			$order->status=$data['Order_Status'];
-        			$result=$ordermodel->save($order);
-        			/* echo $result;
-        			 die(); */
-        			
-        			/*Notification function xxx yy z*/
-        			$this->Notification->setNotification($data['Order_Status'],'','',$data['orderId'],'','','');//sent notification
-        		
-        			if($result){
-        				$this->Flash->success(__('The delivery notification has been saved.'));
-        				 
-        				return $this->redirect(['action' => 'index']);
-        			}
-        		}
-        		
-        		$this->Flash->error(__('The delivery notification could not be saved. Please, change dropdown values.'));
-        	}else{
-        	$entities = $orderProductsModel->newEntities($mystatus_update);//update multiple rows same time using saveMeny
-        	if ($orderProductsModel->saveMany($entities)) {
-            	
-            	//$suppliers_noti_model=$this->loadModel('SupplierNotifications');
-            	//$update=$suppliers_noti_model->save($mystatus_update);
-            	//foreach ($mystatus_update as $mystatus){
-            		//$snot=$suppliers_noti_model->get($mystatus['id']);
-            		//$snot->status_d=$mystatus['status_d'];
-            		//$suppliers_noti_model->save($snot);
-            	//}
-            	/* echo $orderstatus;
-            	echo $data['orderId'];
-            	//die(); */
-        		$ordermodel=$this->loadModel('Orders');
-            	$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
-            	if ($orderstatus!=0 && $current_order_status['status']!=$orderstatus){
-            		/* print '<pre>'; */
-            		//change order table
-            		
-            		$order=$ordermodel->get($data['orderId']);
-            		//print_r($order);
-            		/* echo $data['orderId']; */
-            		$order->status=$orderstatus;
-            		$result=$ordermodel->save($order);
-            		/* echo $result;
-            		die(); */
-            		
-            		/*Notification function xxx yy z*/
-            		$this->Notification->setNotification($orderstatus,'','',$data['orderId'],'','','');//sent notification
-            	}
-            	//$suppliers_noti_model->get($primaryKey);
-            	
-                $this->Flash->success(__('The delivery notification has been saved.'));
+        		//change order table        	
+        		$order=$ordermodel->get($data['orderId']);
+        		$order->status=$data['Order_Status'];
+        		$result=$ordermodel->save($order);
 
-                return $this->redirect(['action' => 'index']);
-            } else {
-                $this->Flash->error(__('The delivery notification could not be saved. Please, try again.'));
-            }
+        		/*Notification function xxx yy z*/
+        		//$this->Notification->setNotification($data['Order_Status'],'','',$data['orderId'],'','','');//sent notification
+        	
+        		if($result){
+        			
+        			$orderProductsModel=$this->loadModel('OrderProducts');
+        			$mystatus_update=[]; //status_d, orderproducts
+        			for($i=0;$i<sizeof($data['productid']);$i++){
+        				$current_status=$orderProductsModel->get([$data['orderId'],$data['productid'][$i]],['fields'=>['status_d']])->toArray();//$current_status['status_s']
+        				//print_r($current_status);
+        				if($current_status['status_d']==1){
+        					continue ;//if current tatus equals to new status return
+        				}
+        				
+        				
+        				//$mystatus_update[$i]=['id'=>$data['supid'][$i],'status_d'=>$data['mystatus'][$i]];
+        				$mystatus_update[]=['order_id'=>$data['orderId'],'product_id'=>$data['productid'][$i],'status_d'=>1];
+        				/*Notification function xxx yy z*/
+        				//$this->Notification->setNotification('','',$data['mystatus'][$i],$data['orderId'],$data['productid'][$i],'','');//sent notification
+        				     
+        			}
+        			if (sizeof($mystatus_update)>0){
+        			$entities = $orderProductsModel->newEntities($mystatus_update);//update multiple rows same time using saveMeny
+        			$orderProductsModel->saveMany($entities);        			
+        			}
+        			
+        			$this->Flash->success(__('The delivery notification has been saved.'));        			 
+        			return $this->redirect(['action' => 'index']);
+        		}
+        		else{
+        			$this->Flash->error(__('Something wrong'));
+        		}
+        	}else{
+        		$this->Flash->error(__('You havent made anychange to sae'));
+        	}
+        	
+
+        	
             
         }
-        }
+        
         $customer=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.customers','Orders.city']]);
        // $suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers','Orders.SupplierNotifications.Suppliers.city']]);
         $suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders.OrderProducts','Orders.OrderProducts.Products','Orders.OrderProducts.Products.packageType','Orders.OrderProducts.Suppliers','Orders.OrderProducts.Suppliers.city']]);
@@ -457,4 +390,148 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	$this->set(compact('deliveryNotifications','counted_data'));
     	$this->set('_serialize', ['deliveryNotifications']);
     }
+    
+/*edit original before radio*/
+    public function editORIGINALbeforRADIO($id = null)
+    {
+    	$deliveryNotification = $this->DeliveryNotifications->get($id, [
+    			'contain' => []
+    	]);
+    	if ($this->request->is(['patch', 'post', 'put'])) {
+    		 
+    		$data=$this->request->data();
+    		print '<pre>';
+    		print_r($data);
+    		die();
+    		 
+    		$orderProductsModel=$this->loadModel('OrderProducts');
+    		$mystatus_update=[]; //status_d, orderproducts
+    		$count_took=0;  //tooked products
+    		$orderstatus=0;  //order table status
+    		for($i=0;$i<sizeof($data['mystatus']);$i++){
+    			if($data['mystatus'][$i]==1){
+    				$count_took++;
+    			}
+    
+    
+    			$current_status=$orderProductsModel->get([$data['orderId'],$data['productid'][$i]],['fields'=>['status_d']])->toArray();//$current_status['status_s']
+    			//print_r($current_status);
+    			if($current_status['status_d']==$data['mystatus'][$i]){
+    				continue ;//if current tatus equals to new status return
+    			}
+    
+    
+    			//$mystatus_update[$i]=['id'=>$data['supid'][$i],'status_d'=>$data['mystatus'][$i]];
+    			$mystatus_update[]=['order_id'=>$data['orderId'],'product_id'=>$data['productid'][$i],'status_d'=>$data['mystatus'][$i]];
+    			/*Notification function xxx yy z*/
+    			$this->Notification->setNotification('','',$data['mystatus'][$i],$data['orderId'],$data['productid'][$i],'','');//sent notification
+    		}
+    		 
+    		/*  print '<pre>';
+    		 print_r($mystatus_update);
+    		 die();  */
+    		//echo $data['status'];
+    		if ($count_took==sizeof($data['mystatus'])){
+    			if ($data['Order_Status']==1){
+    				$data['Order_Status']=4;//check
+    				$orderstatus=4;
+    			}
+    			elseif ($data['Order_Status']==5){
+    				$orderstatus=5;
+    			}
+    
+    		}
+    		/* 	 print '<pre>';
+    		 echo $data['status'];
+    		 print_r($mystatus_update);
+    		 echo $count_took;
+    		 echo $orderstatus;
+    		  
+    		 echo 'xxxx'.$orderstatus;
+    		 die(); */
+    		 
+    		//$deliveryNotification = $this->DeliveryNotifications->patchEntity($deliveryNotification, $data);
+    		//if ($this->DeliveryNotifications->save($deliveryNotification)) {
+    		if(sizeof($mystatus_update)==0){
+    
+    			$ordermodel=$this->loadModel('Orders');
+    			$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
+    			/* print_r($orderstatus.'||'.$current_order_status['status'].'||'.$orderstatus);
+    			 print '<pre>';print_r($data);
+    			die(); */
+    
+    			if ($current_order_status['status']!=$data['Order_Status']){
+    				/* print '<pre>'; */
+    				//change order table
+    
+    				$order=$ordermodel->get($data['orderId']);
+    				//print_r($order);
+    				/* echo $data['orderId']; */
+    				$order->status=$data['Order_Status'];
+    				$result=$ordermodel->save($order);
+    				/* echo $result;
+    				 die(); */
+    				 
+    				/*Notification function xxx yy z*/
+    				$this->Notification->setNotification($data['Order_Status'],'','',$data['orderId'],'','','');//sent notification
+    
+    				if($result){
+    					$this->Flash->success(__('The delivery notification has been saved.'));
+    					 
+    					return $this->redirect(['action' => 'index']);
+    				}
+    			}
+    
+    			$this->Flash->error(__('The delivery notification could not be saved. Please, change dropdown values.'));
+    		}else{
+    			$entities = $orderProductsModel->newEntities($mystatus_update);//update multiple rows same time using saveMeny
+    			if ($orderProductsModel->saveMany($entities)) {
+    				 
+    				//$suppliers_noti_model=$this->loadModel('SupplierNotifications');
+    				//$update=$suppliers_noti_model->save($mystatus_update);
+    				//foreach ($mystatus_update as $mystatus){
+    				//$snot=$suppliers_noti_model->get($mystatus['id']);
+    				//$snot->status_d=$mystatus['status_d'];
+    				//$suppliers_noti_model->save($snot);
+    				//}
+    				/* echo $orderstatus;
+    				 echo $data['orderId'];
+    				 //die(); */
+    				$ordermodel=$this->loadModel('Orders');
+    				$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
+    				if ($orderstatus!=0 && $current_order_status['status']!=$orderstatus){
+    					/* print '<pre>'; */
+    					//change order table
+    
+    					$order=$ordermodel->get($data['orderId']);
+    					//print_r($order);
+    					/* echo $data['orderId']; */
+    					$order->status=$orderstatus;
+    					$result=$ordermodel->save($order);
+    					/* echo $result;
+    					 die(); */
+    
+    					/*Notification function xxx yy z*/
+    					$this->Notification->setNotification($orderstatus,'','',$data['orderId'],'','','');//sent notification
+    				}
+    				//$suppliers_noti_model->get($primaryKey);
+    				 
+    				$this->Flash->success(__('The delivery notification has been saved.'));
+    
+    				return $this->redirect(['action' => 'index']);
+    			} else {
+    				$this->Flash->error(__('The delivery notification could not be saved. Please, try again.'));
+    			}
+    
+    		}
+    	}
+    	$customer=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.customers','Orders.city']]);
+    	// $suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers','Orders.SupplierNotifications.Suppliers.city']]);
+    	$suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders.OrderProducts','Orders.OrderProducts.Products','Orders.OrderProducts.Products.packageType','Orders.OrderProducts.Suppliers','Orders.OrderProducts.Suppliers.city']]);
+    	$suppliers=$suppliers->toArray();
+    	$this->set(compact('deliveryNotification','customer','suppliers'));
+    	 
+    	 
+    	$this->set('_serialize', ['deliveryNotification']);
+    }    
 }

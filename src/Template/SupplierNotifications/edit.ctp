@@ -1,6 +1,8 @@
 <?php
 $status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled',];
-
+//butons activate or disabled
+$submit_activity=false;
+$toggle_activity="";
 ?>
 <?= $this->Form->create($supplierNotification,['class'=>'form-horizontal form-label-left']) ?>
 <div class="row">
@@ -121,7 +123,26 @@ foreach($supplierNotification->supplier->order_products as $product){
 <td><?= h($product['product']['name'])?></td>
 <td><?= h($product['product_quantity'])?></td>
 <td><?= h($product['product']['package_type']->type)?></td>
-<td><?php echo $this->Form->input('my status',['label' => false,'options'=>$status,'default'=>$product['status_s'],'name'=>'mystatus['.$product['product']['id'].']']);?></td></tr>
+<td>
+
+<?php
+/*set radio button value
+0,1,3,4,9 status available
+2 status not available
+*/
+?>
+
+<?php // echo $this->Form->input('my status',['label' => false,'options'=>$status,'default'=>$product['status_s'],'name'=>'mystatus['.$product['product']['id'].']']);?>
+<?php
+if($product['status_s']>0){
+$toggle_activity="disabled";
+$submit_activity=true;
+}
+?>
+<input <?=$toggle_activity?> class="tog supp" data-on="Available" data-off="Not available" data-size="small" <?php if($product['status_s']!=2){echo "checked";} ?> data-toggle="toggle" data-onstyle="success" data-offstyle="danger" type="checkbox" name='mystatus_toggle[<?=$product['product']['id']?>]' id='mystatus_toggle[<?=$product['product']['id']?>]' class="tog-data">
+<input value="<?php if($product['status_s']==2){ echo 2;}else{echo 1;} ?>" type="hidden" name='mystatus[<?=$product['product']['id']?>]' id='mystatus[<?=$product['product']['id']?>]'>
+</td></tr>
+
 <?php }
 ?>
                       </tbody>
@@ -131,7 +152,7 @@ foreach($supplierNotification->supplier->order_products as $product){
   			  		<div class="ln_solid"></div>
     				  <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">                          
-                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success']) ?>
+                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success', 'disabled'=>$submit_activity]) ?>
                         </div>
                       </div>
     

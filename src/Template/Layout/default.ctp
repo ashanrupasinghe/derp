@@ -52,6 +52,9 @@ $cakeDescription = 'Direct2Door.lk';
     <!--<link href="/direct2door.erp/icing/vendors/select2/dist/css/select2.min.css" rel="stylesheet">-->
     <?= $this->Html->css('/icing/vendors/select2/dist/css/select2.min') ?>
     
+    <!--bootstrap toggle; radio buttons-->
+    	<?= $this->Html->css('bootstrap-toggle.min') ?>
+    
         <!-- Custom Theme Style -->
     <!--<link href="/direct2door.erp/icing/build/css/custom.min.css" rel="stylesheet">-->
     <?= $this->Html->css('/icing/build/css/custom.min') ?>
@@ -436,6 +439,9 @@ $cakeDescription = 'Direct2Door.lk';
     <!-- Custom Theme Scripts -->
     <!--<script src="/direct2door.erp/icing/build/js/custom.min.js"></script>-->
     		<?= $this->Html->script('/icing/build/js/custom.min'); ?>
+
+	<!--Bootstrap Toggle radio-->  
+	  		<?= $this->Html->script('bootstrap-toggle.min'); ?>
     
     <script type="text/javascript">
   $('select').select2({tags: true});
@@ -464,6 +470,34 @@ $cakeDescription = 'Direct2Door.lk';
 		forceParse: 0
     });
 </script>
-
+<script type="text/javascript">
+/*http://www.bootstraptoggle.com/*/
+$(function() {
+    $('.tog.supp').change(function() {
+    if($(this).prop('checked')){
+    	
+      $(this).parent().next().val(1);
+            }
+      else{
+      
+      $(this).parent().next().val(2);
+      
+      }
+    })
+  })
+$(function() {
+    $('.tog.del').change(function() {
+    if($(this).prop('checked')){
+    	
+      $(this).parent().next().val(4);
+            }
+      else{
+      
+      $(this).parent().next().val(5);
+      
+      }
+    })
+  })  
+</script>
   </body>
 </html>
