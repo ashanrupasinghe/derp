@@ -1,6 +1,7 @@
 <?php
  $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];
 $payment_status=['1'=>'pending','2'=>'paid'];
+$sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
 ?>
 
 <div class="col-md-12 col-sm-12 col-xs-12">
@@ -128,10 +129,12 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             //nofified variable come from update method, checking nptification table, pending development
             if($notified){
             	$nofification_text="notified";
+            	$disabled=true;
             }else{
             	$nofification_text="pending notify";
+            	$disabled=false;
             }?>
-            <?= $this->Form->postLink(__($nofification_text), ['action' => 'notify', $order->id,$order->deliveryId],['confirm' => __('Are you sure you want to notify # {0}?', $order->id),'class'=>'x-btn x-btn-warning btn btn-warning btn-md']) ?></td>
+            <?= $this->Form->postLink(__($nofification_text), ['action' => 'notify', $order->id,$order->deliveryId],['confirm' => __('Are you sure you want to notify # {0}?', $order->id),'class'=>'x-btn x-btn-warning btn btn-warning btn-md', 'disabled'=>$disabled]) ?></td>
         </tr>
         
 		</table>
@@ -208,6 +211,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
   			  		<table class="table table-hover">
                       <thead>
                         <tr>
+                        <th><?= __('Status') ?></th>
                           <th><?= __('Name') ?></th>
                 <th><?= __('Quantity') ?></th>
                 <th><?= __('Package') ?></th>
@@ -223,6 +227,15 @@ $payment_status=['1'=>'pending','2'=>'paid'];
            
             ?>                       
             <tr>
+             <?php
+            $status_color="";
+            if($product->status_s==1){
+            $status_color="#26B99A";
+            }elseif($product->status_s==2){
+            $status_color="#d9534f";
+            }
+            ?>
+            	<td style="color:<?= $status_color ?>;"><?php echo $sup_status[$product->status_s];?></td>
                 <td><?php echo $product['product']->name;?></td>
                 <td><?php echo $product['product_quantity']; ?></td>                
                 <td><?php echo $product['product']->package_type->type; ?></td>

@@ -137,7 +137,7 @@ class DeliveryNotificationsController extends AppController
         		$result=$ordermodel->save($order);
 
         		/*Notification function xxx yy z*/
-        		//$this->Notification->setNotification($data['Order_Status'],'','',$data['orderId'],'','','');//sent notification
+        		$this->Notification->setNotification($data['Order_Status'],'','',$data['orderId'],'','','','');//sent notification
         	
         		if($result){
         			
@@ -163,7 +163,7 @@ class DeliveryNotificationsController extends AppController
         			}
         			
         			$this->Flash->success(__('The delivery notification has been saved.'));        			 
-        			return $this->redirect(['action' => 'index']);
+        			return $this->redirect(['action' => 'listnotifications']);
         		}
         		else{
         			$this->Flash->error(__('Something wrong'));
@@ -478,7 +478,7 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     				if($result){
     					$this->Flash->success(__('The delivery notification has been saved.'));
     					 
-    					return $this->redirect(['action' => 'index']);
+    					return $this->redirect(['action' => 'listnotifications']);
     				}
     			}
     
@@ -518,7 +518,7 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     				 
     				$this->Flash->success(__('The delivery notification has been saved.'));
     
-    				return $this->redirect(['action' => 'index']);
+    				return $this->redirect(['action' => 'listnotifications']);
     			} else {
     				$this->Flash->error(__('The delivery notification could not be saved. Please, try again.'));
     			}

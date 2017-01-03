@@ -206,7 +206,7 @@ class UserNotificationsController extends AppController
     			break;
     		case 2:
     			$controler="orders";
-    			$action="view";
+    			$action="update";
     			$id=$this->UserNotifications->get($notificationId,['fields'=>['orderId']])->toArray();
     			$id=$id['orderId'];//orderid
     			break;

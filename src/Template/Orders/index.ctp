@@ -77,6 +77,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                     <?= $this->Html->link(__('View'), ['action' => 'view', $order->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
                     <?= $this->Form->postLink(__('Cancel'), ['action' => 'cancel', $order->id],['confirm' => __('Are you sure you want to Cancel # {0}?', $order->id),'class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $order->id], ['confirm' => __('Are you sure you want to delete # {0}?', $order->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
+                    <?= $this->Html->link(__('Update'), ['action' => 'update', $order->id],['class'=>'x-btn x-btn-primary btn btn-default btn-xs']) ?>
                 </td>
             </tr>
             <?php endforeach; ?>

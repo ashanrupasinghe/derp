@@ -1,3 +1,4 @@
+
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
@@ -51,7 +52,9 @@
               
               
               
-               
+               <?php
+$status=['0'=>'Disabled','1'=>'Active'];
+?>
    
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
@@ -108,7 +111,7 @@
                 <td><?= h($customer->mobileNo) ?></td>
                <!-- <td><?= h($customer->created) ?></td>
                 <td><?= h($customer->modified) ?></td>-->
-                <td><?= h($customer->status) ?></td>
+                <td><?= h($status[$customer->status]) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $customer->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>               
 					<?php $cus_name=$customer->firstName.' '.$customer->lastName;?>                    

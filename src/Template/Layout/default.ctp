@@ -168,41 +168,41 @@ $cakeDescription = 'Direct2Door.lk';
                 <!--<h3>Live On</h3>-->
                 <ul class="nav side-menu">
                 <?php if($userLevel==3){?>
-                 <li><a href="<?php echo $this->Url->build('/supplier-notifications/listnotifications'); ?>"><i class="fa fa-laptop"></i>Notifications</a></li>
-                 <li><a href="<?php echo $this->Url->build('/supplier-notifications/schedule'); ?>"><i class="fa fa-laptop"></i>Order Schedule</a></li>
+                 <li><a href="<?php echo $this->Url->build('/supplier-notifications/listnotifications'); ?>"><i class="fa fa-home"></i>Notifications</a></li>
+                 <li><a href="<?php echo $this->Url->build('/supplier-notifications/schedule'); ?>"><i class="fa fa-bicycle"></i>Order Schedule</a></li>
                                   
                 <?php }else if($userLevel==4){?>
-                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/listnotifications'); ?>"><i class="fa fa-laptop"></i>Notifications</a></li>
-                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/schedule'); ?>"><i class="fa fa-laptop"></i>Order Schedule</a></li>
+                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/listnotifications'); ?>"><i class="fa fa-home"></i>Notifications</a></li>
+                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/schedule'); ?>"><i class="fa fa-bicycle"></i>Order Schedule</a></li>
                 <?php   }else{ ?> 
                 
                  <li>
                  <?php if($userLevel==1 || $userLevel==2):?>
-                 <a href="<?php echo $this->Url->build('/customers/search'); ?>"><i class="fa fa-laptop"></i>Dashboard</a>
+                 <a href="<?php echo $this->Url->build('/customers/search'); ?>"><i class="fa fa-home"></i>Dashboard</a>
                  <?php else:?>
-                 	<a href="<?php echo $this->Url->build('/index'); ?>"><i class="fa fa-laptop"></i>Dashboard</a>
+                 	<a href="<?php echo $this->Url->build('/index'); ?>"><i class="fa fa-home"></i>Dashboard</a>
                  <?php endif;?>	
                  	</li>
                  
-                 <li><a href="<?php echo $this->Url->build('/products/index'); ?>"><i class="fa fa-laptop"></i>Products</a></li>
-                 <li><a href="<?php echo $this->Url->build('/package-type/index'); ?>"><i class="fa fa-laptop"></i>Packages</a></li>
-                 <li><a href="<?php echo $this->Url->build('/orders/index'); ?>"><i class="fa fa-laptop"></i>Orders</a></li>
+                 <li><a href="<?php echo $this->Url->build('/products/index'); ?>"><i class="fa fa-bitbucket"></i>Products</a></li>
+                 <li><a href="<?php echo $this->Url->build('/package-type/index'); ?>"><i class="fa fa-table"></i>Packages</a></li>
+                 <li><a href="<?php echo $this->Url->build('/orders/index'); ?>"><i class="fa fa-suitcase"></i>Orders</a></li>
                  <?php if($userLevel==2):?>
-                 <li><a href="<?php echo $this->Url->build('/orders/schedule'); ?>"><i class="fa fa-laptop"></i>Order Schedule</a></li>
+                 <li><a href="<?php echo $this->Url->build('/orders/schedule'); ?>"><i class="fa fa-bicycle"></i>Order Schedule</a></li>
                  <?php endif;?>
                  <?php if($userLevel==1):?>
-                <li><a href="<?php echo $this->Url->build('/callcenter/index'); ?>"><i class="fa fa-laptop"></i>Call Centre Staff</a></li>   
-                <li><a href="<?php echo $this->Url->build('/suppliers/index'); ?>"><i class="fa fa-laptop"></i>Suppliers</a></li>   
-				<li><a href="<?php echo $this->Url->build('/delivery/index'); ?>"><i class="fa fa-laptop"></i>Delivery Staff</a></li>
+                <li><a href="<?php echo $this->Url->build('/callcenter/index'); ?>"><i class="fa fa-phone-square"></i>Call Centre Staff</a></li>   
+                <li><a href="<?php echo $this->Url->build('/suppliers/index'); ?>"><i class="fa fa-wheelchair"></i>Suppliers</a></li>   
+				<li><a href="<?php echo $this->Url->build('/delivery/index'); ?>"><i class="fa fa-truck"></i>Delivery Staff</a></li>
 				<?php endif; ?>
-				<li><a href="<?php echo $this->Url->build('/customers/index'); ?>"><i class="fa fa-laptop"></i>Customers</a></li>
+				<li><a href="<?php echo $this->Url->build('/customers/index'); ?>"><i class="fa fa-group"></i>Customers</a></li>
 				<?php if($userLevel==1):?>
-				<li><a href="<?php echo $this->Url->build('/users/index'); ?>"><i class="fa fa-laptop"></i>Users</a></li>
+				<li><a href="<?php echo $this->Url->build('/users/index'); ?>"><i class="fa fa-user"></i>Users</a></li>
 				
-				<li><a href="<?php echo $this->Url->build('/reports/index'); ?>"><i class="fa fa-laptop"></i>Reports</a></li>
+				<li><a href="<?php echo $this->Url->build('/reports/index'); ?>"><i class="fa fa-file-text-o"></i>Reports</a></li>
 				<?php endif; ?>
 				<?php if($userLevel==2 || $userLevel==1 ):?>
-				<li><a href="<?php echo $this->Url->build('/customers/search'); ?>"><i class="fa fa-laptop"></i>Search Customers</a></li>  
+				<li><a href="<?php echo $this->Url->build('/customers/search'); ?>"><i class="fa fa-search"></i>Search Customers</a></li>  
 				<?php endif;?>                  
                 <!--
                   <li><a><i class="fa fa-bug"></i> Additional Pages <span class="fa fa-chevron-down"></span></a>

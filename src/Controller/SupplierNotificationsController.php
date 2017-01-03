@@ -154,21 +154,27 @@ class SupplierNotificationsController extends AppController
         		/*Notification function xxx yy z*/
         		//$this->Notification->setNotification();die();
         		$updatable_data[]=['order_id'=>$data['orderId'],'product_id'=>$product_id,'status_s'=>$product_status];
-        		$user_id=$this->Auth->user('id');
-        		$this->Notification->setNotification('',$product_status,'',$data['orderId'] ,$product_id,$user_id,'');//send notification
+        		//$user_id=$this->Auth->user('id');
+        		//$this->Notification->setNotification('',$product_status,'',$data['orderId'] ,$product_id,$user_id,'');//send notification
         	} 
 
         	/*  print '<pre>';
         	print_r($updatable_data);
         	die(); */
         	if(sizeof($updatable_data)==0){
-        		$this->Flash->error(__('The supplier notification could not be saved. Please, change dropdown values.'));
+        		$this->Flash->error(__('The supplier notification could not be saved. Please, change values.'));
         	}else{
         	$entities = $orderProductsModel->newEntities($updatable_data);//update multiple rows same time using saveMeny
             if ($orderProductsModel->saveMany($entities)) {
+            	/*new notification for callcenter without delivery,
+            	 * order id xxx ready form supplier yyy
+            	*/
+            	$user_id=$this->Auth->user('id');
+            	$this->Notification->setNotification('','','',$data['orderId'] ,'',$user_id,'','');//send notification
+            	
                 $this->Flash->success(__('The supplier notification has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'listnotifications']);
             } else {
                 $this->Flash->error(__('The supplier notification could not be saved. Please, try again.'));
             }

@@ -163,10 +163,13 @@ class OrdersController extends AppController {
 	
 		if ($this->request->is(['patch', 'post', 'put'])) {
 			//$order = $this->Users->patchEntity($order, $this->request->data);
-			$order->status=$this->request->data('status');
-			$order->paymentStatus=$this->request->data('paymentStatus');
-						
+			$data=$this->request->data;
+			$order->status=$data['status'];
+			$order->paymentStatus=$data['paymentStatus'];
+			$order_id=$id;
 			if ($this->Orders->save($order)) {
+				/*Notification function xxx yy z*/
+				$this->Notification->setNotification($data['status'],'','',$order_id,'','','','');
 				$this->Flash->success(__('The Order has been saved.'));
 		
 				return $this->redirect(['action' => 'index']);
@@ -174,8 +177,8 @@ class OrdersController extends AppController {
 				$this->Flash->error(__('The Order could not be saved. Please, try again.'));
 			}
 		}
-		
-		$this->set('notified',0);
+		$notified=$this->Notification->isSentToDriver($id);
+		$this->set('notified',$notified);
 		$this->set ( 'order', $order );
 		$this->set ( '_serialize', [
 				'order'
@@ -183,12 +186,13 @@ class OrdersController extends AppController {
 	}
 	
 	/*
-	 * 
+	 * notify to delivery staff	 * 
 	 * */
-	public function notify($order_id,$delivery_staff_id){
-		//echo $order_id.'<br>'.$delivery_staff_id;
+	public function notify($order_id,$delivery_staff_id=null){
 		//send the notification
-		if(1){
+		/*Notification function xxx yy z*/
+		$result=$this->Notification->setNotification('','','',$order_id,'','','',111);
+		if($result){
 			
 			$this->Flash->success ( __ ( 'The notification has been sent.' ) );
 		}
@@ -284,7 +288,7 @@ class OrdersController extends AppController {
 				$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
 				
 				/*Notification function xxx yy z*/
-				$this->Notification->setNotification($data['status'],'','',$order_id,'','','');
+				$this->Notification->setNotification($data['status'],'','',$order_id,'','','','');
 				
 				//$this->sendToAll($order->id,'new', $supplerids, $delivery_id);//send emails
 				$this->sendToAll2($order->id,'new', $supplerids, $delivery_id,$order_data);//send emails,product_name,product_quantity,product_supplier
@@ -612,7 +616,7 @@ class OrdersController extends AppController {
 				$con_order_products=$this->Orders->OrderProducts->connection();
 				$stmt = $con_order_products->execute('UPDATE order_products SET status_s = ? WHERE order_id = ?',[9, $id]);
 				/*Notification function xxx yy z*/
-				$this->Notification->setNotification(9,'','',$id,'','','');//send notifications
+				$this->Notification->setNotification(9,'','',$id,'','','','');//send notifications
 /* 			$con_sup=$this->Orders->SupplierNotifications->connection();
 			$stmt = $con_sup->execute('UPDATE supplier_notifications SET status_s = ? WHERE orderId = ?',[9, $id]);
 			
