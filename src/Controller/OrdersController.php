@@ -41,7 +41,9 @@ class OrdersController extends AppController {
 				'sendOrderemail',
 				'send',
 				'viewpdf',
-				'schedule'
+				'schedule',
+				'update',
+				'notify'
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -135,6 +137,66 @@ class OrdersController extends AppController {
 		$this->set ( 'order', $order );
 		$this->set ( '_serialize', [ 
 				'order' 
+		] );
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public function update($id = null,$delivery_id=null) {
+		$order = $this->Orders->get ( $id, [
+				'contain' => [
+						'OrderProducts',
+						'callcenter',
+						'delivery',
+						'customers',
+						'city',
+						'OrderProducts.Products',
+						'OrderProducts.Products.packageType',
+						'OrderProducts.Suppliers',
+						'OrderProducts.Suppliers.city'
+				]
+	
+	
+		] );
+	
+		if ($this->request->is(['patch', 'post', 'put'])) {
+			//$order = $this->Users->patchEntity($order, $this->request->data);
+			$order->status=$this->request->data('status');
+			$order->paymentStatus=$this->request->data('paymentStatus');
+						
+			if ($this->Orders->save($order)) {
+				$this->Flash->success(__('The Order has been saved.'));
+		
+				return $this->redirect(['action' => 'index']);
+			} else {
+				$this->Flash->error(__('The Order could not be saved. Please, try again.'));
+			}
+		}
+		
+		$this->set('notified',0);
+		$this->set ( 'order', $order );
+		$this->set ( '_serialize', [
+				'order'
+		] );
+	}
+	
+	/*
+	 * 
+	 * */
+	public function notify($order_id,$delivery_staff_id){
+		//echo $order_id.'<br>'.$delivery_staff_id;
+		//send the notification
+		if(1){
+			
+			$this->Flash->success ( __ ( 'The notification has been sent.' ) );
+		}
+		else{
+			$this->Flash->error ( __ ( 'The notification could not be sent. Please, try again.' ) );
+		}
+		return $this->redirect ( [
+				'action' => 'index'
 		] );
 	}
 	
