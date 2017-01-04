@@ -26,7 +26,9 @@ class NotificationShell extends Shell {
 		
 		$this->out('Hey there ' . $name);
 	}
-		
+/**
+ *cronjob for send remind notification to driver and suppliers 
+ */		
 	public function sendNotifications(){
 	
 		$current__date_time=Time::now();//now
@@ -102,4 +104,14 @@ class NotificationShell extends Shell {
 	//for shedule a cron job
 	//http://stackoverflow.com/questions/15809368/how-to-call-controller-in-shell-file-in-cakephp
 	//http://stackoverflow.com/questions/13949539/how-to-setup-cronjobs-in-cake-php
+	/*
+	 * Use a shell
+
+The 'Cake Way' of using a CakePHP application in cron jobs would be creating shell and then calling it as a cron job.
+
+i.e. Create a shell to do the task, and then add it to crontab (crontab -e on linux machine):
+
+0 * * * *       cd /path/to/app/ && Console/cake your_shell_name params
+
+	 * */
 }
