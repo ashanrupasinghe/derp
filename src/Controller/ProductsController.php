@@ -275,7 +275,7 @@ class ProductsController extends AppController
     public function import(){
     	
     	if ($this->request->is('post')) {
-    		if (!empty($this->request->productsSheet)){
+    		if (!empty($this->request->data('productsSheet'))){
     		
     		$file= $this->request->data('productsSheet.tmp_name');
     		//echo $file;
