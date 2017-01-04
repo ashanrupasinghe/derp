@@ -564,25 +564,24 @@ class NotificationComponent extends Component
 			}
 		}
 		if (sizeof($notifications)>0){
-			/*  print '<pre>';
+			/* print '<pre>';
 			print_r($notifications);
-			die();  */
+			die();  */ 
 			
 			$userNotificationModel=TableRegistry::get('UserNotifications');
 		$notification_entities=$userNotificationModel->newEntities($notifications);
 		$notifications_save_result=$userNotificationModel->saveMany($notification_entities);
-		print_r( $notifications_save_result);
-		die();
+		
 		if ($notifications_save_result){
-			//$this->Flash->success(__('The notifications have been sent.'));
-			$this->out('The notifications have been sent.');
+			$this->Flash->success(__('The notifications have been sent.'));
+			//$this->out('The notifications have been sent.');
 		}else{
-			//$this->Flash->error(__('The notifications not have been sent.'));
-			$this->out('The notifications not have been sent.');
+			$this->Flash->error(__('The notifications not have been sent.'));
+			//$this->out('The notifications not have been sent.');
 		}
 		}else{
-			//$this->Flash->error(__('Nothing to notify.'));$this->out
-			$this->out('Nothing to notify.');
+			$this->Flash->error(__('Nothing to notify.'));
+			//$this->out('Nothing to notify.');
 		}
 		
 		
