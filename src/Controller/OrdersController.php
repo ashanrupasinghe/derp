@@ -43,7 +43,8 @@ class OrdersController extends AppController {
 				'viewpdf',
 				'schedule',
 				'update',
-				'notify'
+				'notify',
+				'autoSendNotification'
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -202,6 +203,12 @@ class OrdersController extends AppController {
 		return $this->redirect ( [
 				'action' => 'index'
 		] );
+	}
+	/**
+	 * send notifications using chronjob
+	 */
+	public function autoSendNotification(){
+		$this->Notification->chronjob();
 	}
 	
 	/**
