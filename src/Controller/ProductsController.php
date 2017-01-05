@@ -305,7 +305,7 @@ class ProductsController extends AppController
     			$products[$count]['sku']=$product['sku'];
     			$products[$count]['description']=$product['description'];
     			$products[$count]['price']=$product['price'];    			 
-    			if (isset($product['availability'])){
+    			if (isset($product['availability']) && $product['availability']!=""){
     				$products[$count]['availability']=$product['availability'];
     			}
     			else{
@@ -314,7 +314,7 @@ class ProductsController extends AppController
     			
     			$products[$count]['image']=$product['small_image'];    			
     			
-    			if (isset($product['status'])){
+    			if (isset($product['status']) && $product['status']!=""){
     				$products[$count]['status']=$product['status'];
     			}else{
     				$products[$count]['status']=1;
