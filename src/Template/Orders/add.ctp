@@ -65,11 +65,11 @@
 <div class="form-group">
                 <label for="dtp_input3" class="col-md-3 control-label">Delivery Time</label>
                 <div class="input-group date form_time col-md-9" data-date="" data-date-format="hh:ii" data-link-field="dtp_input3" data-link-format="hh:ii">
-                    <input class="form-control" type="text" value="" readonly>
+                    <input class="form-control" type="text" value="<?= $delivery_time ?>" readonly>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 					<span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                 </div>
-				<input type="hidden" id="dtp_input3" value="" name="del-time" /><br/>
+				<input type="hidden" id="dtp_input3" value="<?= $delivery_time ?>" name="del-time" /><br/>
 </div>
            
 </div>		
