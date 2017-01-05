@@ -167,8 +167,8 @@ $(document).ready(function(){
 	    		 totalPrice+=parseInt(($(productPrices[i]).val()));
 	    		}
 	    	//tax, discount
-	    	 var tax_p=10;//persantage
-	    	 var discount_p=5;//persantage
+	    	 var tax_p=0;//persantage 10
+	    	 var discount_p=0;//persantage 5
 	    	 var tax=(totalPrice*tax_p)/100;
 	    	 var discount=(totalPrice*discount_p)/100;
 	    	 var total=(totalPrice+tax-discount);

@@ -373,10 +373,15 @@ class OrdersController extends AppController {
 		} );
 		$this->set ( compact ( 'cities' ) );
 		$current_date_hidden=date('Y-m-d');	
-		$current_date_show=date('d F Y');	
+		$current_date_show=date('d F Y');
+
+		$current__date_time=Time::now();//now
+		$delivery__time=$current__date_time->modify('+250mins')->format('H:i');
+		
 						
 		$this->set('current_date_hidden',$current_date_hidden);		
 		$this->set('current_date_show',$current_date_show);
+		$this->set('delivery_time',$delivery__time);
 		
 		}else{
 			$this->redirect(['controller'=>'customers','action'=>'search']);
@@ -833,8 +838,8 @@ public function countSubTotal($arrIds,$arrQuantity){
 } */
 
 public function processdata($data){
-	$tax_p=10;//tax persontage
-	$discount_p=5;//discount persentage
+	$tax_p=0;//tax persontage 10
+	$discount_p=0;//discount persentage 5
 	$counpon_value=0;//call to a function to find coupon values
 	$subtotal=$this->countSubTotal($data['product_name'],$data['product_quantity']);//count sub total
 	$tax=$subtotal*$tax_p/100;
