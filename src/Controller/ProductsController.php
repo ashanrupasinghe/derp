@@ -376,9 +376,9 @@ class ProductsController extends AppController
     			print_r($orderProducts_save);
     			die(); */
     			if ($orderProducts_save){
-    				$this->Flash->success(__('orderProducts save successfully.'));
+    				$this->Flash->success(__('productSuppliers save successfully.'));
     			}else{
-    				$this->Flash->error(__('orderProducts not save.'));
+    				$this->Flash->error(__('productSuppliers not save.'));
     			}
     		}else{
     			$this->Flash->reeor(__('products not save'));
