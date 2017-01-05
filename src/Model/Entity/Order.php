@@ -66,9 +66,15 @@ class Order extends Entity
     	
     	if ($oddate->isToday() && $odtime->isWithinNext('60 mins') && $this->_properties['status']<4 ){
     		    		
-    		return '#F00000'/* .$current__time.' '.$odtime */;
+    		return '#F00000';//within 60 mins
     	}
-    	return '#73879C'/* .$current__time.' '.$odtime */; 
+    	elseif ($oddate->isToday() && $odtime->wasWithinLast('1440 mins') && $this->_properties['status']<4){
+    		return '#992E2E;';//late
+    	}
+    	elseif($oddate->isYesterday() && $this->_properties['status']<4){
+    		return '#992E2E;';//late
+    	}
+    	return '#73879C';//more than 60 mins; 
     	
     	
     	
@@ -98,9 +104,15 @@ class Order extends Entity
     	
     	if ($oddate->isToday() && $odtime->isWithinNext('90 mins') && $this->_properties['status']<4 ){
     	
-    		return '#F00000'/* .$current__time.' '.$odtime */;
+    		return '#F00000';//within 90 min;
     	}
-    	return '#73879C'/* .$current__time.' '.$odtime */;
+    	elseif ($oddate->isToday() && $odtime->wasWithinLast('1440 mins') && $this->_properties['status']<4){
+    		return '#992E2E;';//late
+    	}
+    	elseif($oddate->isYesterday() && $this->_properties['status']<4){
+    		return '#992E2E;';//late
+    	}
+    	return '#73879C';//more than 90 min
     	 
     	 
     	

@@ -174,6 +174,10 @@ class SupplierNotificationsController extends AppController
             	$notification->status=1;
             	$this->SupplierNotifications->save($notification);
             	
+            	//update order table;
+            	//$this->SupplierNotifications->Orders->get($data['orderId']);
+            	
+            	
             	/*new notification for callcenter without delivery,
             	 * order id xxx ready form supplier yyy
             	*/

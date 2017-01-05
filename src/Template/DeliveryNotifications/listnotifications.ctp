@@ -9,7 +9,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Delivery Notifications') ?> <small><?= __('delivery notification list') ?></small></h2>
+                    <h2><?= __('Delivery Notifications') ?> <small><?= __('delivery notification list &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#91;Now: '.$dateNow.' '.$timeNow.'&#93;') ?></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>

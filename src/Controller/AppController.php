@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\I18n\Time;
 
 
 /**
@@ -69,6 +70,12 @@ class AppController extends Controller
 		$this->set('userLevel', $this->Auth->user('user_type'));
 		$this->set('userName', $this->Auth->user('username'));
 		$this->set('userId', $this->Auth->user('id'));
+		$now=$current__date_time=Time::now();//now
+		$current__date=$current__date_time->format('Y-m-d');
+		$current__time=$current__date_time->format('H:i:s');
+		$this->set('dateTimeNow',$now);
+		$this->set('timeNow',$current__time);
+		$this->set('dateNow',$current__date);
     }
     
     public function beforeFilter(\Cake\Event\Event $event) {

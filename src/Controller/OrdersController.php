@@ -1197,7 +1197,7 @@ public function sendemail2($orderid,$type='new',$recipients,$recipient_type){
 
 
 public function schedule() {
-	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status <'=>5],'order' => ['Orders.deliveryDate' => 'DESC','Orders.deliveryTime' => 'DESC']] );
+	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status <'=>5],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
 	/* print '<pre>';
 		print_r($orders);
 	die(); */

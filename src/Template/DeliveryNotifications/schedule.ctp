@@ -9,7 +9,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Delivery Notifications') ?> <small><?= __('delivery notification list') ?></small></h2>
+                    <h2><?= __('Delivery Notifications') ?> <small><?= __('delivery notification list &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#91;Now: '.$dateNow.' '.$timeNow.'&#93;') ?></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -39,7 +39,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <th><?= $this->Paginator->sort('orderId') ?></th>
                 <th><?= $this->Paginator->sort('deliveryDate') ?></th>
                 <th><?= $this->Paginator->sort('deliveryTime') ?></th>
-                <th><?= __('Ready') ?></th>
+                <!--<th><?= __('Ready') ?></th>-->
                 <th><?= $this->Paginator->sort('status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
                         </tr>
@@ -57,7 +57,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
                 <?php ?> <td><?= $this->Time->format($deliveryNotification['order']->deliveryDate,'yyyy-MM-dd') ?></td><?php ?>
                 <?php ?> <td><?= $this->Time->format($deliveryNotification['order']->deliveryTime,'HH:mm:ss') ?></td><?php ?>
-                <td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>
+                <!--<td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>-->
                 <?php ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php ?>
                 
                 <td class="actions">
