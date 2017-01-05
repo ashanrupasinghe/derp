@@ -33,6 +33,10 @@ class PackageTypeTable extends Table
         $this->table('package_type');
         $this->displayField('id');
         $this->primaryKey('id');
+        
+        $this->hasMany('products', [
+        		'foreignKey' => 'package'
+        ]);
     }
 
     /**

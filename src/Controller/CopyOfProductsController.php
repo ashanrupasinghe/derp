@@ -286,8 +286,6 @@ class ProductsController extends AppController
     		 
     		$data = $this->Import->prepareEntityData($file, ['append'=> true]);
     		$products=[];
-    		$packages=[];
-    		$suppliers=[];
     		$count=0;
     		foreach ($data as $product){
     			$skufinder=$this->Products->find('all',['conditions'=>['sku'=>$product['sku']]]);
@@ -304,7 +302,12 @@ class ProductsController extends AppController
     			$products[$count]['name']=$product['name'];
     			$products[$count]['sku']=$product['sku'];
     			$products[$count]['description']=$product['description'];
-    			$products[$count]['price']=$product['price'];    			 
+    			$products[$count]['price']=$product['price'];
+    			if (isset($product['package'])){
+    				$products[$count]['package']=$product['package'];
+    			}else{
+    				$products[$count]['package']=1;
+    			}
     			if (isset($product['availability'])){
     				$products[$count]['availability']=$product['availability'];
     			}
@@ -319,75 +322,25 @@ class ProductsController extends AppController
     			}else{
     				$products[$count]['status']=1;
     			}
-    			
-    			//$products[$count]['suppliers']=['_ids'=>[$product['suppliers']]];    			 
-    			  $package_query =$this->Products->packageType->find('all',['fields'=>['id']])->where(['type' => $product['package']])->first();
-    			if (sizeof($package_query)>0){
-    				$packages[$count]['id']=$package_query->id;
-    			}
-    				$packages[$count]['type']=$product['package'];
-    			       			
-    			$suppliers[$count]=$product['suppliers'];
-    			
     			$count++;
     
     		}   		
-    		 /*  print '<pre>';
-    		print_r($products);
-    		print_r($packages);
-    		print_r($suppliers);
-    		die();  */ 
     		
-    		$package_entities=$this->Products->packageType->newEntities($packages); 
-    		$package_save=$this->Products->packageType->saveMany($package_entities);
+    		
+    		 
+    		$entities = $this->Products->newEntities($products);    		
+    		
     		/* print '<pre>';
-    		print_r($package_save);
-    		die(); */ 
-    		if ($package_save){
-    			$this->Flash->success(__('packages save successfully'));
-    			for ($i=0;$i<sizeof($package_save);$i++){
-    				
-    				$products[$i]['package']=$package_save[$i]->id;
-    			}    		
-    			$product_entities = $this->Products->newEntities($products);    		
-    			$product_save=$this->Products->saveMany($product_entities);
-    			/* print '<pre>';
-    			print_r($product_save);
-    			die(); */
-    			
-    			if($product_save){
-    				$this->Flash->success(__('products save successfully.'));
-    				$orderProducts=[];//add orderId,productId
-    				for ($j=0;$j<sizeof($product_save);$j++){    					
-    					$product_suppliers=explode(',', $suppliers[$j]);
-    					for ($k=0;$k<sizeof($product_suppliers);$k++){
-    						$orderProducts[]['product_id']=$product_save[$j]->id;
-    						$arr_size=sizeof($orderProducts);
-    						$orderProducts[$arr_size-1]['supplier_id']=$product_suppliers[$k];
-    					}
-    				 
-    			} 
-    			 /* print '<pre>';
-    			print_r($orderProducts);
-    			die();  */
-    			$orderProducts_entities=$this->Products->productSuppliers->newEntities($orderProducts);
-    			$orderProducts_save=$this->Products->productSuppliers->saveMany($orderProducts_entities);
-    			/* print '<pre>';
-    			print_r($orderProducts_save);
-    			die(); */
-    			if ($orderProducts_save){
-    				$this->Flash->success(__('orderProducts save successfully.'));
-    			}else{
-    				$this->Flash->error(__('orderProducts not save.'));
-    			}
+    		print_r($productsx);
+    		die(); */
+    		if($this->Products->saveMany($entities)){
+    			$this->Flash->success(__('Products imported successfully.'));
+    			return $this->redirect(['action' => 'import']);
+    
     		}else{
-    			$this->Flash->reeor(__('products not save'));
+    			$this->Flash->error(__('Products could not be imported. Please, try again.'));
+    			return $this->redirect(['action' => 'import']);
     		}
-    		}
-    		else{
-    			$this->Flash->error(__('packages not save'));
-    		}
-    	
     		
     	}else{
     		$this->Flash->error(__('Please select an EXCEl file'));
