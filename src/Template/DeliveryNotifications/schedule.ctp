@@ -48,7 +48,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                          <?php foreach ($deliveryNotifications as $deliveryNotification): 
             
             ?>
-            <tr>
+            <tr style="color:<?=$deliveryNotification['order']->row_color_delivery?>">
                 <td><?= $this->Number->format($deliveryNotification->id) ?></td>
                 <!--<td><?= $this->Number->format($deliveryNotification->deliveryId) ?></td>-->
                 <td><?php if($deliveryNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>

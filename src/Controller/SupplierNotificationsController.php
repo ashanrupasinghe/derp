@@ -166,6 +166,14 @@ class SupplierNotificationsController extends AppController
         	}else{
         	$entities = $orderProductsModel->newEntities($updatable_data);//update multiple rows same time using saveMeny
             if ($orderProductsModel->saveMany($entities)) {
+            	
+            	/*
+            	 * save status of notification [checke status for change color]
+            	 * */
+            	$notification=$this->SupplierNotifications->get($id);
+            	$notification->status=1;
+            	$this->SupplierNotifications->save($notification);
+            	
             	/*new notification for callcenter without delivery,
             	 * order id xxx ready form supplier yyy
             	*/
@@ -304,7 +312,7 @@ class SupplierNotificationsController extends AppController
     	}
     	 
     	 
-    	$supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'DESC','Orders.deliveryTime' => 'DESC']]);
+    	$supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id'],'Orders.status < '=>4],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

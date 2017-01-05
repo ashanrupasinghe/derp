@@ -37,7 +37,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <th><?= $this->Paginator->sort('created') ?></th>
                 <th><?= $this->Paginator->sort('modified') ?></th>
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <th><?= __('Ready') ?></th>
+                <!--<th><?= __('Ready') ?></th>-->
                 <th><?= $this->Paginator->sort('status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
                         </tr>
@@ -53,7 +53,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <td><?= h($deliveryNotification->created) ?></td>
                 <td><?= h($deliveryNotification->modified) ?></td>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
-                <td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>
+                <!--<td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>-->
                 <?php ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php ?>
                 
                 <td class="actions">

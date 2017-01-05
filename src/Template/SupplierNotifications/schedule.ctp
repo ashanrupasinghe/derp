@@ -44,7 +44,11 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                       </thead>
                       <tbody>
                         <?php foreach ($supplierNotifications as $supplierNotification): ?>
-            <tr>
+            <tr 
+            <?php 
+            if(!$supplierNotification->status){?>
+            style='color:<?php echo $supplierNotification['order']->row_color_supplier;?>'
+            <?php }?>>
                 <td><?= $this->Number->format($supplierNotification->id) ?></td>
                 <!--<td><?= $this->Number->format($supplierNotification->supplierId) ?></td>-->
                 <td><?= h($supplierNotification->sentFrom) ?></td>
@@ -59,6 +63,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                     <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                     <!--<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplierNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>-->
+                    
                 </td>
             </tr>
             <?php endforeach; ?>
