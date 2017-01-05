@@ -9,7 +9,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Orders') ?><small><?= __('Orders') ?></small></h2>
+                    <h2><?= __('Orders Scheule') ?><small><?= __('Orders Schedule') ?></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                     
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
