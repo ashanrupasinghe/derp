@@ -1,7 +1,7 @@
 <?php
 $status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled',];
 //butons activate or disabled
-$submit_activity=false;
+$submit_display='';
 $toggle_activity="";
 ?>
 <?= $this->Form->create($supplierNotification,['class'=>'form-horizontal form-label-left']) ?>
@@ -136,12 +136,19 @@ foreach($supplierNotification->supplier->order_products as $product){
 <?php
 if($product['status_s']>0){
 $toggle_activity="disabled";
-$submit_activity=true;
+$submit_display='none;';
 }
 ?>
+<?php if($product['status_s']==0){?>
 <input <?=$toggle_activity?> class="tog supp" data-on="Available" data-off="Not available" data-size="small" <?php if($product['status_s']!=2){echo "checked";} ?> data-toggle="toggle" data-onstyle="success" data-offstyle="danger" type="checkbox" name='mystatus_toggle[<?=$product['product']['id']?>]' id='mystatus_toggle[<?=$product['product']['id']?>]' class="tog-data">
 <input value="<?php if($product['status_s']==2){ echo 2;}else{echo 1;} ?>" type="hidden" name='mystatus[<?=$product['product']['id']?>]' id='mystatus[<?=$product['product']['id']?>]'>
-</td></tr>
+
+<?php }else{
+ echo $status[$product['status_s']];
+ }?>
+</td>
+
+</tr>
 
 <?php }
 ?>
@@ -152,7 +159,7 @@ $submit_activity=true;
   			  		<div class="ln_solid"></div>
     				  <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">                          
-                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success', 'disabled'=>$submit_activity]) ?>
+                             <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success', 'style'=>'display:'.$submit_display]) ?>
                         </div>
                       </div>
     
