@@ -9,6 +9,7 @@ use Cake\Mailer\Email;
 use Cake\I18n\Time;
 use Cake\Core\Configure;
 use Cake\I18n\Date;
+use Cake\I18n\Number;
 /**
  * Orders Controller
  *
@@ -317,6 +318,10 @@ class OrdersController extends AppController {
 		$this->set ( '_serialize', [ 
 				'order' 
 		] );
+		//get numbers of orders for the customer
+		$numOfOrders=$this->getCustomerNumOfOrder($client_id);
+		$this->set ( 'numOfOrders', $numOfOrders );
+		
 		$this->set ( 'clientid', $client_id );
 		$client_data_query=$this->Orders->Customers->find('all',['conditions'=>['id'=>$client_id]])->select(['address','city'])->first();
 		$client_data=$client_data_query->toArray();
@@ -1232,6 +1237,13 @@ public function schedule() {
 	$this->set ( '_serialize', [
 			'orders'
 	] );
+}
+
+public function getCustomerNumOfOrder($id){
+	$query=$this->Orders->find('all',['conditions'=>['customerId'=>$id]]);
+	$number=$query->count()+1;
+	$number= Number::ordinal($number);
+	return "This is your ".$number." Order";;
 }
 
 

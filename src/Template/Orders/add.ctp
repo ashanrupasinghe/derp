@@ -2,8 +2,10 @@
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Add Order') ?> <small><?= __('select your product here') ?></small></h2>
-                    
+                    <h2><?= __('Add Order: '.$numOfOrders) ?> <small><?= __('select the products here') ?></small></h2>
+                    <!--<ul class="nav navbar-right panel_toolbox">
+                    <li><?= $numOfOrders ?></li>
+                    </ul>-->
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
