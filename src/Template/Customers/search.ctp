@@ -1,4 +1,4 @@
-<div class="col-md-12 col-sm-12 col-xs-12">
+	<div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
                     <h2><?= __('Search Customer') ?><small> enter name or phone</small></h2>
@@ -53,7 +53,8 @@
 
 <?php
 $payment_status=['1'=>'pending','2'=>'paid'];
-$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];   
+$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];
+$color=['1'=>'#c9302c','2'=>'supplier informed','3'=>'products ready','4'=>'#ec971f;','5'=>'#1ABB9C','6'=>'#1ABB9C','9'=>'#992E2E'];   
 ?>
 
 
@@ -122,7 +123,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <td><?= h($order->couponCode) ?></td>-->
                 <td><?= $this->Number->format($order->total) ?></td>
                 <td><?= h($payment_status[$order->paymentStatus]) ?></td>
-                <td><?= h($status[$order->status]) ?></td>
+                <td style="color:<?= $color[$order->status]?>"><?= h($status[$order->status]) ?></td>
                <!-- <td><?= h($order->created) ?></td>
                 <td><?= h($order->modified) ?></td>-->
                 <td class="actions">

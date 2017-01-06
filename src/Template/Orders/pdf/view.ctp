@@ -7,7 +7,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
 	<tbody>
 		<tr>
 			<td style="border-top: 0px;"  colspan="3">
-				<img src="<?php echo $_SERVER["DOCUMENT_ROOT"].'/direct2door.erp/webroot/img/pdflogo.png'; ?>" style="height:75px;">
+				<img src="<?php echo '/var/www/vhosts/direct2door_erp/webroot/img/pdflogo.png'; ?>" style="height:75px;">
 			</td>
 		</tr>
 		<tr>
