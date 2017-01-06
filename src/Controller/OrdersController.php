@@ -234,6 +234,7 @@ class OrdersController extends AppController {
 		if(!empty($client_id)){
 		if ($this->request->is ( 'post' )) {
 			$data=$this->processdata($order_data);//rearrange data sets with count total
+			$products_price=$this->getProductPrice($order_data['product_name'],$order_data['product_quantity']);//get product price
 			$delivery_id=$order_data['deliveryId'];//send for email
 			$suppliers_id=$order_data['product_supplier'];//send for email
 			$order = $this->Orders->patchEntity ( $order, $data );	
@@ -264,7 +265,7 @@ class OrdersController extends AppController {
 				//set order products array, one order has many products
 				  for($i=0;$i<sizeof($order_data['product_name']);$i++){
 				 	//order_pruducts table
-					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order_data['product_name'][$i],'product_quantity'=>$order_data['product_quantity'][$i],'supplier_id'=>$order_data['product_supplier'][$i]];
+					$order_products[$i]=['order_id'=>$order->id,'product_id'=>$order_data['product_name'][$i],'product_quantity'=>$order_data['product_quantity'][$i],'product_price'=>$products_price[$i],'supplier_id'=>$order_data['product_supplier'][$i]];
 										
 				}  
 				//set supplier notification array, one suplier has one notification per order
@@ -835,6 +836,25 @@ public function countSubTotal($arrIds,$arrQuantity){
 	}
 	return $subTotal;
 }
+/**
+ * 
+ * @param unknown $arrIds
+ * @param unknown $arrQuantity
+ * @return multitype:
+ * 
+ * to store product price on order products table
+ */
+public function getProductPrice($arrIds,$arrQuantity){
+	$productSupModel=$this->loadModel('Products');
+	$product_price=[];
+	for ($i=0;$i<sizeof($arrIds);$i++){
+		$price_obj=$productSupModel->get($arrIds[$i],['fields'=>['price']]);
+		$price=$price_obj->price;
+		$product_price[$i]=$price;
+	}
+	return $product_price;
+}
+
 /* public function countFinaltotal($subtotal,$tax_p=0,$discount_p=0,$coupon_value=0){
 	$tax=$subtotal*$tax_p/100;
 	$discount=$subtotal*$discount_p/100;
