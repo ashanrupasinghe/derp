@@ -61,7 +61,8 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             <td style="border-bottom:0px"><?php echo $product['product']->package_type->type; ?></td>
             <td style="border-bottom:0px;text-align:right"><?php echo $product['product_quantity']; ?></td>                
             <td style="border-bottom:0px;text-align:right"><?php 
-            $item_price= $product['product']->price;
+            //$item_price= $product['product']->price;
+            $item_price= $product['product_price'];
             $item_qty=$product['product_quantity'];
             $item_tota_price=$item_price*$item_qty;
             echo $this->Number->currency($item_tota_price,'LKR');?>
