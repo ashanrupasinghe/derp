@@ -234,7 +234,7 @@ class OrdersController extends AppController {
 		if(!empty($client_id)){
 		if ($this->request->is ( 'post' )) {
 			$data=$this->processdata($order_data);//rearrange data sets with count total
-			$products_price=$this->getProductPrice($order_data['product_name'],$order_data['product_quantity']);//get product price
+			$products_price=$this->getProductPrice($order_data['product_name']);//get product price
 			$delivery_id=$order_data['deliveryId'];//send for email
 			$suppliers_id=$order_data['product_supplier'];//send for email
 			$order = $this->Orders->patchEntity ( $order, $data );	
@@ -844,7 +844,7 @@ public function countSubTotal($arrIds,$arrQuantity){
  * 
  * to store product price on order products table
  */
-public function getProductPrice($arrIds,$arrQuantity){
+public function getProductPrice($arrIds){
 	$productSupModel=$this->loadModel('Products');
 	$product_price=[];
 	for ($i=0;$i<sizeof($arrIds);$i++){
@@ -1012,6 +1012,18 @@ public function deliveryEmail($orderdata){
 }
 
 //new order information email
+/**
+ * 
+ * @param unknown $orderId
+ * @param unknown $trype
+ * @param unknown $suppliers
+ * @param unknown $delivery
+ * @param unknown $orderdata
+ * 
+ * the email sent @ order saving time, so product price get from products table,
+ * if you sent this email after long time, you need to get price from OrderProducts table,
+ * because product price may change time to time
+ */
 public function sendToAll2($orderId,$trype,$suppliers,$delivery,$orderdata){
 	
 	
@@ -1020,6 +1032,7 @@ public function sendToAll2($orderId,$trype,$suppliers,$delivery,$orderdata){
 	$delivery_model=$this->loadModel('Delivery');
 	
 	$countedval=$this->processdata($orderdata);
+	
 	
 	
 	$sub_total=$countedval['subTotal'];
