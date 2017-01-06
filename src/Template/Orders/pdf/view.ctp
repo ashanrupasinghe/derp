@@ -19,22 +19,24 @@ $payment_status=['1'=>'pending','2'=>'paid'];
 		<tr>
 		<td style="border-top: 0px;padding-bottom: 0px;" colspan="3">
 		<div class="x_title" style="border-bottom: 2px solid #E6E9ED;padding: 1px 5px 6px;margin-bottom: 10px;">
-					<h3 style="margin-top: 0px;margin-bottom: 5px;"><?= __('Order '.'#'.$order->id) ?></h3>
+									
+					<p style="margin-top: 0px;margin-bottom: 5px;font-size: 24px;font-weight: 500;border-top: 0px;padding-top: 0px;margin-bottom: 3px;">
+					<?= __('Order '.'#'.$order->id) ?></p>
 				</div>
 				<p>Plase on <?= h($order->created) ?></p>
 		</td>
 		</tr>
 		<tr>
 		<td style="border-top: 0px;padding-top: 0px;">
-			  <h4>Billing Info</h4>
+			  <p style="font-size: 18px;font-weight: 550;border-top: 0px;padding-top: 0px;margin-bottom: 3px;">Billing Info</p>
   			  <p><?= $order->customer->firstName.' '.$order->customer->lastName?><br><?= h($order->address) ?><br><?= h($order->cid->cname) ?><br>Sri Lanka<br>T: <?= h($order->customer->mobileNo) ?></p>
 			  </td>
 			<td style="border-top: 0px;padding-top: 0px;">
-			  <h4>Payment Method</h4>
+			  <p style="font-size: 18px;font-weight: 550;border-top: 0px;padding-top: 0px;margin-bottom: 3px;">Payment Method</p>
   			  <p>Cash On Delivery</p>
 			  </td>
 			<td style="border-top: 0px;padding-top: 0px;">
-			  <h4>Shipping Method</h4>
+			  <p style="font-size: 18px;font-weight: 550;border-top: 0px;padding-top: 0px;margin-bottom: 3px;">Shipping Method</p>
   			  <p>Free Shipping - Free</p>
 			</td>
 		</tr>

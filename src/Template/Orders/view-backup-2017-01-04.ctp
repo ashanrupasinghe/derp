@@ -9,7 +9,7 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
                   <div class="x_title">
                     <h2><?= __('View Order') ?> <small><?= __('Order ID: '.$order->id) ?></small></h2>
                     <ul class="nav navbar-right panel_toolbox">                      
-                      <li><?= $this->Html->link('Get PDF', ['controller' => 'Orders', 'action' => 'view', $order->id.'.pdf'])?></li>
+                      <li><?= $this->Html->link('Print Invoice', ['controller' => 'Orders', 'action' => 'view', $order->id.'.pdf'])?></li>
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
