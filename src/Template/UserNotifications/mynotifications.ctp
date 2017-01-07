@@ -53,6 +53,7 @@
                 9=>'order cancelled', 
                 10=>'order completed',
                 11=>'product availability',
+                12=>'inform to delivery staff',
                 222=>'order delivery reminder',
                 333=>'order products reminder*',
                 444=>'order delivery reminder',
