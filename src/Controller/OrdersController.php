@@ -304,7 +304,7 @@ class OrdersController extends AppController {
 				$dilivery_notification_result=$this->Orders->DeliveryNotifications->save($dlilevery_notification_entity);
 				
 				/*Notification function xxx yy z*/
-				$this->Notification->setNotification($data['status'],'','',$order_id,'','','','');
+				$this->Notification->setNotification(1,'','',$order_id,'','','','');
 				
 				//$this->sendToAll($order->id,'new', $supplerids, $delivery_id);//send emails
 				$this->sendToAll2($order->id,'new', $supplerids, $delivery_id,$order_data);//send emails,product_name,product_quantity,product_supplier

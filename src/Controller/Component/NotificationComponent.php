@@ -671,7 +671,7 @@ class NotificationComponent extends Component
 				if ($callcenter_users_length>0){
 					$message_del_callcenter="Order ID: ".$orderes_noti_del[$i]['orderId']." will have been delivered at ".$orderes_noti_del[$i]['deliveryTime'].", ".$orderes_noti_del[$i]['deliveryDate'].". Delivery staff ID: ".$orderes_noti_del[$i]['user_id']." not Picke the products yet";
 					for ($x=0;$x<$callcenter_users_length;$x++){
-						$notifications_callcenter[]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_del_callcenter,'type'=>444,'seen'=>0];;//555;//444
+						$notifications_callcenter[]=['orderId'=>$orderes_noti_del[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_del_callcenter,'type'=>444,'seen'=>0];;//555;//444
 					}
 	
 				}

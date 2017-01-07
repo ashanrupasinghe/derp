@@ -119,17 +119,18 @@ class DeliveryNotificationsController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
         	
         	$data=$this->request->data();
-        	 /*  print '<pre>';
-        	print_r($data); 
-        	die(); */
+        	   
         	
         	$order_id=$data['orderId'];
         	$new_order_status=$data['Order_Status'];
         	
         	$ordermodel=$this->loadModel('Orders');
-        	$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']])->toArray();//$current_status['status_s']//current order status
-        	        	
-        	if ($current_order_status['status']!=$data['Order_Status']){
+        	
+        	$current_order_status=$ordermodel->get($data['orderId'],['fields'=>['status']]);//$current_status['status_s']//current order status
+        /* 	print '<pre>';
+        	print_r($current_order_status);
+        	die(); */
+        	if ($current_order_status->status!=$data['Order_Status']){
         		
         		//change order table        	
         		$order=$ordermodel->get($data['orderId']);

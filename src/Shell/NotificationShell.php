@@ -44,6 +44,7 @@ class NotificationShell extends Shell {
 		$orderModel  = TableRegistry::get('Orders');
 		$connection = ConnectionManager::get('default');
 		$userModel=TableRegistry::get('Users');
+		$userNotificationModel=TableRegistry::get('UserNotifications');
 		$notifications=[];
 		$notifications_callcenter=[];
 		//get callcenter user list
@@ -71,12 +72,16 @@ class NotificationShell extends Shell {
 				" JOIN supplier_notifications ON supplier_notifications.orderId=orders.id".
 				" JOIN suppliers ON suppliers.id= supplier_notifications.supplierId".				
 				" WHERE orders.deliveryDate='".$current__date."' AND '".$current__time."' >=  SUBTIME(orders.deliveryTime, '01:30:00')".
-				" AND supplier_notifications.status=0";
+				" AND supplier_notifications.status=0".
+				" AND orders.status!=9";
 		$orderes_noti_sup = $connection->execute($query_sup)->fetchAll('assoc');
 	
 		//send to suppliers
 		if(sizeof($orderes_noti_sup)>0){
 			for($i=0;$i<sizeof($orderes_noti_sup);$i++){
+				//get count of currently sent reminder to supplier
+				$count_query=$userNotificationModel->find('all',['conditions'=>['type'=>333,'orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$orderes_noti_sup[$i]['user_id']]]);
+				if ($count_query->count()==0){
 				$message_supp="Order ID: ".$orderes_noti_sup[$i]['orderId']." will have been delivered at ".$orderes_noti_sup[$i]['deliveryTime'].", ".$orderes_noti_sup[$i]['deliveryDate'].". Please confirm your products availability";
 				$notifications[]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$orderes_noti_sup[$i]['user_id'],'notification'=>$message_supp,'type'=>333,'seen'=>0];
 	
@@ -86,6 +91,9 @@ class NotificationShell extends Shell {
 						$notifications_callcenter[]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_supp_callcenter,'type'=>555,'seen'=>0];;//555
 					}
 				}
+				
+				}
+				
 			}
 		}
 	
@@ -96,23 +104,27 @@ class NotificationShell extends Shell {
 		if (sizeof($orderes_noti_del)>0){
 			$supplier_size=sizeof($orderes_noti_sup);
 			for($i=0;$i<sizeof($orderes_noti_del);$i++){
+				//get count of currently sent reminder to driver				
+				$count_query=$userNotificationModel->find('all',['conditions'=>['type'=>222,'orderId'=>$orderes_noti_del[$i]['orderId'],'userId'=>$orderes_noti_del[$i]['user_id']]]);
+				if ($count_query->count()==0){				
 				$message_del="Order ID: ".$orderes_noti_del[$i]['orderId']." will have been delivered at ".$orderes_noti_del[$i]['deliveryTime'].", ".$orderes_noti_del[$i]['deliveryDate'].". Please Picke the products and deliver to the customer";
 				$notifications[]=['orderId'=>$orderes_noti_del[$i]['orderId'],'userId'=>$orderes_noti_del[$i]['user_id'],'notification'=>$message_del,'type'=>222,'seen'=>0];
 	
 				if ($callcenter_users_length>0){
 					$message_del_callcenter="Order ID: ".$orderes_noti_del[$i]['orderId']." will have been delivered at ".$orderes_noti_del[$i]['deliveryTime'].", ".$orderes_noti_del[$i]['deliveryDate'].". Delivery staff ID: ".$orderes_noti_del[$i]['user_id']." not Picke the products yet";
 					for ($x=0;$x<$callcenter_users_length;$x++){
-						$notifications_callcenter[]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_del_callcenter,'type'=>444,'seen'=>0];;//555;//444
+						$notifications_callcenter[]=['orderId'=>$orderes_noti_del[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_del_callcenter,'type'=>444,'seen'=>0];;//555;//444
 					}
 	
 				}
+			}
 	
 			}
 		}
 		
 		$notifications=array_merge($notifications,$notifications_callcenter);
 		if (sizeof($notifications)>0){			
-			$userNotificationModel=TableRegistry::get('UserNotifications');
+			
 			$notification_entities=$userNotificationModel->newEntities($notifications);
 			$notifications_save_result=$userNotificationModel->saveMany($notification_entities);
 	
