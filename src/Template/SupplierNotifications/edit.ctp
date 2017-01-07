@@ -63,6 +63,14 @@ $toggle_activity="";
                           <?php echo $this->Form->input('orderId',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
                         </div>
                       </div> 
+                      
+                      <div class="form-group">
+                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="orderId">Delivery Date</label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('deliveryDate',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true,'value'=>$supplierNotification['order']->delivery_date_time]);?>                          
+                        </div>
+                      </div> 
+                      
             <?php echo $this->Form->input('orderId',['disabled'=>false,'type'=>'hidden']); ?>
             <?php //echo $this->Form->input('status',['options'=>$status]); ?>
             

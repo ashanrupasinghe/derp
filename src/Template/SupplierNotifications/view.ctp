@@ -59,8 +59,8 @@ $status_del=['0'=>'pending','1'=>'took over'];
             <td><?= h($supplierNotification->created) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($supplierNotification->modified) ?></td>
+            <th scope="row"><?= __('Delivery Date') ?></th>
+            <td><?= $this->Time->format($supplierNotification['order']->delivery_date_time) ?></td>
         </tr>
                       </tbody>
                     </table>

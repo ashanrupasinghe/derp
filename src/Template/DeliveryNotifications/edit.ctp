@@ -67,6 +67,13 @@ $submit_activity=false;
 						<div class="col-md-7 col-sm-7 col-xs-12">                          
                           <?php echo $this->Form->input('orderId',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
                         </div>
+                      </div> 
+                      
+                      <div class="form-group">
+                                                                  <label class="control-label col-md-5 col-sm-5 col-xs-12" for="orderId">Delivery Date</span></label>                        
+						<div class="col-md-7 col-sm-7 col-xs-12">                          
+                          <?php echo $this->Form->input('deliveryDate',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true,'value'=>$deliveryNotification['order']->delivery_date_time]);?>                          
+                        </div>
                       </div>                   
                   
 

@@ -74,7 +74,7 @@ class SupplierNotificationsController extends AppController
         		'contain' => ['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType']]
         ]); */
         $supplierNotification = $this->SupplierNotifications->get($id, [
-        		'contain' =>['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID]],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType'],
+        		'contain' =>['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID]],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType','Orders'],
         		 
         ]);
         ///print_r($supplierNotification);
@@ -125,7 +125,7 @@ class SupplierNotificationsController extends AppController
         ]); */
     	
     	$supplierNotification = $this->SupplierNotifications->get($id, [
-    			'contain' =>['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID]],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType'],
+    			'contain' =>['Suppliers.OrderProducts'=>['conditions'=>['order_id'=>$supplierNotification_orderID]],'Suppliers.OrderProducts.Products','Suppliers.OrderProducts.Products.packageType','Orders'],
     			
     	]);
         

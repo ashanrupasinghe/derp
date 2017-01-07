@@ -66,7 +66,7 @@ class DeliveryNotificationsController extends AppController
     public function view($id = null)
     {
         $deliveryNotification = $this->DeliveryNotifications->get($id, [
-            'contain' => []
+            'contain' => ['Orders']
         ]);
         $customer=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.customers','Orders.city']]);
         //$suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers','Orders.SupplierNotifications.Suppliers.city']]);
@@ -114,7 +114,7 @@ class DeliveryNotificationsController extends AppController
     public function edit($id = null)
     {
         $deliveryNotification = $this->DeliveryNotifications->get($id, [
-            'contain' => []
+            'contain' => ['Orders']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
         	

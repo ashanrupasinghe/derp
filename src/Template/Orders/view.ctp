@@ -72,8 +72,8 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
             <td><?= h($order->created) ?></td>
         </tr>
         <tr>
-            <th><?= __('Modified') ?></th>
-            <td><?= h($order->modified) ?></td>
+            <th><?= __('Delivery Date') ?></th>
+            <td><?= $this->Time->format($order->delivery_date_time) ?></td>
         </tr>
         
 

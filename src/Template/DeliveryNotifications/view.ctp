@@ -52,8 +52,10 @@ $status_del=['0'=>'pending','1'=>'took over'];
             <td><?= h($deliveryNotification->created) ?></td>
         </tr>
         <tr>
-            <th scope="row"><?= __('Modified') ?></th>
-            <td><?= h($deliveryNotification->modified) ?></td>
+            <th scope="row"><?= __('Delivery Date') ?></th>
+            <td>
+            <?= $this->Time->format($deliveryNotification['order']->delivery_date_time) ?>
+            </td>
         </tr>
         <tr>
         <th scope="row"	><?= __('NotificationText') ?></th>
