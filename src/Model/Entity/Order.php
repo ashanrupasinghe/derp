@@ -64,14 +64,14 @@ class Order extends Entity
     	//$odtime=$odtime->modify('+60 mins')->format('H:i:s');//if current time equal this return red
     	
     	
-    	if ($oddate->isToday() && $odtime->isWithinNext('60 mins') && $this->_properties['status']<4 ){
+    	if ($oddate->isToday() && $odtime->isWithinNext('60 mins') && ($this->_properties['status']<4 || $this->_properties['status']==7) ){
     		    		
     		return '#F00000';//within 60 mins
     	}
-    	elseif ($oddate->isToday() && $odtime->wasWithinLast('1440 mins') && $this->_properties['status']<4){
+    	elseif ($oddate->isToday() && $odtime->wasWithinLast('1440 mins') && ($this->_properties['status']<4 || $this->_properties['status']==7)){
     		return '#992E2E;';//late
     	}
-    	elseif($oddate<$current__date_time && $this->_properties['status']<4){
+    	elseif($oddate<$current__date_time && ($this->_properties['status']<4 || $this->_properties['status']==7)){
     		return '#992E2E;';//late
     	}
     	return '#73879C';//more than 60 mins; 

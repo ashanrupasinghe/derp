@@ -195,6 +195,13 @@ class OrdersController extends AppController {
 		/*Notification function xxx yy z*/
 		$result=$this->Notification->setNotification('','','',$order_id,'','','',111);
 		if($result){
+			$order=$this->Orders->get($order_id);
+			$order->status=7;//driver informed
+			if($this->Orders->save($order)){
+				$this->Flash->success ( __ ( 'Order status changed to driver notified.' ) );
+			}else{
+				$this->Flash->success ( __ ( 'Order status not changed to driver notified.' ) );
+			}
 			
 			$this->Flash->success ( __ ( 'The notification has been sent.' ) );
 		}
@@ -1236,7 +1243,7 @@ public function sendemail2($orderid,$type='new',$recipients,$recipient_type){
 
 
 public function schedule() {
-	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status <'=>5],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
+	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status IN'=>[1,2,3,4,7]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
 	/* print '<pre>';
 		print_r($orders);
 	die(); */

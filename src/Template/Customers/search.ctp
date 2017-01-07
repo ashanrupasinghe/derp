@@ -53,8 +53,8 @@
 
 <?php
 $payment_status=['1'=>'pending','2'=>'paid'];
-$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed','9'=>'canceled'];
-$color=['1'=>'#c9302c','2'=>'supplier informed','3'=>'products ready','4'=>'#ec971f;','5'=>'#1ABB9C','6'=>'#1ABB9C','9'=>'#992E2E'];   
+$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed','9'=>'canceled'];
+$color=['1'=>'#c9302c','2'=>'supplier informed','3'=>'products ready','4'=>'#ec971f;','5'=>'#1ABB9C','6'=>'#1ABB9C',7=>'#c9302c','9'=>'#992E2E'];   
 ?>
 
 

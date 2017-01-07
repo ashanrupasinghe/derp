@@ -61,7 +61,7 @@ class NotificationShell extends Shell {
 				" JOIN user_notifications ON user_notifications.orderId=orders.id".
 				" JOIN delivery ON delivery.id=orders.deliveryId".				
 				" WHERE orders.deliveryDate='".$current__date."' AND '".$current__time."' >=  SUBTIME(orders.deliveryTime, '01:00:00') AND user_notifications.type=12".
-				" AND orders.status < 4";
+				" AND orders.status IN (1,2,3,7)";
 		$orderes_noti_del = $connection->execute($query_del)->fetchAll('assoc');
 		
 		//check order- supplier status

@@ -623,7 +623,7 @@ class NotificationComponent extends Component
 				" WHERE orders.deliveryDate='".$current__date."' AND '".$current__time."' >=  SUBTIME(orders.deliveryTime, '01:00:00') AND user_notifications.type=12".
 				//" AND order_products.status_d=0".
 				//" GROUP BY delivery.user_id";
-				" AND orders.status < 4";
+				" AND orders.status IN (1,2,3,7)";
 		$orderes_noti_del = $connection->execute($query_del)->fetchAll('assoc');
 		/* print '<pre>';
 		print_r($orderes_noti_del);
