@@ -2,7 +2,7 @@
 <?php
 //$status=['0'=>'pending', '1'=>'took all', '2'=>'delevered','9'=>'canceled'];
 //$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];
-$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed', '9'=>'canceled'];
+$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed', '9'=>'canceled'];
 
 ?>
 

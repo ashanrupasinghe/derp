@@ -146,7 +146,7 @@
 <div class="col-md-8 col-sm-8 col-xs-12">
 	<?php echo $this->Form->input('paymentStatus',['label' => false,'class'=>'form-control','options'=>$payment_status,'empty'=>'select status']); ?>
 </div>
-<?php  $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];?>
+<?php  $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed'];?>
 </div>
 <div class="form-group">
 <label class="control-label col-md-4 col-sm-4 col-xs-12">Status</label>

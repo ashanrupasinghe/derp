@@ -1,6 +1,6 @@
 <?php 
 //$status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled'];
-$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed', '9'=>'canceled'];
+$status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed', '9'=>'canceled'];
 $my_status=[0=>'pending',1=>'confirm'];
 ?>
 

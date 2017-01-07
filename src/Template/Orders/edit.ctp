@@ -99,7 +99,7 @@ endforeach;?>
             //echo $this->Form->input('paymentStatus');
             echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);
             //echo $this->Form->input('status');
-            $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed'];
+            $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed'];
             echo $this->Form->input('status',['options'=>$status,'empty'=>'select status']);
         ?>
 </div>        
