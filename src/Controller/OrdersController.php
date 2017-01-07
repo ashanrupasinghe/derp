@@ -44,8 +44,8 @@ class OrdersController extends AppController {
 				'viewpdf',
 				'schedule',
 				'update',
-				'notify'/* ,
-				'autoSendNotification' */
+				'notify',
+				'autoSendNotification' 
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {

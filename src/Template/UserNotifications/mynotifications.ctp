@@ -40,7 +40,25 @@
                 <td><?= $this->Number->format($userNotification->orderId) ?></td>
                 
                 <td><a href="<?= $this->url->build('/user-notifications/genarateUrl/'.$userNotification->id.'/'.$userLevel.'/'.$userId);?>"><?= h($userNotification->notification) ?></a></td>
-                <?php $typrArray=[1=>'new order', 2=>'product available', 3=>'product not available', 4=>'product ready', 5=>'product handover to delivery staff', 6=>'product took over by delivery staff', 7=>'order took over', 8=>'order delivered', 9=>'order cancelled', 10=>'order completed',11=>'product availability'];?>
+                <?php $typrArray=
+                [
+                1=>'new order',
+                2=>'product available', 
+                3=>'product not available', 
+                4=>'product ready', 
+                5=>'product handover to delivery staff', 
+                6=>'product took over by delivery staff', 
+                7=>'order took over', 
+                8=>'order delivered', 
+                9=>'order cancelled', 
+                10=>'order completed',
+                11=>'product availability',
+                222=>'order delivery reminder',
+                333=>'order products reminder*',
+                444=>'order delivery reminder',
+                555=>'order products reminder*',
+                
+                ];?>
                 <td><?= $typrArray[$userNotification->type] ?></td>
                 <?php $seenArray=[0=>'Not seen',1=>'Seen'];?>
                 <td class="see-sow"><?= $seenArray[$userNotification->seen] ?></td>
