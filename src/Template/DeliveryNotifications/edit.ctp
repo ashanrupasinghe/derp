@@ -239,7 +239,9 @@ $submit_activity=false;
                 <td><?php echo $supplier['supplier']['address']."<br><br>".$supplier['supplier']['cid']['cname']; ?></td>
                 <!--<td><?php echo $supplier['supplier']['cid']['cname']; ?></td>-->
                 <td><?php echo $supplier['supplier']['mobileNo']."<br>".$supplier['supplier']['contactNo'];?></td>
-                <td><?php echo $supplier['product']['name']; ?></td>
+                <td><?php echo $supplier['product']['name']; ?><br>
+                <?php if($supplier['product']['name_si']!=null){ echo $supplier['product']['name_si'];} ?><br>
+                <?php if($supplier['product']['name_ta']!=null){echo $supplier['product']['name_ta'];} ?></td>
                 <td><?php echo $supplier['product_quantity']; ?></td>
                 <td><?php echo $supplier['product']['package_type']['type']; ?></td>
                 <?php echo $this->Form->input('supid',['value'=>$supplier['product']['id'],'name'=>'productid[]','type'=>'hidden']);?>

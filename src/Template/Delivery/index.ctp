@@ -64,7 +64,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $delivery->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $delivery->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $delivery->id], ['confirm' => __('Are you sure you want to delete # {0}?', $delivery->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
+                   
                 </td>
             </tr>
             <?php endforeach; ?>

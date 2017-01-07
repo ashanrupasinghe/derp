@@ -50,7 +50,10 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                         <?php foreach ($products as $product): ?>
                 <tr>
                     <td><?= $this->Number->format($product->id) ?></td>
-                    <td><?= h($product->name) ?></td>
+                    <td><?= h($product->name) ?><br>
+                    	<?php if($product->name_si!=null){?><?= h($product->name_si) ?><?php } ?><br>
+                    	<?php if($product->name_ta!=null){?><?= h($product->name_ta) ?><?php } ?><br>
+                    </td>
                     <td><?= $this->Number->format($product->price) ?></td>
                     <td><?= h($package_type[$product->package]) ?></td>
                     <td><?= h($availability[$product->availability]) ?></td>
@@ -64,9 +67,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                        <?php if($userLevel==1||$userLevel==2):?> <?= $this->Html->link(__('Edit'), ['action' => 'edit', $product->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                         
                         <?php endif;?>
-                                               <?php if($userLevel==1):?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $product->id],['confirm' => __('Are you sure you want to delete # {0}?', $product->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
-                        <?php endif;?>
+                       
                     </td>
                 </tr>
             <?php endforeach; ?>

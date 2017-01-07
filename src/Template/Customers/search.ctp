@@ -91,7 +91,7 @@ $color=['1'=>'#c9302c','2'=>'supplier informed','3'=>'products ready','4'=>'#ec9
                 <th><?= $this->Paginator->sort('city') ?></th>
                 <!--<th><?= $this->Paginator->sort('latitude') ?></th>
                 <th><?= $this->Paginator->sort('longitude') ?></th>-->
-                <th><?= $this->Paginator->sort('callcenter') ?></th>
+                <th><?= $this->Paginator->sort('delivery_date_time') ?></th>
                 <th><?= $this->Paginator->sort('delivery staff') ?></th>
                 <!--<th><?= $this->Paginator->sort('subTotal') ?></th>
                 <th><?= $this->Paginator->sort('tax') ?></th>
@@ -114,8 +114,8 @@ $color=['1'=>'#c9302c','2'=>'supplier informed','3'=>'products ready','4'=>'#ec9
                 <td><?= h($cities[$order->city]) ?></td>
                 <!--<td><?= h($order->latitude) ?></td>
                 <td><?= h($order->longitude) ?></td>-->
-                <td><?= $this->Html->link($callcenters[$order->callcenterId], ['controller' => 'Callcenter', 'action' => 'view', $order->callcenterId])?></td>
-                
+                <!--<td><?= $this->Html->link($callcenters[$order->callcenterId], ['controller' => 'Callcenter', 'action' => 'view', $order->callcenterId])?></td>-->
+                <td><?= $this->Time->format($order->delivery_date_time) ?></td>
                 <td><?= $this->Html->link($deliveries[$order->deliveryId], ['controller' => 'Delivery', 'action' => 'view', $order->deliveryId])?></td>
                 <!--<td><?= $this->Number->format($order->subTotal) ?></td>
                 <td><?= $this->Number->format($order->tax) ?></td>
@@ -129,7 +129,7 @@ $color=['1'=>'#c9302c','2'=>'supplier informed','3'=>'products ready','4'=>'#ec9
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['controller'=>'orders','action' => 'view', $order->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
                     <?= $this->Form->postLink(__('Cancel'), ['controller'=>'orders','action' => 'cancel', $order->id],['confirm' => __('Are you sure you want to Cancel # {0}?', $order->id),'class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['controller'=>'orders','action' => 'delete', $order->id], ['confirm' => __('Are you sure you want to delete # {0}?', $order->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
+                    
                     <?= $this->Html->link(__('Update'), ['controller'=>'orders','action' => 'update', $order->id],['class'=>'x-btn x-btn-primary btn btn-default btn-xs']) ?>
                 </td>
             </tr>

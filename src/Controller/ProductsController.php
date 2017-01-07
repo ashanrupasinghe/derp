@@ -302,6 +302,12 @@ class ProductsController extends AppController
     				$products[$count]['id']=$currentsku->id;
     			}
     			$products[$count]['name']=$product['name'];
+    			if (isset($product['name_si']) && $product['name_si']!=""){
+    			$products[$count]['name_si']=$product['name_si'];
+    			}
+    			if (isset($product['name_ta']) && $product['name_ta']!=""){
+    			$products[$count]['name_ta']=$product['name_ta'];
+    			}
     			$products[$count]['sku']=$product['sku'];
     			$products[$count]['description']=$product['description'];
     			$products[$count]['price']=$product['price'];    			 
@@ -311,9 +317,9 @@ class ProductsController extends AppController
     			else{
     				$products[$count]['availability']=1;
     			}
-    			
+    			if(isset($products[$count]['image']) && $products[$count]['image']!=""){
     			$products[$count]['image']=$product['small_image'];    			
-    			
+    			}
     			if (isset($product['status']) && $product['status']!=""){
     				$products[$count]['status']=$product['status'];
     			}else{
@@ -397,5 +403,7 @@ class ProductsController extends AppController
     	}
     	 //http://stackoverflow.com/questions/22590957/how-do-i-best-avoid-inserting-duplicate-records-in-cakephp
     	 //https://github.com/cewi/excel
+    	 // * http://stackoverflow.com/questions/4557564/how-to-save-other-languages-in-mysql-table
+ //* ALTER TABLE posts MODIFY title VARCHAR(255) CHARACTER SET UTF8;
     }
 }

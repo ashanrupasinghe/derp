@@ -92,7 +92,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
     <tbody>
         <tr>
 			<td style="border-bottom:0px;border-top:0px;">
-				Phone : <b>011 432 432 4</b>
+				Phone : <b>011 75 56 600</b>
 			</td>
 			<td style="border-bottom:0px;border-top:0px;">
 			Hours of Operation :<b> 9 am to 6 pm</b>

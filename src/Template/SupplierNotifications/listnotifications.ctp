@@ -1,6 +1,7 @@
 <?php 
 //$status=['0'=>'pending','1'=>'available','2'=>'not available','3'=>'ready','4'=>'handed over','9'=>'canceled'];
 $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed', '9'=>'canceled'];
+$my_status=[0=>'pending',1=>'confirm'];
 ?>
 
 
@@ -34,9 +35,10 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <!--<th><?= $this->Paginator->sort('supplierId') ?></th>-->
                 <th><?= $this->Paginator->sort('sentFrom') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
-                <th><?= $this->Paginator->sort('modified') ?></th>
+                <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>                
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <th><?= $this->Paginator->sort('status') ?></th>
+                <th><?= $this->Paginator->sort('Order.status','Order Status') ?></th>
+                <th><?= $this->Paginator->sort('status','My Status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                       </thead>
@@ -45,16 +47,19 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
             <tr>
                 <td><?= $this->Number->format($supplierNotification->id) ?></td>
                 <!--<td><?= $this->Number->format($supplierNotification->supplierId) ?></td>-->
-                <td><?= h($supplierNotification->sentFrom) ?></td>
-                <td><?= h($supplierNotification->created) ?></td>
-                <td><?= h($supplierNotification->modified) ?></td>
+                <td><?php if($supplierNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>
+                
+                <td><?= $this->time->format($supplierNotification->created) ?></td>
+                <td><?= $this->Time->format($supplierNotification['order']->delivery_date_time) ?></td>
+                
                 <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
                 <?php ?><td><?= h($status[$supplierNotification['order']->status]) ?></td><?php ?>
+                <?php ?><td><?= h($my_status[$supplierNotification->status]) ?></td><?php ?>
                 
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
-                    <!--<?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplierNotification->id],['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>-->
+                    
                 </td>
             </tr>
             <?php endforeach; ?>

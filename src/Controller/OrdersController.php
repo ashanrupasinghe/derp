@@ -44,8 +44,8 @@ class OrdersController extends AppController {
 				'viewpdf',
 				'schedule',
 				'update',
-				'notify',
-				'autoSendNotification'
+				'notify'/* ,
+				'autoSendNotification' */
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -63,7 +63,7 @@ class OrdersController extends AppController {
 	 * @return \Cake\Network\Response|null
 	 */
 	public function index() {
-		$orders = $this->paginate ( $this->Orders,['contain'=>'customers','order' => ['Orders.created' => 'DESC']] );
+		$orders = $this->paginate ( $this->Orders,['contain'=>'customers','order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
 		/* print '<pre>';
 		print_r($orders);
 		die(); */
@@ -209,7 +209,7 @@ class OrdersController extends AppController {
 	 * send notifications using chronjob
 	 */
 	public function autoSendNotification(){
-		$this->Notification->chronjob();
+		$this->Notification->sendNotifications();
 	}
 	
 	/**
@@ -891,7 +891,8 @@ public function processdata($data){
 			'deliveryTime'=>$data['del-time'],
 			'note'=>$data['del-note'],
 			'paymentStatus'=>$data['paymentStatus'],
-			'status'=>$data['status']
+			//'status'=>$data['status']//selected status
+			'status'=>2//supplier informed
 	];
 	return $newdata;
 }
@@ -1317,4 +1318,8 @@ http://stackoverflow.com/questions/1006654/fastest-way-to-find-distance-between-
  * */
 
 
-/*http://stackoverflow.com/questions/26772946/how-to-access-one-controller-action-inside-another-controller-action*/
+/*http://stackoverflow.com/questions/26772946/how-to-access-one-controller-action-inside-another-controller-action
+ * 
+ * http://stackoverflow.com/questions/4557564/how-to-save-other-languages-in-mysql-table
+ * ALTER TABLE posts MODIFY title VARCHAR(255) CHARACTER SET UTF8;
+ * */

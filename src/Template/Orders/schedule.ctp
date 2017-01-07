@@ -34,8 +34,9 @@ $color=['1'=>'#c9302c','2'=>'#c9302c','3'=>'#c9302c','4'=>'#ec971f;','5'=>'#1ABB
                       <thead>
                         <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('deliveryDate') ?></th>
-                <th><?= $this->Paginator->sort('deliveryTime') ?></th>
+                <!--<th><?= $this->Paginator->sort('deliveryDate') ?></th>
+                <th><?= $this->Paginator->sort('deliveryTime') ?></th>-->
+                <th><?= $this->Paginator->sort('delivery_date_time','Delivery Date') ?></th> 
                 <th><?= $this->Paginator->sort('customerId') ?></th>
                 <!--<th><?= $this->Paginator->sort('address') ?></th>-->
                 <th><?= $this->Paginator->sort('city') ?></th>
@@ -59,8 +60,9 @@ $color=['1'=>'#c9302c','2'=>'#c9302c','3'=>'#c9302c','4'=>'#ec971f;','5'=>'#1ABB
             <?php foreach ($orders as $order): ?>
             <tr>
                 <td><?= $this->Number->format($order->id) ?></td>
-                <td><?= $this->Time->format($order->deliveryDate,'yyyy-MM-dd') ?></td>
-                <td><?= $this->Time->format($order->deliveryTime,'HH:mm:ss') ?></td>                
+                <!--<td><?= $this->Time->format($order->deliveryDate,'yyyy-MM-dd') ?></td>
+                <td><?= $this->Time->format($order->deliveryTime,'HH:mm:ss') ?></td>-->
+                <td><?= $this->Time->format($order->delivery_date_time) ?></td>                
                 <td><?= $this->Html->link($order->customer['firstName'].' '.$order->customer['lastName'], ['controller' => 'Customers', 'action' => 'view', $order->customerId])?></td>
                 <!--<td><?= h($order->address) ?></td>-->
                 <td><?= h($cities[$order->city]) ?></td>

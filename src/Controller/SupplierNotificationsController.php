@@ -174,9 +174,16 @@ class SupplierNotificationsController extends AppController
             	$notification->status=1;
             	$this->SupplierNotifications->save($notification);
             	
-            	//update order table;
-            	//$this->SupplierNotifications->Orders->get($data['orderId']);
-            	
+            	//update order table if all suppliers checked the notifications;
+            	$all_order_query=$this->SupplierNotifications->find('all',['conditions'=>['orderId'=>$data['orderId']]]);
+            	$checked_notification_query=$this->SupplierNotifications->find('all',['conditions'=>['orderId'=>$data['orderId'],'status'=>1]]);
+            	$all_order_count=$all_order_query->count();
+            	$checked_notification_count=$checked_notification_query->count();
+            	if ($all_order_count==$checked_notification_count){
+            		$order=$this->SupplierNotifications->Orders->get($data['orderId']);
+            		$order->status=3;
+            		$this->SupplierNotifications->Orders->save($order);
+            	}
             	
             	/*new notification for callcenter without delivery,
             	 * order id xxx ready form supplier yyy
@@ -263,7 +270,7 @@ class SupplierNotificationsController extends AppController
     	}
     	
     	
-        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['SupplierNotifications.created' => 'DESC']]);
+        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

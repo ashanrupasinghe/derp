@@ -120,7 +120,9 @@ $toggle_activity="";
 foreach($supplierNotification->supplier->order_products as $product){
 ?>
 <tr><td><?= h($product['product']['id'])?></td>
-<td><?= h($product['product']['name'])?></td>
+<td><?= h($product['product']['name'])?><br>
+<?php if($product['product']['name_si']!=null){?><?= h($product['product']['name_si'])?><?php } ?><br>
+<?php if($product['product']['name_ta']!=null){?><?= h($product['product']['name_ta'])?><?php } ?></td>
 <td><?= h($product['product_quantity'])?></td>
 <td><?= h($product['product']['package_type']->type)?></td>
 <td>

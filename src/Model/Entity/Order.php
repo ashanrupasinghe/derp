@@ -45,7 +45,7 @@ class Order extends Entity
         'id' => false
     ];
     
-    protected $_virtual = ['row_color_delivery','row_color_supplier'];
+    protected $_virtual = ['row_color_delivery','row_color_supplier','delivery_date_time'];
     /**
      *use this column directly to change color of rows delivery time within 60 mins 
      */
@@ -71,13 +71,32 @@ class Order extends Entity
     	elseif ($oddate->isToday() && $odtime->wasWithinLast('1440 mins') && $this->_properties['status']<4){
     		return '#992E2E;';//late
     	}
-    	elseif($oddate->isYesterday() && $this->_properties['status']<4){
+    	elseif($oddate<$current__date_time && $this->_properties['status']<4){
     		return '#992E2E;';//late
     	}
     	return '#73879C';//more than 60 mins; 
     	
     	
     	
+    	
+    }
+    
+    protected function _getDeliveryDateTime()
+    {
+    	$time=$this->_properties['deliveryTime'];
+    	$time=new Time($time);
+    	$time=$time->format('H:i:s');
+    	$date=$this->_properties['deliveryDate'];
+    	
+    	$date_time=$date.' '.$time;
+    	//$new_date_time=sortotime($date_time);
+    	
+    	//$time=new Time($time);
+    	//$time=$time->format('g:i A');
+    	
+    	//$st=date('g:i A',$time);
+    	//return $date.', '.$time;
+    	return new Time($date_time);
     	
     }
     
@@ -109,7 +128,7 @@ class Order extends Entity
     	elseif ($oddate->isToday() && $odtime->wasWithinLast('1440 mins') && $this->_properties['status']<4){
     		return '#992E2E;';//late
     	}
-    	elseif($oddate->isYesterday() && $this->_properties['status']<4){
+    	elseif($oddate<$current__date_time && $this->_properties['status']<4){
     		return '#992E2E;';//late
     	}
     	return '#73879C';//more than 90 min

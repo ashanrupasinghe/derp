@@ -34,6 +34,18 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                         </div>
                       </div>
                       <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name_si">Name in Sinhala <span class="required">*</span></label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('name_si',['label' => false,'class'=>'form-control col-md-7 col-xs-12']);?>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name_ta">Name in Tamil <span class="required">*</span></label>                        
+						<div class="col-md-6 col-sm-6 col-xs-12">                          
+                          <?php echo $this->Form->input('name_ta',['label' => false,'class'=>'form-control col-md-7 col-xs-12']);?>
+                        </div>
+                      </div>
+                      <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="description">Description</label>                        
 						<div class="col-md-6 col-sm-6 col-xs-12">
                           <?php echo $this->Form->input('description',['label' => false,'class'=>'form-control col-md-7 col-xs-12','rows'=>3]);?>

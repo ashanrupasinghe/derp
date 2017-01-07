@@ -30,7 +30,7 @@
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'btn btn-info btn-xs']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'btn btn-warning btn-xs']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $supplierNotification->id], ['confirm' => __('Are you sure you want to delete # {0}?', $supplierNotification->id),'class'=>'btn btn-danger btn-xs']) ?>
+                   
                 </td>
             </tr>
             <?php endforeach; ?>

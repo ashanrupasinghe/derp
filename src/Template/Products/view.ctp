@@ -5,7 +5,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Product Name: '.$product->name) ?><small>product details</small></h2>
+                    <h2><?= __('Product Name: '.$product->name.'/ '.$product->name_ta.'/ '.$product->name_si) ?><small>product details</small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>

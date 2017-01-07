@@ -27,7 +27,7 @@ class CustomersController extends AppController {
 		
 	
 		// The owner of an article can edit and delete it
-		if (in_array($this->request->action, ['add','edit', 'delete','view','index','search','result','check'])) {
+		if (in_array($this->request->action, ['add','edit', 'delete','view','index','search','result','check','import'])) {
 			
 			if (isset($user['user_type']) && $user['user_type'] == 2) {
 				return true;
@@ -35,6 +35,15 @@ class CustomersController extends AppController {
 		}
 	
 		return parent::isAuthorized($user);
+	}
+	
+	
+	public function initialize()
+	{
+		parent::initialize();
+		$this->loadComponent('Cewi/Excel.Import');
+		ini_set('memory_limit', '256M');
+		//set_time_limit(0); Infinite
 	}
 	
 	/**
@@ -277,5 +286,91 @@ class CustomersController extends AppController {
 		return $this->redirect(['controller'=>'orders','action' => 'add']);
 	
 	
+	}
+	
+	/**
+	 * import data from a excel sheet
+	 */
+	public function import(){
+		 
+		if ($this->request->is('post')) {
+			if (!empty($this->request->data('customersSheet'))){
+				$file= $this->request->data('customersSheet.tmp_name'); 
+				$data = $this->Import->prepareEntityData($file, ['append'=> true]);
+				
+				$customers=[];				
+				$count=0;
+				foreach ($data as $customer){
+					if(isset($customer['id']) && $customer['id']!="" ){
+						$customers[$count]['id']=$customer['id'];//if use id col, u can update data.
+					}
+					if (isset($customer['firstName']) && $customer['firstName']!="" ){
+					$customers[$count]['firstName']=$customer['firstName'];//firstName
+					}
+					if (isset($customer['lastName']) && $customer['lastName']!="" ){
+					$customers[$count]['lastName']=$customer['lastName'];//lastName
+					}
+					if (isset($customer['address']) && $customer['address']!="" ){
+					$customers[$count]['address']=$customer['address'];//address
+					}
+					if (isset($customer['city']) && $customer['city']!="" ){
+					$customers[$count]['city']=intval($customer['city']);//city[city id]
+					}
+					if (isset($customer['latitude']) && $customer['latitude']!="" ){
+					$customers[$count]['latitude']=$customer['latitude'];//latitude
+					}
+					if (isset($customer['longitude']) && $customer['longitude']!="" ){
+					$customers[$count]['longitude']=$customer['longitude'];//longitude
+					}
+					if (isset($customer['email']) && $customer['email']!="" ){
+					$customers[$count]['email']=$customer['email'];//email
+					}
+					if (isset($customer['mobileNo']) && $customer['mobileNo']!="" ){
+					$customers[$count]['mobileNo']=$customer['mobileNo'];//mobileNo
+					}
+					if (isset($customer['created']) && $customer['created']!="" ){
+					$customers[$count]['created']=$customer['created'];//created
+					}/* else{
+						$customers[$count]['created']=date('d/m/y,g:i A');
+					} */
+					if (isset($customer['modified']) && $customer['modified']!="" ){
+					$customers[$count]['modified']=$customer['modified'];//modified
+					}/* 
+					else{
+						$customers[$count]['modified']=date('d/m/y,g:i A');
+					} */
+					if (isset($customer['status']) && $customer['status']!="" ){
+					$customers[$count]['status']=$customer['status'];//status[1,0]
+					}
+					
+					$count++;	
+				}
+				/* print '<pre>';
+				print_r($customers);
+				die(); */
+				if (sizeof($customers)>0){
+						$customers_entities=$this->Customers->newEntities($customers);
+						 
+						$customers_save=$this->Customers->saveMany($customers_entities);
+						
+						if ($customers_save){
+							$this->Flash->success(__('customers save successfully.'));
+						}else{
+							$this->Flash->error(__('customers not save.'));
+						}
+				}else{
+					$this->Flash->error(__('no customers to import.'));
+				}
+				
+				
+				 
+	
+			}else{
+				$this->Flash->error(__('Please select an EXCEl file'));
+				return $this->redirect(['action' => 'import']);
+			}
+			 
+		}
+
 	}
 }

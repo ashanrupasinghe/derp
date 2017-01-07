@@ -7,6 +7,7 @@ $status=['0'=>'Disabled','1'=>'Active'];
                     <h2><?= __('Customers') ?><small>Order by latest</small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                     <li><?= $this->Html->link(__('Add New Customer'), ['controller' => 'Customers', 'action' => 'add','class'=>'btn btn-default']) ?><li>
+                    <li><?= $this->Html->link(__('Import Customers'), ['controller' => 'Customers', 'action' => 'import']) ?></li>
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
@@ -60,7 +61,7 @@ $status=['0'=>'Disabled','1'=>'Active'];
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $customer->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $customer->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $customer->id],['confirm' => __('Are you sure you want to delete # {0}?', $customer->id),'class'=>'x-btn x-btn-danger btn btn-danger btn-xs']) ?>
+                   
 					<?php $cus_name=$customer->firstName.' '.$customer->lastName;?>                    
                     <?= $this->Form->postLink(__('Proceed order'), ['action' => 'check', $customer->id], ['confirm' => __('Are you sure you want to proceed an order for {0}?', $cus_name),'class'=>'x-btn x-btn-success btn btn-success btn-xs']) ?>
                 </td>

@@ -5,7 +5,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><?= __('Impotr Product') ?> <small>import products using excel sheet</small></h2>
+                    <h2><?= __('Impotr Customers') ?> <small>import customers using excel sheet</small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -28,7 +28,7 @@ $status = ['0'=>'Desabled','1'=>'Active'];
                   <?= $this->Form->create('',['type' => 'file','class'=>'form-horizontal form-label-left']) ?>
                   <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  		<?= $this->Form->input('productsSheet', ['type' => 'file','required'=>true]);?>
+                  		<?= $this->Form->input('customersSheet', ['type' => 'file','required'=>true]);?>
                   		</div>
                   		</div>
                   		

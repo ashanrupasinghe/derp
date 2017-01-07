@@ -38,7 +38,17 @@ class NotificationShell extends Shell {
 			$notify_time_del=$current__date_time->modify('+60 mins')->format('H:i:s'); */
 		$orderModel  = TableRegistry::get('Orders');
 		$connection = ConnectionManager::get('default');
+		$userModel=TableRegistry::get('Users');
 		$notifications=[];
+		$notifications_callcenter=[];
+		//get callcenter user list
+		$callcenterQuery=$userModel->find('all',['fields'=>['id'],'conditions'=>['user_type'=>2]])->toArray();
+		$callcenter_users=[];//contain callcenter staff ids
+		foreach ($callcenterQuery as $callcenter){
+			$callcenter_users[]=$callcenter['id'];
+		}
+		$callcenter_users_length=sizeof($callcenter_users);
+		
 		//check order- delivery status, if call center not sent notification to delivery staff, he do not know about the order, we chack whether notification is sent
 		//$query_del="SELECT orders.id as orderId, delivery.user_id, orders.deliveryDate, orders.deliveryTime FROM orders JOIN user_notifications ON user_notifications.orderId=orders.id JOIN delivery ON delivery.id=orders.deliveryId WHERE orders.deliveryDate='".$current__date."' AND '".$current__time."' >=  SUBTIME(orders.deliveryTime, '01:00:00') AND type=12";
 		$query_del=  "SELECT orders.id as orderId, delivery.user_id, orders.deliveryDate, orders.deliveryTime".
@@ -67,7 +77,16 @@ class NotificationShell extends Shell {
 		if(sizeof($orderes_noti_sup)>0){
 			for($i=0;$i<sizeof($orderes_noti_sup);$i++){
 				$message_supp="Order ID: ".$orderes_noti_sup[$i]['orderId']." will have been delivered at ".$orderes_noti_sup[$i]['deliveryTime'].", ".$orderes_noti_sup[$i]['deliveryDate'].". Please confirm your products availability";
-				$notifications[$i]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$orderes_noti_sup[$i]['user_id'],'notification'=>$message_supp,'type'=>222,'seen'=>0];
+				$notifications[$i]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$orderes_noti_sup[$i]['user_id'],'notification'=>$message_supp,'type'=>333,'seen'=>0];
+				
+				
+				
+				if ($callcenter_users_length>0){
+					$message_supp_callcenter="Order ID: ".$orderes_noti_sup[$i]['orderId']." will have been delivered at ".$orderes_noti_sup[$i]['deliveryTime'].", ".$orderes_noti_sup[$i]['deliveryDate'].". Supplier ID: ".$orderes_noti_sup[$i]['user_id']." not confirm products availability yet";
+					for ($x=0;$x<$callcenter_users_length;$x++){
+							$notifications_callcenter[]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_supp_callcenter,'type'=>555,'seen'=>0];;//555
+					}
+				}
 			}
 		}
 	
@@ -76,10 +95,20 @@ class NotificationShell extends Shell {
 			$supplier_size=sizeof($orderes_noti_sup);
 			for($i=0;$i<sizeof($orderes_noti_del);$i++){
 				$message_del="Order ID: ".$orderes_noti_del[$i]['orderId']." will have been delivered at ".$orderes_noti_del[$i]['deliveryTime'].", ".$orderes_noti_del[$i]['deliveryDate'].". Please Picke the products and deliver to the customer";
-				$notifications[$i+$supplier_size]=['orderId'=>$orderes_noti_del[$i]['orderId'],'userId'=>$orderes_noti_del[$i]['user_id'],'notification'=>$message_del,'type'=>333,'seen'=>0];
+				$notifications[$i+$supplier_size]=['orderId'=>$orderes_noti_del[$i]['orderId'],'userId'=>$orderes_noti_del[$i]['user_id'],'notification'=>$message_del,'type'=>222,'seen'=>0];
+				
+				if ($callcenter_users_length>0){
+				$message_del_callcenter="Order ID: ".$orderes_noti_del[$i]['orderId']." will have been delivered at ".$orderes_noti_del[$i]['deliveryTime'].", ".$orderes_noti_del[$i]['deliveryDate'].". Delivery staff ID: ".$orderes_noti_del[$i]['user_id']." not Picke the products yet";
+					for ($x=0;$x<$callcenter_users_length;$x++){
+						$notifications_callcenter[]=['orderId'=>$orderes_noti_sup[$i]['orderId'],'userId'=>$callcenter_users[$x],'notification'=>$message_del_callcenter,'type'=>444,'seen'=>0];;//555;//444
+					}
+				
+				}
 	
 			}
 		}
+		$notifications=array_merge($notifications,$notifications_callcenter);
+		
 		if (sizeof($notifications)>0){
 			  /* print '<pre>';
 				print_r($notifications);
