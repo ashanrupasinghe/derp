@@ -49,7 +49,7 @@ $my_status=[0=>'pending',1=>'confirm'];
                 <!--<td><?= $this->Number->format($supplierNotification->supplierId) ?></td>-->
                 <td><?php if($supplierNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>
                 
-                <td><?= $this->time->format($supplierNotification->created) ?></td>
+                <td><?= $this->Time->format($supplierNotification->created) ?></td>
                 <td><?= $this->Time->format($supplierNotification['order']->delivery_date_time) ?></td>
                 
                 <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
