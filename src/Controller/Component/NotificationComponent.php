@@ -243,6 +243,20 @@ class NotificationComponent extends Component
 		elseif ($type==12){
 			$user_list=$deliveryStaff;
 			$message="Products avilabile for order ID: ".$order_id.", Collect them and diliver please";
+			
+			$s_list_q=$orderProdctsModel->find('all',['fields'=>['Users.id','Suppliers.firstName','Suppliers.lastName'],'conditions'=>['order_id'=>$order_id]])->distinct('supplier_id')->contain('Suppliers.Users')->toArray();
+			
+			for ($i=0;$i<sizeof($s_list_q);$i++){
+				$s_list[$i]=['user_id'=>$s_list_q[$i]->Suppliers->user->id,'first_name'=>$s_list_q[$i]->Suppliers->firstName,'last_name'=>$s_list_q[$i]->Suppliers->lastName];
+			}
+
+			/*
+			 $m="Order 95 is ready. Collect from supplier.name";
+			 ---$s_list-contain suppliers details----
+			  [ ['user_id' => (int) 12,	'first_name' => 'Kasun','last_name' => 'Kalhara'],
+				['user_id' => (int) 14,	'first_name' => 'Pemasiri',	'last_name' => 'Kemadasa'],
+				['user_id' => (int) 18,	'first_name' => 'Gayan','last_name' => 'Kavinda']]
+			*/
 		}
 		/* $data=[$order_id,];
 		$userNotificationEntity = $userNotificationModel->newEntity ();
