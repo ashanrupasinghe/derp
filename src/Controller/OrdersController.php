@@ -184,6 +184,8 @@ class OrdersController extends AppController {
 		}
 		$notified=$this->Notification->isSentToDriver($id);
 		$this->set('notified',$notified);
+		$total=$this->countTotal($id);
+		$this->set('total_pdf',$total);
 		$this->set ( 'order', $order );
 		$this->set ( '_serialize', [
 				'order'
@@ -1315,6 +1317,8 @@ public function getCustomerNumOfOrder($id){
  * @param unknown $orderId
  * @return multitype:string: array contain total of available products and not available products
  * [ [available] => 400 [notavailable] => 200]
+ * 
+ * need to modifid to cupancode, tax, discounts, etc
  */
 public function countTotal($orderId){
     
@@ -1325,8 +1329,15 @@ public function countTotal($orderId){
 							->where(['order_id' => $orderId,'status_s'=>1])->first();
 			$not_available_sum= $orderProductQuery_not_available->select(['total' => $orderProductQuery_not_available->func()->sum('product_quantity*product_price')])
 			->where(['order_id' => $orderId,'status_s'=>2])->first();			
-			
+			if (empty($available_sum['total'])){
+				$available_sum['total']=0;
+			}
+			if (empty($not_available_sum['total'])){
+				$not_available_sum['total']=0;
+			}
 			$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
+			/* print_r($total);
+			die(); */
 			return $total;	
 			
 			

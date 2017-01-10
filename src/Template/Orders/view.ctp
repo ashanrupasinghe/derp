@@ -84,29 +84,34 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
 	<div class="orders col-lg-6 col-md-6 col-sm-12 columns content div-top-pad-0 div-left-pad-0">    
     <table class="table table-hover">
 		<tr>
-            <th><?= __('SubTotal') ?></th>
-            <td><?= $this->Number->format($order->subTotal) ?></td>
+            <th><?= __('SubTotal') ?><small>&#40;<?= __('ordered time') ?>&#41;</small></th>
+            <td><?= $this->Number->currency($order->subTotal,'LKR') ?></td>
         </tr>
         <tr>
             <th><?= __('Tax') ?></th>
-            <td><?= $this->Number->format($order->tax) ?></td>
+            <td><?= $this->Number->currency($order->tax,'LKR') ?></td>
         </tr>
         <tr>
             <th><?= __('Discount') ?></th>
-            <td><?= $this->Number->format($order->discount) ?></td>
+            <td><?= $this->Number->currency($order->discount,'LKR') ?></td>
         </tr>
         <tr>
             <th><?= __('CouponCode') ?></th>
             <td><?= h($order->couponCode) ?></td>
         </tr>
         <tr>
-            <th><?= __('Total') ?></th>
-            <td><?= $this->Number->format($order->total) ?></td>
+            <th><?= __('Total') ?> <small> &#40;<?= __('ordered time') ?>&#41;</small> </th>
+            <td><?= $this->Number->currency($order->total,'LKR') ?></td>
         </tr>
-         </tr>
-                <tr>
+         <tr>
+         <?php if($order->status<3){?>
+               
             <th>&nbsp;</th>
             <td></td>
+         <?php }else{?>   
+            <th><?= __('Total') ?> <small> &#40;<?= __('available products') ?>&#41;</small> </th>
+            <td><?= $this->Number->currency($total_pdf['available'],'LKR') ?></td>
+         <?php }?>   
         </tr>
         <tr>
             <th ><?= __('Order Status') ?></th>
