@@ -67,7 +67,11 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             $item_price= $product['product_price'];
             $item_qty=$product['product_quantity'];
             $item_tota_price=$item_price*$item_qty;
+            if($product['status_s']==2){
+            $item_tota_price=0;
+            }
             echo $this->Number->currency($item_tota_price,'LKR');?>
+            
 			</td>
         </tr>
     <?php endforeach; ?>
@@ -80,9 +84,9 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             	<b>Grand Total</b><br>
             </td>
             <td style="border-bottom:0px;text-align:right">
-            <?php echo $this->Number->currency($order->subTotal,'LKR') ?><br>
+            <?php echo $this->Number->currency($total_pdf['available'],'LKR') ?><br>
             <?php echo $this->Number->currency(0,'LKR') ?><br>
-            <b><?php echo $this->Number->currency($order->total,'LKR') ?></b>
+            <b><?php echo $this->Number->currency($total_pdf['available'],'LKR') ?></b>
             </td>
             </tr>
     </tbody>

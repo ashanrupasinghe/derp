@@ -14,5 +14,7 @@ use Cake\ORM\Entity;
  */
 class OrderProduct extends Entity
 {
-
+	//public  $virtualFields = ['total' => 'SUM(OrderProduct.product_price * OrderProduct.product_quantity)'];
+	
+	
 }

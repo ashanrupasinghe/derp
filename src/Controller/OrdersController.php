@@ -137,6 +137,8 @@ class OrdersController extends AppController {
 		/*  print '<pre>';
 		print_r($order);
 		die();  */
+		$total=$this->countTotal($id);
+		$this->set('total_pdf',$total);
 		$this->set ( 'order', $order );
 		$this->set ( '_serialize', [ 
 				'order' 
@@ -1306,6 +1308,28 @@ public function getCustomerNumOfOrder($id){
 	$number=$query->count()+1;
 	$number= Number::ordinal($number);
 	return "This is your ".$number." Order";;
+}
+
+/**
+ * count total focus on pdf
+ * @param unknown $orderId
+ * @return multitype:string: array contain total of available products and not available products
+ * [ [available] => 400 [notavailable] => 200]
+ */
+public function countTotal($orderId){
+    
+			$orderProductQuery_available=$this->Orders->OrderProducts->find();
+			$orderProductQuery_not_available=$this->Orders->OrderProducts->find();
+			//$query = $articles->find();
+			$available_sum= $orderProductQuery_available->select(['total' => $orderProductQuery_available->func()->sum('product_quantity*product_price')])
+							->where(['order_id' => $orderId,'status_s'=>1])->first();
+			$not_available_sum= $orderProductQuery_not_available->select(['total' => $orderProductQuery_not_available->func()->sum('product_quantity*product_price')])
+			->where(['order_id' => $orderId,'status_s'=>2])->first();			
+			
+			$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
+			return $total;	
+			
+			
 }
 
 
