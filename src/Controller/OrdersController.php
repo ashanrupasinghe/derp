@@ -10,6 +10,7 @@ use Cake\I18n\Time;
 use Cake\Core\Configure;
 use Cake\I18n\Date;
 use Cake\I18n\Number;
+use App\Model\Entity\Order;
 /**
  * Orders Controller
  *
@@ -610,12 +611,32 @@ class OrdersController extends AppController {
 				'post',
 				'delete' 
 		] );
-		$order = $this->Orders->get ( $id );
-		if ($this->Orders->delete ( $order )) {
+			$order = $this->Orders->get ( $id );
+			$order->deleted=1;
+			$this->Orders->save($order);
+			
+			$orderProductQuery=$this->Orders->OrderProducts->query();			
+			$suppliernotificationQuery=$this->Orders->supplierNotifications->query();
+			$deliveryNotificationQuery=$this->Orders->deliveryNotifications->query();
+			$userNotificationQuery=$this->Orders->userNotifications->query();
+			
+			$orderProductQuery->update()->set(['deleted' => 1])->where(['order_id' => $id])->execute();
+			$suppliernotificationQuery->update()->set(['deleted' => 1])->where(['orderId' => $id])->execute();
+			$deliveryNotificationQuery->update()->set(['deleted' => 1])->where(['orderId' => $id])->execute();
+			$userNotificationQuery->update()->set(['deleted' => 1])->where(['orderId' => $id])->execute();
+			
+			$this->Flash->success ( __ ( 'The order has been deleted.' ) );
+			
+		
+		/* 
+		 debug($order);
+			die();
+			 
+		 if ($this->Orders->delete ( $order )) {
 			$this->Flash->success ( __ ( 'The order has been deleted.' ) );
 		} else {
 			$this->Flash->error ( __ ( 'The order could not be deleted. Please, try again.' ) );
-		}
+		} */
 		
 		return $this->redirect ( [ 
 				'action' => 'index' 

@@ -40,6 +40,11 @@ class UserNotificationsTable extends Table
         		'foreignKey' => 'userId',
         		'joinType' => 'INNER'
         ]);
+        
+        $this->belongsTo('Orders', [
+        		'foreignKey' => 'orderId',
+        		'joinType' => 'INNER'
+        ]);
     }
 
     /**

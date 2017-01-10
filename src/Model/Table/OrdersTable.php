@@ -49,6 +49,9 @@ class OrdersTable extends Table
         $this->hasMany('DeliveryNotifications',[
         		'foreignKey' => 'orderId'
         ]);
+        $this->hasMany('UserNotifications',[
+        		'foreignKey' => 'orderId'
+        ]);
         
         
 		$this->belongsTo('callcenter',['foreignKey'=>'callcenterId']);
