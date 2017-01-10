@@ -42,7 +42,7 @@ class UserNotificationsController extends AppController
 		if($userId==$this->Auth->user('id')){
 		$userNotifications = $this->paginate($this->UserNotifications);
 		if($userId!=""){
-			$userNotifications = $this->paginate($this->UserNotifications,['conditions'=>['userId'=>$userId],'order'=>['created'=>'DESC']]);
+			$userNotifications = $this->paginate($this->UserNotifications,['conditions'=>['userId'=>$userId, 'deleted ='=>0],'order'=>['created'=>'DESC']]);
 		}
 	
 		$this->set(compact('userNotifications'));

@@ -270,7 +270,7 @@ class SupplierNotificationsController extends AppController
     	}
     	
     	
-        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id']],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
+        $supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id'],'SupplierNotifications.deleted ='=>0],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }
@@ -323,7 +323,7 @@ class SupplierNotificationsController extends AppController
     	}
     	 
     	 
-    	$supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id'],'Orders.status < '=>4],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
+    	$supplierNotifications = $this->paginate($this->SupplierNotifications,['conditions'=>['SupplierNotifications.SupplierId'=>$supplier['id'],'Orders.status < '=>4,'SupplierNotifications.deleted ='=>0],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
     	$this->set(compact('supplierNotifications'));
     	$this->set('_serialize', ['supplierNotifications']);
     }

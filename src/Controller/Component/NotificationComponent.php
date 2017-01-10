@@ -278,7 +278,7 @@ class NotificationComponent extends Component
 	public function getNotificationCount($user_id){		
 		$userNotificationModel=TableRegistry::get('UserNotifications');
 		// In a controller or table method.
-		$query = $userNotificationModel->find('all', ['conditions' => ['userId'=>$user_id,'seen'=>0]]);
+		$query = $userNotificationModel->find('all', ['conditions' => ['userId'=>$user_id,'seen'=>0,'deleted ='=>0]]);
 		$number = $query->count();
 		return $number;
 	
@@ -286,7 +286,7 @@ class NotificationComponent extends Component
 	
 	public function getLatestNotifications($user_id){
 		$userNotificationModel=TableRegistry::get('UserNotifications');
-		$query = $userNotificationModel->find('all', ['fields'=>['id','orderId','notification','type','created'],'conditions' => ['userId'=>$user_id,'seen'=>0]])->order(['created' => 'DESC'])->limit(5)->toArray();
+		$query = $userNotificationModel->find('all', ['fields'=>['id','orderId','notification','type','created'],'conditions' => ['userId'=>$user_id,'seen'=>0,'deleted ='=>0]])->order(['created' => 'DESC'])->limit(5)->toArray();
 		return $query;
 		/* print '<pre>';
 		print_r($query);

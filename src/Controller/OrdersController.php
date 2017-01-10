@@ -64,7 +64,7 @@ class OrdersController extends AppController {
 	 * @return \Cake\Network\Response|null
 	 */
 	public function index() {
-		$orders = $this->paginate ( $this->Orders,['contain'=>'customers','order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
+		$orders = $this->paginate ( $this->Orders,['contain'=>'customers','order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC'],'conditions'=>['deleted ='=>0]] );
 		/* print '<pre>';
 		print_r($orders);
 		die(); */
@@ -1264,7 +1264,7 @@ public function sendemail2($orderid,$type='new',$recipients,$recipient_type){
 
 
 public function schedule() {
-	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status IN'=>[1,2,3,4,7]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
+	$orders = $this->paginate ( $this->Orders,['contain'=>'customers','conditions'=>['Orders.status IN'=>[1,2,3,4,7],'deleted ='=>0],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']] );
 	/* print '<pre>';
 		print_r($orders);
 	die(); */

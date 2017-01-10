@@ -173,7 +173,7 @@ class CustomersController extends AppController {
 	}
 	public function search() {
 		$ordersModel=$this->loadModel('Orders');
-		$orders = $this->paginate ( $ordersModel,['contain'=>'customers','order' => ['Orders.modified' => 'DESC'],'conditions'=>['Orders.status NOT IN'=>[6,9]]] );
+		$orders = $this->paginate ( $ordersModel,['contain'=>'customers','order' => ['Orders.modified' => 'DESC'],'conditions'=>['Orders.status NOT IN'=>[6,9],'deleted ='=>0]] );
 		/* print '<pre>';
 		 print_r($orders);
 		die(); */
