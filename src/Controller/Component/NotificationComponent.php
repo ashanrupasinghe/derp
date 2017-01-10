@@ -190,10 +190,12 @@ class NotificationComponent extends Component
 			for ($i=0;$i<sizeof($sups);$i++){				
 				$suppliers[$i]=$sups[$i]['Users']->id;				
 			}
-			$user_list=array_merge($admin_users,$callcenter_users,$suppliers,$deliveryStaff);//admin.calls.dels.sups
+			$user_list=[];//admin.calls.dels.sups
 			if ($type==1){
+				$user_list=array_merge($admin_users,$callcenter_users,$suppliers);//admin.calls.dels.sups
 				$message="New order request, Order ID: ".$order_id;
 			}else{
+				$user_list=array_merge($admin_users,$callcenter_users,$suppliers,$deliveryStaff);//admin.calls.dels.sups
 				$message="order ID: ".$order_id." is canceled";
 			}
 			//$url="/orders/view/".$order_id;
