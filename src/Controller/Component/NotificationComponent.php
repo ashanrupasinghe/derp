@@ -244,12 +244,13 @@ class NotificationComponent extends Component
 			$user_list=$deliveryStaff;
 			$message="Products avilabile for order ID: ".$order_id.", Collect them and diliver please";
 			
-			$s_list_q=$orderProdctsModel->find('all',['fields'=>['Users.id','Suppliers.firstName','Suppliers.lastName'],'conditions'=>['order_id'=>$order_id]])->distinct('supplier_id')->contain('Suppliers.Users')->toArray();
+			$s_list_q=$orderProdctsModel->find('all',['fields'=>['Users.id','Suppliers.firstName','Suppliers.lastName'],'conditions'=>['order_id'=>$order_id,'status_s'=>1]])->distinct('supplier_id')->contain('Suppliers.Users')->toArray();
 			
+			$s_list=[];
 			for ($i=0;$i<sizeof($s_list_q);$i++){
 				$s_list[$i]=['user_id'=>$s_list_q[$i]->Suppliers->user->id,'first_name'=>$s_list_q[$i]->Suppliers->firstName,'last_name'=>$s_list_q[$i]->Suppliers->lastName];
 			}
-
+			
 			/*
 			 $m="Order 95 is ready. Collect from supplier.name";
 			 ---$s_list-contain suppliers details----
@@ -266,10 +267,26 @@ class NotificationComponent extends Component
 		print_r($user_list);
 		echo $message; */
 		$rows=[];//data to save
-		for ($i=0;$i<sizeof($user_list);$i++){
-			$rows[$i]=['orderId'=>$order_id,'userId'=>$user_list[$i],'notification'=>$message,'type'=>$type,'seen'=>0];
+		if ($type==12){
+			//set of notifications to driver
+			
+			for ($i=0;$i<sizeof($s_list);$i++){
+				//one notification for separate users
+				$message="Order ".$order_id." is ready. Collect from ".$s_list[$i]['first_name']." ".$s_list[$i]['last_name'];
+				$rows[$i]=['orderId'=>$order_id,'userId'=>$user_list[0],'notification'=>$message,'type'=>$type,'seen'=>0];
+					
+			}
 		}
-		$notification_entities=$userNotificationModel->newEntities($rows);
+		else{
+			for ($i=0;$i<sizeof($user_list);$i++){			
+					//one notification for separate users
+				$rows[$i]=['orderId'=>$order_id,'userId'=>$user_list[$i],'notification'=>$message,'type'=>$type,'seen'=>0];
+			
+			}
+		}
+		
+		
+		$notification_entities=$userNotificationModel->newEntities($rows);		
 		$notifications_save_result=$userNotificationModel->saveMany($notification_entities);
 		return $notifications_save_result;//newly add remove if there error
 		
@@ -505,8 +522,10 @@ class NotificationComponent extends Component
 			echo $message; */
 		$rows=[];//data to save
 		for ($i=0;$i<sizeof($user_list);$i++){
+			
 			$rows[$i]=['orderId'=>$order_id,'userId'=>$user_list[$i],'notification'=>$message,'type'=>$type,'seen'=>0];
 		}
+		
 		$notification_entities=$userNotificationModel->newEntities($rows);
 		$notifications_save_result=$userNotificationModel->saveMany($notification_entities);
 	
