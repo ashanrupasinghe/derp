@@ -183,7 +183,8 @@ class DeliveryNotificationsController extends AppController
         $suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders.OrderProducts','Orders.OrderProducts.Products','Orders.OrderProducts.Products.packageType','Orders.OrderProducts.Suppliers','Orders.OrderProducts.Suppliers.city']]);
         $suppliers=$suppliers->toArray();
         $this->set(compact('deliveryNotification','customer','suppliers'));
-         
+        $total=$this->countTotal($id);
+        $this->set('total_pdf',$total);
          
         $this->set('_serialize', ['deliveryNotification']);
     }
@@ -534,5 +535,37 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	 
     	 
     	$this->set('_serialize', ['deliveryNotification']);
-    }    
+    }
+    /**
+     * count total focus on pdf
+     * @param unknown $orderId
+     * @return multitype:string: array contain total of available products and not available products
+     * [ [available] => 400 [notavailable] => 200]
+     *
+     * need to modifid to cupancode, tax, discounts, etc
+     */
+    public function countTotal($orderId){
+    	$order_model=$this->loadModel('Orders');
+    	$orderProductQuery_available=$order_model->OrderProducts->find();
+    	$orderProductQuery_not_available=$order_model->OrderProducts->find();
+    	//$query = $articles->find();
+    	$available_sum= $orderProductQuery_available->select(['total' => $orderProductQuery_available->func()->sum('product_quantity*product_price')])
+    	->where(['order_id' => $orderId,'status_s'=>1])->first();
+    	$not_available_sum= $orderProductQuery_not_available->select(['total' => $orderProductQuery_not_available->func()->sum('product_quantity*product_price')])
+    	->where(['order_id' => $orderId,'status_s'=>2])->first();
+    	if (empty($available_sum['total'])){
+    		$available_sum['total']=0;
+    	}
+    	if (empty($not_available_sum['total'])){
+    		$not_available_sum['total']=0;
+    	}
+    	$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
+    	/* print_r($total);
+    	 die(); */
+    	return $total;
+    		
+    		
+    }
+
+    
 }

@@ -74,7 +74,15 @@ $submit_activity=false;
 						<div class="col-md-7 col-sm-7 col-xs-12">                          
                           <?php echo $this->Form->input('deliveryDate',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true,'value'=>$deliveryNotification['order']->delivery_date_time]);?>                          
                         </div>
-                      </div>                   
+                      </div> 
+                      
+                      <div class="form-group">
+                                                                  <label class="control-label col-md-5 col-sm-5 col-xs-12" for="orderId"><?= __('Total') ?> <small>&#40;<?= __('available products') ?>&#41;</small></label>                        
+						<div class="col-md-7 col-sm-7 col-xs-12">
+						<?php $totl=$this->Number->currency($total_pdf['available'],'LKR');?>                          
+                          <?php echo $this->Form->input('total',['label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true,'value'=>$totl]);?>                          
+                        </div>
+                      </div>                  
                   
 
             <?php echo $this->Form->input('orderId',['type'=>'hidden']); ?>
@@ -173,13 +181,13 @@ $submit_activity=false;
                           <?php echo $this->Form->input('email',['value'=>$email,'label' => false,'class'=>'form-control col-md-7 col-xs-12','disabled'=>true]);?>                          
                         </div>
                       </div> 
-                      
+                      <hr>
                       <div class="form-group">
-                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">&nbsp;</label>                        
+                                                                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">Delivery Note</label>                        
 						<div class="col-md-9 col-sm-9 col-xs-12">                          
-                                                    
+                                                   <span class=""><?= $deliveryNotification['order']->note ?></span> 
                         </div>
-                      </div> 
+                      </div>
                       
                       
 

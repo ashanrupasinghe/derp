@@ -62,14 +62,14 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
             <th><?= __('Delivery name') ?></th>
             <?php $delivery_name=$order->delivery->firstName.' '.$order->delivery->lastName; ?>
             <td><?= $this->Html->link($delivery_name, ['controller' => 'Delivery', 'action' => 'view', $order->deliveryId])?></td>
-        </tr>
-                <tr>
-            <th>&nbsp;</th>
-            <td></td>
-        </tr>
+        </tr>                
           <tr>
             <th><?= __('Created') ?></th>
             <td><?= h($order->created) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Created') ?></th>
+            <td><?= h($order->note) ?></td>
         </tr>
         
         <tr>

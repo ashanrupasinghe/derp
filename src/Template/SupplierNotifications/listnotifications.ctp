@@ -33,8 +33,8 @@ $my_status=[0=>'pending',1=>'confirm'];
                         <tr>
                           <th><?= $this->Paginator->sort('id') ?></th>
                 <!--<th><?= $this->Paginator->sort('supplierId') ?></th>-->
-                <th><?= $this->Paginator->sort('sentFrom') ?></th>
-                <th><?= $this->Paginator->sort('created') ?></th>
+                <!--<th><?= $this->Paginator->sort('sentFrom') ?></th>-->
+                <!--<th><?= $this->Paginator->sort('created') ?></th>-->
                 <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>                
                 <th><?= $this->Paginator->sort('orderId') ?></th>
                 <th><?= $this->Paginator->sort('Order.status','Order Status') ?></th>
@@ -47,9 +47,9 @@ $my_status=[0=>'pending',1=>'confirm'];
             <tr>
                 <td><?= $this->Number->format($supplierNotification->id) ?></td>
                 <!--<td><?= $this->Number->format($supplierNotification->supplierId) ?></td>-->
-                <td><?php if($supplierNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>
+                <!--<td><?php if($supplierNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>-->
                 
-                <td><?= $this->Time->format($supplierNotification->created) ?></td>
+                <!--<td><?= $this->Time->format($supplierNotification->created) ?></td>-->
                 <td><?= $this->Time->format($supplierNotification['order']->delivery_date_time) ?></td>
                 
                 <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
@@ -57,7 +57,7 @@ $my_status=[0=>'pending',1=>'confirm'];
                 <?php ?><td><?= h($my_status[$supplierNotification->status]) ?></td><?php ?>
                 
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
+                    
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                     
                 </td>

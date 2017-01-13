@@ -59,7 +59,7 @@ $payment_status=['1'=>'pending','2'=>'paid'];
     <tbody>
     <?php foreach($order->order_products as $product): ?>                       
         <tr>
-            <td style="border-bottom:0px"><b><?php echo $product['product']->name;?></b><br>SKU: <?php echo $product['product']->sku; ?></td>
+            <td style="border-bottom:0px"><b><?php echo $product['product']->name;?></b><!--<br>SKU: --><?php // echo $product['product']->sku; ?></td>
             <td style="border-bottom:0px"><?php echo $product['product']->package_type->type; ?></td>
             <td style="border-bottom:0px;text-align:right"><?php echo $product['product_quantity']; ?></td>                
             <td style="border-bottom:0px;text-align:right"><?php 

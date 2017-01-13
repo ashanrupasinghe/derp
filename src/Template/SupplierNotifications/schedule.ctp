@@ -62,7 +62,7 @@ $my_status=[0=>'pending',1=>'confirm'];
                 <?php ?><td><?= h($status[$supplierNotification['order']->status]) ?></td><?php ?>
                 <?php ?><td><?= h($my_status[$supplierNotification->status]) ?></td><?php ?>
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $supplierNotification->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
+                   
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $supplierNotification->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                    
                     

@@ -57,7 +57,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <?php ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php ?>
                 
                 <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $deliveryNotification->id],['class'=>'x-btn x-btn-primary btn btn-info btn-xs']) ?>
+                    
                     <?= $this->Html->link(__('Edit'), ['action' => 'edit', $deliveryNotification->id],['class'=>'x-btn x-btn-warning btn btn-warning btn-xs']) ?>
                     
                 </td>
