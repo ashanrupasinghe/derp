@@ -24,6 +24,11 @@ $cakeDescription = 'Direct2Door.lk';
             <?= $this->fetch('title') ?>
         </title>
         <?= $this->Html->meta('icon') ?>
+        <?php 
+        $current_cntrl=$this->request->params['controller'];
+        if($current_cntrl=="DeliveryNotifications" || $current_cntrl=="SupplierNotifications"){ ?>
+        <meta http-equiv="refresh" content="120">
+        <?php } ?>
 
 
 <!-- Bootstrap -->

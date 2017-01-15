@@ -31,14 +31,17 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
   			  		<table class="table table-hover">
                       <thead>
                         <tr>
-                          <th><?= $this->Paginator->sort('id') ?></th>
+                <!--<th><?= $this->Paginator->sort('id') ?></th>-->
                 <!--<th><?= $this->Paginator->sort('deliveryId') ?></th>-->
-                <th><?= $this->Paginator->sort('sentFrom') ?></th>
-                <th><?= $this->Paginator->sort('created') ?></th>
-                <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>     
+                <!--<th><?= $this->Paginator->sort('sentFrom') ?></th>-->
+                <!--<th><?= $this->Paginator->sort('created') ?></th>-->
                 <th><?= $this->Paginator->sort('orderId') ?></th>
+                <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>     
+                
                 <!--<th><?= __('Ready') ?></th>-->
-                <th><?= $this->Paginator->sort('Orders.status','Order Status') ?></th>
+                <!--<th><?= $this->Paginator->sort('Orders.status','Order Status') ?></th>-->
+                                <th>Customer Name</th>
+                <th>Customer Address</th>
                 <th class="actions"><?= __('Actions') ?></th>
                         </tr>
                       </thead>
@@ -47,14 +50,17 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
             
             ?>
             <tr>
-                <td><?= $this->Number->format($deliveryNotification->id) ?></td>
+                <?php /* ?><td><?= $this->Number->format($deliveryNotification->id) ?></td><?php */?>
                 <!--<td><?= $this->Number->format($deliveryNotification->deliveryId) ?></td>-->
-                <td><?php if($deliveryNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td>
-                <td><?= h($deliveryNotification->created) ?></td>
-                <td><?= $this->Time->format($deliveryNotification['order']->delivery_date_time) ?></td>
+                <?php /* ?><td><?php if($deliveryNotification->sentFrom==1):?><?= h('System') ?><?php endif;?></td><?php */?>
+                <?php /* ?><td><?= h($deliveryNotification->created) ?></td><?php */?>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
+                <td><?= $this->Time->format($deliveryNotification['order']->delivery_date_time) ?></td>
+                
                 <!--<td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>-->
-                <?php ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php ?>
+                <?php /* ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php */?>
+                <td><?= h($deliveryNotification['order']['customer']->firstName. ' '.$deliveryNotification['order']['customer']->lastName ) ?></td>
+                 <td><?= h($deliveryNotification['order']['customer']->address ) ?></td>
                 
                 <td class="actions">
                     

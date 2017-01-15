@@ -81,11 +81,13 @@ $payment_status=['1'=>'pending','2'=>'paid'];
             <td style="border-bottom:0px;text-align:right" colspan="">
             	Sub Total<br>
             	Shipping & Handling<br>
+            	Discount<br>
             	<b>Grand Total</b><br>
             </td>
             <td style="border-bottom:0px;text-align:right">
-            <?php echo $this->Number->currency($total_pdf['available'],'LKR') ?><br>
+            <?php echo $this->Number->currency($total_pdf['subtotal'],'LKR') ?><br>
             <?php echo $this->Number->currency(0,'LKR') ?><br>
+            <?php echo $this->Number->currency($order->discount,'LKR') ?><br>
             <b><?php echo $this->Number->currency($total_pdf['available'],'LKR') ?></b>
             </td>
             </tr>

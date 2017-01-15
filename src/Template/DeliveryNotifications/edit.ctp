@@ -3,6 +3,7 @@
  $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed','9'=>'canceled'];
 $status_sup=['0'=>'pending', '1'=>'available', '2'=>'not available', '3'=>'ready', '4'=>'hand overed','9'=>'canceled'];
 $status_del=['0'=>'pending','1'=>'took over'];
+$payment_status=['1'=>'pending','2'=>'cash','3'=>'card', '4'=>'credit'];//2 was paid
 
 //butons activate or disabled
 
@@ -17,6 +18,65 @@ $submit_activity=false;
 ?>
 <?= $this->Form->create($deliveryNotification,['class'=>'form-horizontal form-label-left']) ?>
 <div class="row">
+<div class="col-md-12 col-sm-12 col-xs-12">
+<div class="col-md-12 col-sm-12 col-xs-12">
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><?= __('Notification ID: '.$deliveryNotification->id) ?> <small><?= __('order actions') ?></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">  
+  			  		<div class="row">
+					<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<label class="control-label col-md-5 col-sm-5 col-xs-12">Payment Status</label>
+								<div class="col-md-7 col-sm-7 col-xs-12">
+								<?php echo $this->Form->input('paymentStatus',['label' => false,'class'=>'form-control','options'=>$payment_status,'empty'=>'select status','default'=>$deliveryNotification['order']->paymentStatus]); ?>
+							</div>
+
+						</div>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+					<div class="form-group">
+                                                                  <label class="control-label col-md-5 col-sm-5 col-xs-12" for="Order_Status">Order Status<span class="required">*</span></label>                        
+						<div class="col-md-7 col-sm-7 col-xs-12">                          
+                          <?php //echo $this->Form->input('Order_Status',['label' => false,'options'=>$status,'default'=>0,'value'=>$customer['order']['status'],'class'=>'form-control col-md-7 col-xs-12']);?>
+                          
+                          <input <?= $toggle_activity ?> class="tog del" data-on="Collected" data-off="Delivered" data-size="small" <?php if(!($customer['order']['status']==5||$customer['order']['status']==6)){echo "checked";} ?> data-toggle="toggle" data-onstyle="info" data-offstyle="warning" type="checkbox" name='order_Status_toggle' id='' class="order_Status_toggle">
+							<input value="<?php if(!($customer['order']['status']==5||$customer['order']['status']==6)){echo 4;}else{ echo 5;} ?>" type="hidden" name='Order_Status' id='Order_Status'>
+                                                    
+                        </div>
+                      </div> 
+					</div>
+					
+					<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+						<div class="col-md-2 col-sm-12 col-xs-12">
+						<div class="form-group">
+					 <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success','disabled'=>$submit_activity]) ?>
+					 </div>
+					</div>
+                  </div>
+				  </div>
+                </div>
+				</div>
+</div>
+</div>
 <div class="col-md-6 col-sm-6 col-xs-12">
 <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
@@ -89,7 +149,7 @@ $submit_activity=false;
             
             
             
-            
+            <?php /* ?>
                                                                                                              <div class="form-group">
                                                                   <label class="control-label col-md-5 col-sm-5 col-xs-12" for="Order_Status">Order Status<span class="required">*</span></label>                        
 						<div class="col-md-7 col-sm-7 col-xs-12">                          
@@ -100,7 +160,7 @@ $submit_activity=false;
                                                     
                         </div>
                       </div> 
-                  
+                  <?php */?>
                   
                   
   			  		
@@ -271,12 +331,12 @@ $submit_activity=false;
                       </tbody>
                     </table>
                     
-                    <div class="ln_solid"></div>
+                    <!--<div class="ln_solid"></div>
     				  <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">                          
                              <?= $this->Form->button(__('Submit'),['class'=>'btn btn-success','disabled'=>$submit_activity]) ?>
                         </div>                        
-                      </div>
+                      </div>-->
                   </div>
                 </div>
 </div>

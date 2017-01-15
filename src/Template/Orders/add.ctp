@@ -121,7 +121,8 @@
 <div class="form-group">
 <label class="control-label col-md-4 col-sm-4 col-xs-12">Discount</label>
 <div class="col-md-8 col-sm-8 col-xs-12">
-	<?php echo $this->Form->input('discount',['label' => false,'class'=>'form-control','disabled'=>true]); ?>
+	<?php echo $this->Form->input('discount',['label' => false,'class'=>'form-control','disabled'=>true, 'type'=>'hidden']); ?>
+	<?php echo $this->Form->input('direct_discount',['label' =>false,'class'=>'form-control','disabled'=>false]); ?>
 </div>
 </div>
 <div class="form-group">
@@ -140,7 +141,9 @@
 
 <div class="form-horizontal form-label-left orders col-lg-4 col-md-4 col-sm-12 columns content div-top-pad-0 div-left-pad-0">
 
-<?php $payment_status=['1'=>'pending','2'=>'paid'];?>			
+<?php //$payment_status=['1'=>'pending','2'=>'paid'];
+$payment_status=['1'=>'pending','2'=>'cash','3'=>card, '4'=>'credit'];//2 was paid
+?>			
 <div class="form-group">
 <label class="control-label col-md-4 col-sm-4 col-xs-12">Payment Status</label>
 <div class="col-md-8 col-sm-8 col-xs-12">

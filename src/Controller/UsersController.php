@@ -186,10 +186,10 @@ class UsersController extends AppController
     		}
     		if($userlevel==3){
     			$user_id=$this->Auth->user('id');
-    			return $this->redirect(['controller' => 'UserNotifications', 'action' => 'mynotifications',$user_id]);
+    			return $this->redirect(['controller' => 'SupplierNotifications', 'action' => 'schedule']);
     		}
     		if ($userlevel==4){
-    			return $this->redirect(['controller' => 'DeliveryNotifications', 'action' => 'listnotifications']);
+    			return $this->redirect(['controller' => 'DeliveryNotifications', 'action' => 'schedule']);
     		}
     	}else {
     		return $this->redirect(['controller' => 'Users', 'action' => 'login']);

@@ -246,6 +246,8 @@ class OrdersController extends AppController {
 		if(!empty($client_id)){
 		if ($this->request->is ( 'post' )) {
 			$data=$this->processdata($order_data);//rearrange data sets with count total
+			/* debug($data);
+			die(); */
 			$products_price=$this->getProductPrice($order_data['product_name']);//get product price
 			$delivery_id=$order_data['deliveryId'];//send for email
 			$suppliers_id=$order_data['product_supplier'];//send for email
@@ -902,6 +904,10 @@ public function processdata($data){
 	$tax=$subtotal*$tax_p/100;
 	$discount=$subtotal*$discount_p/100;
 	$total=$subtotal+$tax-$discount-$counpon_value;
+	//change adding discount directly,
+	
+	$direct_discount=$data['direct_discount'];
+	$direct_total=$subtotal-$direct_discount;
 	
 	$newdata=[
 			'customerId'=>$data['customerId'],
@@ -914,11 +920,11 @@ public function processdata($data){
 			
 			'subTotal'=>$subtotal,
 			'tax'=>$tax,
-			'discount'=>$discount,	
+			'discount'=>$direct_discount,	
 					
 			'couponCode'=>$data['couponCode'],
 			
-			'total'=>$total,
+			'total'=>$direct_total,
 			'deliveryDate'=>$data['del-date'],
 			'deliveryTime'=>$data['del-time'],
 			'note'=>$data['del-note'],
@@ -1335,8 +1341,15 @@ public function countTotal($orderId){
 			if (empty($not_available_sum['total'])){
 				$not_available_sum['total']=0;
 			}
-			$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
+			//$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
 			/* print_r($total);
+			die(); */
+			//get discount
+			$order=$this->Orders->get($orderId,['fields'=>['discount']]);
+			$order_discount=$order->discount;//contain in order table, call center add at ordered time
+			$total_ammount=$available_sum['total']-$order_discount;
+			$total=['available'=>$total_ammount,'notavailable'=>$not_available_sum['total'],'direct_discount'=>$order_discount,'subtotal'=>$available_sum['total']];
+			/* debug($total);
 			die(); */
 			return $total;	
 			

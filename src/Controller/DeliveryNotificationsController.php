@@ -135,6 +135,7 @@ class DeliveryNotificationsController extends AppController
         		//change order table        	
         		$order=$ordermodel->get($data['orderId']);
         		$order->status=$data['Order_Status'];
+        		$order->paymentStatus=$data['paymentStatus'];
         		$result=$ordermodel->save($order);
 
         		/*Notification function xxx yy z*/
@@ -292,7 +293,7 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	//print_r( $counted_data);
     	//die();
     	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['deliveryId'=>$delivery['id']]]);
-    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
     	/* print '<pre>';
     	print_r($deliveryNotifications);
     	die(); */
@@ -385,10 +386,10 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	//print_r( $counted_data);
     	//die();
     	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['deliveryId'=>$delivery['id']]]);
-    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'Orders.status < '=>5,'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'Orders.status < '=>5,'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
     	/* print '<pre>';
     	 print_r($deliveryNotifications);
-    	die(); */
+    	die();  */
     	$this->set(compact('deliveryNotifications','counted_data'));
     	$this->set('_serialize', ['deliveryNotifications']);
     }
@@ -559,7 +560,11 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	if (empty($not_available_sum['total'])){
     		$not_available_sum['total']=0;
     	}
-    	$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
+    	//$total=['available'=>$available_sum['total'],'notavailable'=>$not_available_sum['total']];
+    	$order=$order_model->get($orderId,['fields'=>['discount']]);
+    	$order_discount=$order->discount;//contain in order table, call center add at ordered time
+    	$total_ammount=$available_sum['total']-$order_discount;
+    	$total=['available'=>$total_ammount,'notavailable'=>$not_available_sum['total'],'direct_discount'=>$order_discount,'subtotal'=>$available_sum['total']];
     	/* print_r($total);
     	 die(); */
     	return $total;

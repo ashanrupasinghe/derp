@@ -37,7 +37,7 @@ $my_status=[0=>'pending',1=>'confirm'];
                 <!--<th><?= $this->Paginator->sort('created') ?></th>-->
                 <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>                
                 <th><?= $this->Paginator->sort('orderId') ?></th>
-                <th><?= $this->Paginator->sort('Order.status','Order Status') ?></th>
+                <!--<th><?= $this->Paginator->sort('Order.status','Order Status') ?></th>-->
                 <th><?= $this->Paginator->sort('status','My Status') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
                         </tr>
@@ -53,7 +53,7 @@ $my_status=[0=>'pending',1=>'confirm'];
                 <td><?= $this->Time->format($supplierNotification['order']->delivery_date_time) ?></td>
                 
                 <td><?= $this->Number->format($supplierNotification->orderId) ?></td>
-                <?php ?><td><?= h($status[$supplierNotification['order']->status]) ?></td><?php ?>
+                <?php /*?><td><?= h($status[$supplierNotification['order']->status]) ?></td><?php */?>
                 <?php ?><td><?= h($my_status[$supplierNotification->status]) ?></td><?php ?>
                 
                 <td class="actions">
