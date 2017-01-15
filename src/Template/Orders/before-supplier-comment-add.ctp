@@ -65,17 +65,6 @@
 				<input type="hidden" id="dtp_input2" value="<?= $current_date_hidden ?>" name="del-date" /><br/>
             </div>
 <div class="form-group">
-                <label for="del-note" class="col-md-3 control-label">Delivery Note</label>
-                <div class="input-group col-md-9">
-                    <textarea name="del-note" class="form-control" rows="4"></textarea>
-                    
-                </div>
-</div>
-           
-</div>		
-
-<div class="form-horizontal form-label-left orders col-lg-6 col-md-6  col-sm-12 columns content div-top-pad-0 div-right-pad-0">
-<div class="form-group">
                 <label for="dtp_input3" class="col-md-3 control-label">Delivery Time</label>
                 <div class="input-group date form_time col-md-9" data-date="" data-date-format="hh:ii" data-link-field="dtp_input3" data-link-format="hh:ii">
                     <input class="form-control" type="text" value="<?= $delivery_time ?>" readonly>
@@ -84,13 +73,16 @@
                 </div>
 				<input type="hidden" id="dtp_input3" value="<?= $delivery_time ?>" name="del-time" /><br/>
 </div>
-<div class="form-group">
- <label for="supp-note" class="col-md-3 control-label">Supplier Note</label>
+           
+</div>		
+
+<div class="form-horizontal form-label-left orders col-lg-6 col-md-6  col-sm-12 columns content div-top-pad-0 div-right-pad-0">
+ <label for="del-note" class="col-md-3 control-label">Delivery Note</label>
                 <div class="input-group col-md-9">
-                    <textarea name="supp-note" class="form-control" rows="4"></textarea>
+                    <textarea name="del-note" class="form-control" rows="4"></textarea>
                     
                 </div>
-</div>
+
 </div>
 
 </div> 

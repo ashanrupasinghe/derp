@@ -997,6 +997,7 @@ public function processdata($data){
 			'deliveryDate'=>$data['del-date'],
 			'deliveryTime'=>$data['del-time'],
 			'note'=>$data['del-note'],
+			'supplier_note'=>$data['supp-note'],
 			'paymentStatus'=>$data['paymentStatus'],
 			//'status'=>$data['status']//selected status
 			'status'=>2//supplier informed

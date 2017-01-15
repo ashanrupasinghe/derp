@@ -32,6 +32,8 @@ $toggle_activity="";
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
+				  
+				  
                   <?= $this->Form->create($supplierNotification,['class'=>'form-horizontal form-label-left']) ?>
 
   			  		<table class="table table-hover">
@@ -94,6 +96,28 @@ $submit_display='none;';
                         </div>
                       </div>
     
+  			  		
+                  </div>
+                </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  
+                  <div class="x_content">
+						<div class="row">
+						<div class="col-sm-4 col-md-4 col-lg-4 col-xs-12">
+						<?= h('Order Id: ') ?><?= h($supplierNotification->order->id) ?>
+						</div>
+						<div class="col-sm-4 col-md-4 col-lg-4 col-xs-12">
+						<?= h('Delivery Date: ') ?>	<?= h($supplierNotification->order->delivery_date_time) ?>
+					</div>
+						<div class="col-sm-4 col-md-4 col-lg-4 col-xs-12">
+						<?= h('Supplier Notes: ') ?><?= h($supplierNotification->order->supplier_note) ?>
+						</div>
+					
+				  </div>
+		
   			  		
                   </div>
                 </div>

@@ -10,7 +10,7 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
                   <div class="x_title">
                     <h2><?= __('View Order') ?> <small><?= __('Order ID: '.$order->id) ?></small></h2>
                     <ul class="nav navbar-right panel_toolbox">                      
-                      <li><?= $this->Html->link('Get PDF', ['controller' => 'Orders', 'action' => 'view', $order->id.'.pdf'])?></li>
+                      <li><?= $this->Html->link('Print Invoice', ['controller' => 'Orders', 'action' => 'view', $order->id.'.pdf'])?></li>
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
                       <li class="dropdown">
@@ -65,12 +65,12 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
             <td><?= $this->Html->link($delivery_name, ['controller' => 'Delivery', 'action' => 'view', $order->deliveryId])?></td>
         </tr>                
           <tr>
-            <th><?= __('Created') ?></th>
-            <td><?= h($order->created) ?></td>
+            <th><?= __('Delivery Note') ?></th>
+            <td><?= h($order->note) ?></td>
         </tr>
         <tr>
-            <th><?= __('Created') ?></th>
-            <td><?= h($order->note) ?></td>
+            <th><?= __('Supplier Note') ?></th>
+            <td><?= h($order->supplier_note) ?></td>
         </tr>
         
         <tr>
