@@ -142,7 +142,7 @@
 <div class="form-horizontal form-label-left orders col-lg-4 col-md-4 col-sm-12 columns content div-top-pad-0 div-left-pad-0">
 
 <?php //$payment_status=['1'=>'pending','2'=>'paid'];
-$payment_status=['1'=>'pending','2'=>'cash','3'=>card, '4'=>'credit'];//2 was paid
+$payment_status=['1'=>'pending','2'=>'cash','3'=>'card', '4'=>'credit'];//2 was paid
 ?>			
 <div class="form-group">
 <label class="control-label col-md-4 col-sm-4 col-xs-12">Payment Status</label>

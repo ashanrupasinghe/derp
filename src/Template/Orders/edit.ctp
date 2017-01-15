@@ -95,7 +95,8 @@ endforeach;?>
           <?php  echo $this->Form->input('couponCode');
             
             echo $this->Form->input('total',['disabled'=>true]);
-            $payment_status=['1'=>'pending','2'=>'paid'];
+            //$payment_status=['1'=>'pending','2'=>'paid'];
+            $payment_status=['1'=>'pending','2'=>'cash','3'=>'card', '4'=>'credit'];//2 was paid
             //echo $this->Form->input('paymentStatus');
             echo $this->Form->input('paymentStatus',['options'=>$payment_status,'empty'=>'select status']);
             //echo $this->Form->input('status');

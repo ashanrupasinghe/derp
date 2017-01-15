@@ -1,6 +1,6 @@
 <?php
  $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'delivery tookover','5'=>'delivered','6'=>'completed',7=>'driver informed','9'=>'canceled'];
-$payment_status=['1'=>'pending','2'=>'cash','3'=>card, '4'=>'credit'];//2 was paid
+$payment_status=['1'=>'pending','2'=>'cash','3'=>'card', '4'=>'credit'];//2 was paid
 $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
 ?>
 
