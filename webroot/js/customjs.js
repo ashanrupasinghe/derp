@@ -170,7 +170,11 @@ $(document).ready(function(){
 	    	 var tax_p=0;//persantage 10
 	    	 var discount_p=0;//persantage 5
 	    	 var tax=(totalPrice*tax_p)/100;
-	    	 var discount=(totalPrice*discount_p)/100;
+	    	 //var discount=(totalPrice*discount_p)/100;
+	    	 var discount=$('#direct-discount').val();
+	    	 if(!discount){
+	    		 discount=0;
+	    	 }
 	    	 var total=(totalPrice+tax-discount);
 	    	// alert(discount);
 	    	 $("#subtotal").val(totalPrice);
@@ -325,6 +329,14 @@ $( ".notify-seen" ).mouseover(function() {
 	
 	
 	});
+
+/*
+ * change total value when adding discount
+ * */
+$(document).on('focusout','#direct-discount',function() {
+	 displaySubTotalWithTimeout();
+	 
+});
 
 
 	    
