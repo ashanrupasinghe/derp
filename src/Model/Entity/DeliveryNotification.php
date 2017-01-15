@@ -30,4 +30,13 @@ class DeliveryNotification extends Entity
         '*' => true,
         'id' => false
     ];
+    
+    
+   /*  public function updateDeliver($orderId,$deliveryId){
+    	$this->query()
+    	->update()
+    	->set(['deliveryId' => $deliveryId])
+    	->where(['orderId' => $orderId])
+    	->execute();
+    } */
 }

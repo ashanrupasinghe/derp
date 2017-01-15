@@ -46,6 +46,7 @@ class OrdersController extends AppController {
 				'schedule',
 				'update',
 				'notify',
+				'notify2',
 				'autoSendNotification' 
 		] )) {
 			
@@ -187,6 +188,18 @@ class OrdersController extends AppController {
 		$total=$this->countTotal($id);
 		$this->set('total_pdf',$total);
 		$this->set ( 'order', $order );
+		$deliveries = $this->Orders->Delivery->find ()->contain(['city'])->select ( [
+				'id',
+				'firstName',
+				'lastName',
+				'city.cname'
+		] )->where(['status'=>1])->order(['rate' =>'DESC']) ->formatResults ( function ($results) {
+		
+			return $results->combine ( 'id', function ($row) {
+				return $row ['firstName'] . ' ' . $row ['lastName'].' - '.$row['cid']['cname'];
+			} );
+		} );
+		$this->set ( 'deliveries', $deliveries );
 		$this->set ( '_serialize', [
 				'order'
 		] );
@@ -194,6 +207,7 @@ class OrdersController extends AppController {
 	
 	/*
 	 * notify to delivery staff	 * 
+	 * will not use, use notify 2 instead of this
 	 * */
 	public function notify($order_id,$delivery_staff_id=null){
 		//send the notification
@@ -217,6 +231,58 @@ class OrdersController extends AppController {
 				'action' => 'index'
 		] );
 	}
+	/*
+	 * notify to delivery staff	 *
+	 * 
+	 * use insedead of notify
+	 * */
+	public function notify2(){
+//first need update order table and delivery notifications table using selected deliver id
+//then send notifications 
+		if ($this->request->is(['patch', 'post', 'put'])) {
+		//send the notification
+		/*Notification function xxx yy z*/
+		$order_id=$this->request->data('order_id');
+		$delivery_id=$this->request->data('deliveryId');
+		//echo $order_id.$delivery_id;
+		$orderx=$this->Orders->get($order_id);
+		$orderx->deliveryId=$delivery_id;
+		$driverSave=$this->Orders->save($orderx);
+		$query=$this->Orders->DeliveryNotifications;
+		$driverNotifySave=$query->query()
+		->update()
+		->set(['deliveryId' => $delivery_id])
+		->where(['orderId' => $order_id])
+		->execute();
+		
+		
+		if ($driverSave){		
+		$result=$this->Notification->setNotification('','','',$order_id,'','','',111);
+		/* debug($result);
+		die(); */
+		if($result){
+			$order=$this->Orders->get($order_id);
+			$order->status=7;//driver informed
+			if($this->Orders->save($order)){
+				$this->Flash->success ( __ ( 'Order status changed to driver notified.' ) );
+			}else{
+				$this->Flash->success ( __ ( 'Order status not changed to driver notified.' ) );
+			}
+				
+			$this->Flash->success ( __ ( 'The notification has been sent.' ) );
+		}
+		else{
+			$this->Flash->error ( __ ( 'The notification could not be sent. Please, try again.' ) );
+		}		
+		}else{
+			$this->Flash->success ( __ ( 'driver culd not be changed, check again' ) );
+		}
+		return $this->redirect ( [
+				'action' => 'index'
+		] );
+		}
+	}	
+	
 	/**
 	 * send notifications using chronjob
 	 */
@@ -907,6 +973,9 @@ public function processdata($data){
 	//change adding discount directly,
 	
 	$direct_discount=$data['direct_discount'];
+	if ($direct_discount==""){
+		$direct_discount=0;
+	}
 	$direct_total=$subtotal-$direct_discount;
 	
 	$newdata=[

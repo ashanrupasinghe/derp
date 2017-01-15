@@ -110,8 +110,8 @@ class OrdersTable extends Table
 
         $validator
             ->numeric('tax')
-            ->requirePresence('tax', 'create')
-            ->notEmpty('tax');
+            /* ->requirePresence('tax', 'create') */
+            ->allowEmpty('tax');
 
         $validator
             ->numeric('discount')

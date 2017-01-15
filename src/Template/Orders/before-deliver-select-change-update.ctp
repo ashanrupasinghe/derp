@@ -125,30 +125,11 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
         
 		</table>
 	</div>
-	
-	
-	
 	<div class="row">
-	<?= $this->Form->create($order, ['url' => ['action' => 'notify2']]); ?>
-	<div class="orders col-lg-8 col-md-8 col-sm-12 columns content div-top-pad-0 div-left-pad-0">
-		
-		
-		<table class="table table-hover">
-		<tr>
-            <th class="td-40"><?= __('Notify to Delivery Staff') ?></th>
-            <td>
-           <?php echo $this->Form->input('deliveryId',['label' => false,'class'=>'form-control','options'=>$deliveries,'default'=>$order->deliveryId]); ?>
-			<input type="hidden" value="<?php echo $order->id;?>" name="order_id">
-			</td>
-			
-        </tr>
-        
-		</table>
-	</div>
 	<div class="orders col-lg-4 col-md-4 col-sm-12 columns content div-top-pad-0 div-left-pad-0">
 		<table class="table table-hover">
 		<tr>
-            
+            <th class="td-40"><?= __('Notify to Delivery Staff') ?></th>
             <td>
             <?php 
             //nofified variable come from update method, checking nptification table, pending development
@@ -156,24 +137,15 @@ $sup_status=[0=>'pending',1=>'available',2=>'not available',9=>'canceled'];
             	$nofification_text="notified";
             	$disabled=true;
             }else{
-            	$nofification_text="send deliver notification";
+            	$nofification_text="pending notify";
             	$disabled=false;
             }?>
-			<?php ?>
-            
-			<?= $this->Form->button(__($nofification_text),['style'=>'float: right;','class'=>'btn btn-warning', 'disabled'=>$disabled]) ?>
-			<?php ?>
-			</td>
-			<td></td>
-			
+            <?= $this->Form->postLink(__($nofification_text), ['action' => 'notify', $order->id,$order->deliveryId],['confirm' => __('Are you sure you want to notify # {0}?', $order->id),'class'=>'x-btn x-btn-warning btn btn-warning btn-md', 'disabled'=>$disabled]) ?></td>
         </tr>
         
 		</table>
-		
 	</div>
-	<?= $this->Form->end() ?>
 	</div>
-	
 	<div class="row">
 	<?= $this->Form->create($order,['id'=>'order']) ?>
 	<div class="orders col-lg-4 col-md-4 col-sm-12 columns content div-top-pad-0 div-left-pad-0">
