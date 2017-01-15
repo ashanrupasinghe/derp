@@ -37,7 +37,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <!--<th><?= $this->Paginator->sort('created') ?></th>-->
                 <th><?= $this->Paginator->sort('orderId') ?></th>
                 <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>     
-                
+                <th>Available Total</th>
                 <!--<th><?= __('Ready') ?></th>-->
                 <!--<th><?= $this->Paginator->sort('Orders.status','Order Status') ?></th>-->
                                 <th>Customer Name</th>
@@ -56,7 +56,18 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <?php /* ?><td><?= h($deliveryNotification->created) ?></td><?php */?>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
                 <td><?= $this->Time->format($deliveryNotification['order']->delivery_date_time) ?></td>
-                
+                <?php 
+                $availableAmmount=0;
+                if(!empty($deliveryNotification['order']->order_products)){                	
+                	$discount=$deliveryNotification['order']->discount;
+                	foreach($deliveryNotification['order']->order_products as $product){
+                		$availableAmmount+=$product['product_quantity']*$product['product_price'];
+                	}
+                	
+                	$availableAmmount=$availableAmmount-$discount;
+                }
+                ?>
+                <td><?= $this->Number->currency($availableAmmount,'LKR') ?></td>
                 <!--<td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>-->
                 <?php /* ?> <td><?= h($status[$deliveryNotification['order']->status]) ?></td><?php */?>
                 <td><?= h($deliveryNotification['order']['customer']->firstName. ' '.$deliveryNotification['order']['customer']->lastName ) ?></td>

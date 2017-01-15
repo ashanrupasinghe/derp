@@ -37,7 +37,7 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <!--<th><?= $this->Paginator->sort('created') ?></th>-->
                 <th><?= $this->Paginator->sort('orderId') ?></th>
                 <th><?= $this->Paginator->sort('Orders.delivery_date_time','Delivery Date') ?></th>     
-                
+                <th>Available Total</th>
                 <!--<th><?= $this->Paginator->sort('deliveryDate') ?></th>
                 <th><?= $this->Paginator->sort('	') ?></th>-->
                 <!--<th><?= __('Ready') ?></th>-->
@@ -58,7 +58,18 @@ $status=['1'=>'pending','2'=>'supplier informed','3'=>'products ready','4'=>'del
                 <?php /* ?><td><?= h($deliveryNotification->created) ?></td><?php */ ?>
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
                 <td><?= $this->Time->format($deliveryNotification['order']->delivery_date_time) ?></td>
-                
+                <?php 
+                $availableAmmount=0;
+                if(!empty($deliveryNotification['order']->order_products)){                	
+                	$discount=$deliveryNotification['order']->discount;
+                	foreach($deliveryNotification['order']->order_products as $product){
+                		$availableAmmount+=$product['product_quantity']*$product['product_price'];
+                	}
+                	
+                	$availableAmmount=$availableAmmount-$discount;
+                }
+                ?>
+                <td><?= $this->Number->currency($availableAmmount,'LKR') ?></td>
                 <?php /*?> <td><?= $this->Time->format($deliveryNotification['order']->deliveryDate,'yyyy-MM-dd') ?></td><?php ?>
                 <?php ?> <td><?= $this->Time->format($deliveryNotification['order']->deliveryTime,'HH:mm:ss') ?></td><?php */?>
                 <!--<td><?= h($counted_data[$deliveryNotification->orderId]['ready']."/".$counted_data[$deliveryNotification->orderId]['noOfProduct']) ?></td>-->
