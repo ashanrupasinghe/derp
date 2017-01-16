@@ -1547,9 +1547,8 @@ public function getInvoice($id = null) {
 			
 	));
 	return $this->response;
-
 	
-	return;
+	
 }
 
 
