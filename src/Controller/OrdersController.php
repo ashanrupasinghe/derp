@@ -13,6 +13,7 @@ use Cake\I18n\Number;
 use App\Model\Entity\Order;
 
 use PHPExcel;
+use Symfony\Component\VarDumper\Cloner\Data;
 /**
  * Orders Controller
  *
@@ -1485,9 +1486,12 @@ public function getInvoice($id = null) {
 	
 	$objPHPExcel->getActiveSheet()->SetCellValue('G1', "Invoice");
 	$number=$order->id;
-	$order_creatd=$order->created;
-	$date="2016-01-12";
-	$time="12:25";
+	$order_creatd=$order->created;	
+	$created__date_time=new Time($order_creatd);//now
+	$created__date=$created__date_time->format('Y-m-d');
+	$created__time=$created__date_time->format('H:i:s');
+	$date=$created__date;
+	$time=$created__time;
 	$subtotal=$total['subtotal'];
 	$discount=$order->discount;
 	$totla=$total['available'];
@@ -1539,8 +1543,10 @@ public function getInvoice($id = null) {
 	$objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
 	
 	// Write the Excel file to filename some_excel_file.xlsx in the current directory
-	$file_name="order_".$id."_invoice.xlsx";
-	$objWriter->save("invoice/".$file_name);
+	//$file_name="/var/www/vhosts/direct2door_erp/webroot/invoice/order_".$id."_invoice.xlsx"; //for server
+	//$file_name="/var/www/vhosts/direct2door_erp/webroot/invoice/order_".$id."_invoice.xlsx"; //for demo ?
+	$file_name="invoice/order_".$id."_invoice.xlsx"; //for local
+	$objWriter->save($file_name);
 	
 	$this->response->file($file_name, array(
 			'download' => true,
