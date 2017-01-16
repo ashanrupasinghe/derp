@@ -11,6 +11,8 @@ use Cake\Core\Configure;
 use Cake\I18n\Date;
 use Cake\I18n\Number;
 use App\Model\Entity\Order;
+
+use PHPExcel;
 /**
  * Orders Controller
  *
@@ -47,7 +49,8 @@ class OrdersController extends AppController {
 				'update',
 				'notify',
 				'notify2',
-				'autoSendNotification' 
+				'autoSendNotification',
+				'getInvoice' 
 		] )) {
 			
 			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 2) {
@@ -1424,6 +1427,124 @@ public function countTotal($orderId){
 			return $total;	
 			
 			
+}
+
+
+	
+
+public function getInvoice($id = null) {
+	//http://stackoverflow.com/questions/12611148/how-to-export-data-to-an-excel-file-using-phpexcel
+	//http://stackoverflow.com/questions/15887953/cakephp-file-download-link
+	$order = $this->Orders->get ( $id, [
+			'contain' => [
+					'OrderProducts',
+					'callcenter',
+					'delivery',
+					'customers',
+					'city',
+					'OrderProducts.Products',
+					'OrderProducts.Products.packageType',
+					'OrderProducts.Suppliers',
+					'OrderProducts.Suppliers.city'
+			]
+
+
+	] );
+
+	
+
+	/*  print '<pre>';
+		print_r($order);
+	die();  */
+	$total=$this->countTotal($id);
+	
+	/* $this->set('total_pdf',$total);
+	$this->set ( 'order', $order );
+	$this->set ( '_serialize', [
+			'order'
+	] ); */
+	
+	$objPHPExcel = new PHPExcel();
+	$objPHPExcel->setActiveSheetIndex(0);
+	$objPHPExcel->getActiveSheet()->SetCellValue('A1', "Customer");
+	$name=$order->customer->firstName.' '.$order->customer->lastName;
+	$address=$order->customer->address;
+	$contact=$order->customer->mobileNo;
+	$myId=$order->customer->id;
+	$myPurchase="";
+	$objPHPExcel->getActiveSheet()->SetCellValue('A2', "Name");
+	$objPHPExcel->getActiveSheet()->SetCellValue('B2', $name);
+	$objPHPExcel->getActiveSheet()->SetCellValue('A3', "Address");
+	$objPHPExcel->getActiveSheet()->SetCellValue('B3', $address);
+	$objPHPExcel->getActiveSheet()->SetCellValue('A4', "Contact");
+	$objPHPExcel->getActiveSheet()->SetCellValue('B4', $contact);
+	$objPHPExcel->getActiveSheet()->SetCellValue('A5', "My ID");
+	$objPHPExcel->getActiveSheet()->SetCellValue('B5', $myId);
+	$objPHPExcel->getActiveSheet()->SetCellValue('A6', "My purchase");
+	$objPHPExcel->getActiveSheet()->SetCellValue('B6', $myPurchase);
+	
+	$objPHPExcel->getActiveSheet()->SetCellValue('G1', "Invoice");
+	$number=$order->id;
+	$order_creatd=$order->created;
+	$date="2016-01-12";
+	$time="12:25";
+	$subtotal=$total['subtotal'];
+	$discount=$order->discount;
+	$totla=$total['available'];
+	$objPHPExcel->getActiveSheet()->SetCellValue('G2', "Number");
+	$objPHPExcel->getActiveSheet()->SetCellValue('H2', $number);
+	$objPHPExcel->getActiveSheet()->SetCellValue('G3', "Date");
+	$objPHPExcel->getActiveSheet()->SetCellValue('H3', $date);
+	$objPHPExcel->getActiveSheet()->SetCellValue('G4', "Time");
+	$objPHPExcel->getActiveSheet()->SetCellValue('H4', $time);
+	$objPHPExcel->getActiveSheet()->SetCellValue('G5', "Subtotal");
+	$objPHPExcel->getActiveSheet()->SetCellValue('H5', $subtotal);
+	$objPHPExcel->getActiveSheet()->SetCellValue('G6', "Discount");
+	$objPHPExcel->getActiveSheet()->SetCellValue('H6', $discount);
+	$objPHPExcel->getActiveSheet()->SetCellValue('G7', "Totla");
+	$objPHPExcel->getActiveSheet()->SetCellValue('H7', $totla);
+	
+	
+	//8-to a,b,c,d,e
+	$objPHPExcel->getActiveSheet()->SetCellValue('A9', "No.");
+	$objPHPExcel->getActiveSheet()->SetCellValue('B9', "Description");
+	$objPHPExcel->getActiveSheet()->SetCellValue('C9', "Qty");
+	$objPHPExcel->getActiveSheet()->SetCellValue('D9', "Unit price");
+	$objPHPExcel->getActiveSheet()->SetCellValue('E9', "Ammount");
+	/* $product_data=[
+			['name'=>'Ala','qty'=>10,'unit_price'=>100,'ammount'=>100],
+			['name'=>'Bathala','qty'=>5,'unit_price'=>75,'ammount'=>375],
+			['name'=>'Mun','qty'=>10,'unit_price'=>25,'ammount'=>250]
+	]; */
+	$product_data=$order->order_products;
+	
+	for($i=1;$i<=sizeof($product_data);$i++){
+		$rowCount=$i+9;
+		$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $rowCount);
+		$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $product_data[$i-1]['product']->name);
+		$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $product_data[$i-1]['product']->product_quantity);
+		$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $product_data[$i-1]['product']->product_price);
+		$item_price= $product_data[$i-1]['product']->product_price;
+		$item_qty=$product_data[$i-1]['product']->product_quantity;
+		$item_tota_price=$item_price*$item_qty;
+		$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $item_tota_price);
+	}
+	
+	// Instantiate a Writer to create an OfficeOpenXML Excel .xlsx file
+	$objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+	
+	// Write the Excel file to filename some_excel_file.xlsx in the current directory
+	$file_name="order_".$id."_invoice.xlsx";
+	$objWriter->save($file_name);
+	
+	$this->response->file($file_name, array(
+			'download' => true,
+			
+	));
+	return $this->response;
+
+	
+	return;
 }
 
 
