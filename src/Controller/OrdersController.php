@@ -1522,11 +1522,16 @@ public function getInvoice($id = null) {
 		$rowCount=$i+9;
 		$objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $rowCount);
 		$objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $product_data[$i-1]['product']->name);
-		$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $product_data[$i-1]['product']->product_quantity);
-		$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $product_data[$i-1]['product']->product_price);
-		$item_price= $product_data[$i-1]['product']->product_price;
-		$item_qty=$product_data[$i-1]['product']->product_quantity;
+		$objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, $product_data[$i-1]->product_quantity);
+		$objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $product_data[$i-1]->product_price);
+		if ($product_data[$i-1]->status_s!=2){
+		$item_price= $product_data[$i-1]->product_price;
+		$item_qty=$product_data[$i-1]->product_quantity;
 		$item_tota_price=$item_price*$item_qty;
+		}
+		else{
+			$item_tota_price=0;
+		}
 		$objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $item_tota_price);
 	}
 	
@@ -1535,7 +1540,7 @@ public function getInvoice($id = null) {
 	
 	// Write the Excel file to filename some_excel_file.xlsx in the current directory
 	$file_name="order_".$id."_invoice.xlsx";
-	$objWriter->save($file_name);
+	$objWriter->save("invoice/".$file_name);
 	
 	$this->response->file($file_name, array(
 			'download' => true,
