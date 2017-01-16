@@ -1402,7 +1402,7 @@ public function countTotal($orderId){
 			$orderProductQuery_not_available=$this->Orders->OrderProducts->find();
 			//$query = $articles->find();
 			$available_sum= $orderProductQuery_available->select(['total' => $orderProductQuery_available->func()->sum('product_quantity*product_price')])
-							->where(['order_id' => $orderId,'status_s'=>1])->first();
+							->where(['order_id' => $orderId,'status_s < '=>2])->first();
 			$not_available_sum= $orderProductQuery_not_available->select(['total' => $orderProductQuery_not_available->func()->sum('product_quantity*product_price')])
 			->where(['order_id' => $orderId,'status_s'=>2])->first();			
 			if (empty($available_sum['total'])){
