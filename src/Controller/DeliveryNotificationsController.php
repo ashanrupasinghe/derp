@@ -391,7 +391,8 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	//print_r( $counted_data);
     	//die();
     	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['deliveryId'=>$delivery['id']]]);
-    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'Orders.status IN'=>[1,2,3,4,7],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
+    	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'Orders.status IN'=>[1,2,3,4,7],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'Orders.status IN'=>[4],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime' => 'ASC']]);
     	/* print '<pre>';
     	debug($deliveryNotifications);
     	die(); */   
@@ -619,7 +620,8 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     	$user_id=$this->Auth->user('id');
     	$delivery_query=$this->DeliveryNotifications->delivery->find('all',['conditions'=>['user_id'=>$user_id]])->contain(['Users'])->first();
     	$delivery=$delivery_query->toArray();
-    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]],'Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
+    	//$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]],'Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'Orders.status IN'=>[1,2,3,7],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]],'Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
     	
     	//$deliveryNotifications = $this->paginate($supplier,['contain'=>['Orders.DeliveryNotifications'=>['conditions'=>['deliveryId'=>$delivery['id'],'deleted ='=>0]],'Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
     	

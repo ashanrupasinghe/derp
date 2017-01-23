@@ -57,7 +57,7 @@ die();
                          foreach ($deliveryNotification->order->supplier_notifications as $suplier): 
             
             ?>
-            <tr>
+            <tr style="color:<?=$deliveryNotification['order']->row_color_delivery?>">
                 <td><?= $this->Number->format($deliveryNotification->orderId) ?></td>
                 <td><?= $this->Time->format($deliveryNotification['order']->delivery_date_time) ?></td>
                 
