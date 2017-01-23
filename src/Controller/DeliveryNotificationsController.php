@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
+use Cake\Routing\Router;
 /**
  * DeliveryNotifications Controller
  *
@@ -25,7 +26,10 @@ class DeliveryNotificationsController extends AppController
 				'edit',
 				'view',
 				'listnotifications',
-				'schedule'
+				'schedule',
+				'listSuppliervice',
+				'editSuppliervice',
+				'picked'
 				
 	
 	
@@ -575,6 +579,98 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     		
     		
     }
+    
+    public function editSuppliervice($delNotificationId,$supplerId){
+    	/* echo $delNotificationId.'<br>'.$supplerId;
+    	die(); */
+    	
+    	$deliveryNotification = $this->DeliveryNotifications->get($delNotificationId, [
+    			'contain' => ['Orders']
+    	]);
+    	if ($this->request->is(['patch', 'post', 'put'])) {
+    		 
+    		$data=$this->request->data();
+    		$data['supplier_id']=$supplerId;
+    		/* print '<pre>';
+    		print_r($data);
+    		die(); */
+    		
+    		if($data['product_Status']!=0){
+    			$this->picked($data['supplier_id'], $data['orderId']);
+    		}else{
+    			$this->Flash->error(__('please make a change before submit'));
+    			$this->redirect( Router::url( $this->referer(), true ) );
+    		}
+    	}
+    	$customer=$this->DeliveryNotifications->get($delNotificationId,['contain'=>['Orders','Orders.customers','Orders.city']]);
+    	// $suppliers=$this->DeliveryNotifications->get($id,['contain'=>['Orders','Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers','Orders.SupplierNotifications.Suppliers.city']]);
+    	$suppliers=$this->DeliveryNotifications->get($delNotificationId,['contain'=>['Orders.OrderProducts','Orders.OrderProducts.Products','Orders.OrderProducts.Products.packageType','Orders.OrderProducts.Suppliers'=>['conditions'=>['Suppliers.id'=>$supplerId]],'Orders.OrderProducts.Suppliers.city']]);
+    	$suppliers=$suppliers->toArray();
+    	$this->set(compact('deliveryNotification','customer','suppliers'));
+    	$orderId=$this->DeliveryNotifications->get($delNotificationId,['fields'=>['orderId']]);
+    	$total=$this->countTotal($orderId->orderId);
+    	$this->set('total_pdf',$total);
+    	 
+    	$this->set('_serialize', ['deliveryNotification']);
+    	
+    	
+    }
+    public function listSuppliervice(){
+    	$user_id=$this->Auth->user('id');
+    	$delivery_query=$this->DeliveryNotifications->delivery->find('all',['conditions'=>['user_id'=>$user_id]])->contain(['Users'])->first();
+    	$delivery=$delivery_query->toArray();
+    	$deliveryNotifications = $this->paginate($this->DeliveryNotifications,['conditions'=>['DeliveryNotifications.deliveryId'=>$delivery['id'],'DeliveryNotifications.deleted ='=>0],'contain'=>['Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]],'Orders.SupplierNotifications','Orders.SupplierNotifications.Suppliers'],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
+    	
+    	//$deliveryNotifications = $this->paginate($supplier,['contain'=>['Orders.DeliveryNotifications'=>['conditions'=>['deliveryId'=>$delivery['id'],'deleted ='=>0]],'Orders','Orders.customers','Orders.OrderProducts'=>['conditions'=>['status_s < '=>2]]],'order' => ['Orders.deliveryDate' => 'ASC','Orders.deliveryTime'=>'ASC']]);
+    	
+    	   /* print '<pre>';
+    	 print_r($deliveryNotifications);
+    	die(); */    
+    	$this->set(compact('deliveryNotifications','counted_data'));
+    	$this->set('_serialize', ['deliveryNotifications']);
+    	
+    }
+    
+    public function picked($supplier_id,$order_id){
+    	$this->request->allowMethod(['post','put']);
+    	/* print_r($supplier_id);
+    	print_r($order_id);
+    	die(); */
+    	$order_products=$this->loadModel('OrderProducts');
+    	$count_products_for_order=$order_products->find()->where(['order_id' => $order_id])->count();
+    	//update
+    	$update_order_products_query = $order_products->query();
+    	if($update_order_products_query->update()->set(['status_d' => 1])->where(['order_id' => $order_id,'supplier_id'=>$supplier_id])->execute()){
+    		$this->Flash->success(__('The delivery notification has been changed.'));
+    		$count_picked_products=$order_products->find()->where(['order_id' => $order_id,'status_d'=>1])->count();
+    		if($count_products_for_order==$count_picked_products){//if all products picked
+    			//update order table
+    			//change order table
+    			$order_model=$this->loadModel('Orders');
+    			$order=$order_model->get($order_id);
+    			$order->status=4;//change order status as picked took
+    			$result=$order_model->save($order);
+    		
+    			/*Notification function xxx yy z*/
+    			$this->Notification->setNotification(4,'','',$order_id,'','','','');//sent notification
+    		
+    		}
+    	} 
+    	else {
+    		$this->Flash->error(__('Something went wrong'));
+    	}   	
+    	
+    	
+    	//count orderproducts product list for the order: 5 products
+    	//get products for this supplier and update as picked
+    	//count picked products
+    	//picked products == order products then order status change as picked
+    	//else do nothing
+    	
+    	
+    	return $this->redirect(['action' => 'listSuppliervice']);
+    }    
+  
 
     
 }

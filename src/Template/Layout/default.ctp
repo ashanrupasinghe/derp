@@ -178,7 +178,8 @@ $cakeDescription = 'Direct2Door.lk';
                                   
                 <?php }else if($userLevel==4){?>
                  <li><a href="<?php echo $this->Url->build('/delivery-notifications/listnotifications'); ?>"><i class="fa fa-home"></i>Notifications</a></li>
-                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/schedule'); ?>"><i class="fa fa-bicycle"></i>Order Schedule</a></li>
+                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/schedule'); ?>"><i class="fa fa-truck"></i>Schedule to Deliver</a></li>
+                 <li><a href="<?php echo $this->Url->build('/delivery-notifications/list-suppliervice'); ?>"><i class="fa fa-upload"></i>Schedule to Pick Products</a></li>
                 <?php   }else{ ?> 
                 
                  <li>
@@ -494,11 +495,11 @@ $(function() {
     $('.tog.del').change(function() {
     if($(this).prop('checked')){
     	
-      $(this).parent().next().val(4);
+      $(this).parent().next().val(0);
             }
       else{
       
-      $(this).parent().next().val(5);
+      $(this).parent().next().val(1);
       
       }
     })

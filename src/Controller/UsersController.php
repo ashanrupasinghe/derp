@@ -189,7 +189,7 @@ class UsersController extends AppController
     			return $this->redirect(['controller' => 'SupplierNotifications', 'action' => 'schedule']);
     		}
     		if ($userlevel==4){
-    			return $this->redirect(['controller' => 'DeliveryNotifications', 'action' => 'schedule']);
+    			return $this->redirect(['controller' => 'DeliveryNotifications', 'action' => 'listSuppliervice']);
     		}
     	}else {
     		return $this->redirect(['controller' => 'Users', 'action' => 'login']);
