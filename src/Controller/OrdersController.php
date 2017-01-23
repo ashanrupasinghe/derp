@@ -1505,7 +1505,7 @@ public function getInvoice($id = null) {
 	$objPHPExcel->getActiveSheet()->SetCellValue('H5', $subtotal);
 	$objPHPExcel->getActiveSheet()->SetCellValue('G6', "Discount");
 	$objPHPExcel->getActiveSheet()->SetCellValue('H6', $discount);
-	$objPHPExcel->getActiveSheet()->SetCellValue('G7', "Totla");
+	$objPHPExcel->getActiveSheet()->SetCellValue('G7', "Total");
 	$objPHPExcel->getActiveSheet()->SetCellValue('H7', $totla);
 	
 	
@@ -1514,7 +1514,7 @@ public function getInvoice($id = null) {
 	$objPHPExcel->getActiveSheet()->SetCellValue('B9', "Description");
 	$objPHPExcel->getActiveSheet()->SetCellValue('C9', "Qty");
 	$objPHPExcel->getActiveSheet()->SetCellValue('D9', "Unit price");
-	$objPHPExcel->getActiveSheet()->SetCellValue('E9', "Ammount");
+	$objPHPExcel->getActiveSheet()->SetCellValue('E9', "Amount");
 	/* $product_data=[
 			['name'=>'Ala','qty'=>10,'unit_price'=>100,'ammount'=>100],
 			['name'=>'Bathala','qty'=>5,'unit_price'=>75,'ammount'=>375],
