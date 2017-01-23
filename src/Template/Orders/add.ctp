@@ -278,6 +278,15 @@ $payment_status=['1'=>'pending','2'=>'cash','3'=>'card', '4'=>'credit'];//2 was 
 	
   /*$('select').select2();*/
   //$('#product-list').on('change', function(e) { alert("huu");});
+  
+  $(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
 
 </script>
 
