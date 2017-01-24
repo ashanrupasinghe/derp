@@ -55,7 +55,7 @@ die();
                          <?php 
                          foreach ($deliveryNotifications as $deliveryNotification):
                          foreach ($deliveryNotification->order->supplier_notifications as $suplier):                         
-                         if($suplier->delivery_status>0){
+                         if($suplier->delivery_status>0){//if this products currently piked, not show
             
             ?>
             <tr style="color:<?=$deliveryNotification['order']->row_color_delivery?>">

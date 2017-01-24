@@ -33,6 +33,10 @@ class SupplierNotification extends Entity
     ];
     
     protected $_virtual = ['delivery_status'];
+    /**
+     * to check deliver piked the product from this supp notification
+     * @return number
+     */
     protected function _getDeliveryStatus(){
     	$order_products=TableRegistry::get('OrderProducts');
     	$q=$order_products->find('all',['conditions'=>['supplier_id'=>$this->_properties['supplierId'],'order_id'=>$this->_properties['orderId'],'status_d'=>0]]);
