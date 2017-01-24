@@ -40,6 +40,12 @@ class SupplierNotificationsController extends AppController
 	
 		return parent::isAuthorized ( $user );
 	}
+//to add associated table fields use this array	
+	public $paginate = [
+			'sortWhitelist' => [
+					'id', 'Orders.deliveryDate','Orders.deliveryTime'
+			]
+	];
     /**
      * Index method
      *
