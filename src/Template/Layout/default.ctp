@@ -492,14 +492,27 @@ $(function() {
     })
   })
 $(function() {
-    $('.tog.del').change(function() {
+    $('.tog.suppvice').change(function() {
     if($(this).prop('checked')){
     	
-      $(this).parent().next().val(0);
+      $(this).parent().next().val(1);
             }
       else{
       
-      $(this).parent().next().val(1);
+      $(this).parent().next().val(0);
+      
+      }
+    })
+  })  
+  $(function() {
+    $('.tog.del').change(function() {
+    if($(this).prop('checked')){
+    	
+      $(this).parent().next().val(4);
+            }
+      else{
+      
+      $(this).parent().next().val(5);
       
       }
     })

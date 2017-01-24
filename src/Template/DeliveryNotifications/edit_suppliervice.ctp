@@ -49,8 +49,8 @@ $submit_activity=false;
 						<div class="col-md-7 col-sm-7 col-xs-12">                          
                           <?php //echo $this->Form->input('product_Status',['label' => false,'options'=>$status,'default'=>0,'value'=>$customer['order']['status'],'class'=>'form-control col-md-7 col-xs-12']);?>
                           
-                          <input <?= $toggle_activity ?> class="tog del" data-on="Collected" data-off="Delivered" data-size="small" <?php if(!($customer['order']['status']==5||$customer['order']['status']==6)){echo "checked";} ?> data-toggle="toggle" data-onstyle="info" data-offstyle="warning" type="checkbox" name='order_Status_toggle' id='' class="order_Status_toggle">
-							<input value="0" type="hidden" name='product_Status' id='product_Status'>
+                          <input <?= $toggle_activity ?> class="tog suppvice" data-on="Collected" data-off="Not Collected" data-size="small" <?php if(!($customer['order']['status']==5||$customer['order']['status']==6)){echo "checked";} ?> data-toggle="toggle" data-onstyle="info" data-offstyle="warning" type="checkbox" name='order_Status_toggle' id='' class="order_Status_toggle">
+							<input value="1" type="hidden" name='product_Status' id='product_Status'>
                                                     
                         </div>
                       </div> 

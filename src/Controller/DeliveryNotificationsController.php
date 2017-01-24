@@ -594,12 +594,12 @@ SELECT dn.*,count(*) noOfProduct,sum(case when sn.status_s = 3 then 1 else 0 end
     		$data['supplier_id']=$supplerId;
     		/* print '<pre>';
     		print_r($data);
-    		die(); */
+    		die(); */ 	
     		
     		if($data['product_Status']!=0){
     			$this->picked($data['supplier_id'], $data['orderId']);
     		}else{
-    			$this->Flash->error(__('please make a change before submit'));
+    			$this->Flash->error(__('please pick product'));
     			$this->redirect( Router::url( $this->referer(), true ) );
     		}
     	}
