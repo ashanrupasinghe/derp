@@ -54,7 +54,8 @@ die();
                       <tbody>
                          <?php 
                          foreach ($deliveryNotifications as $deliveryNotification):
-                         foreach ($deliveryNotification->order->supplier_notifications as $suplier): 
+                         foreach ($deliveryNotification->order->supplier_notifications as $suplier):                         
+                         if($suplier->delivery_status>0){
             
             ?>
             <tr style="color:<?=$deliveryNotification['order']->row_color_delivery?>">
@@ -87,7 +88,9 @@ die();
                     <?= $this->Form->postLink(__('Picked'), ['action' => 'picked', $suplier->supplierId,$deliveryNotification->orderId],['confirm' => __('Products PICKED from {0}?', $supplier_name),'class'=>'x-btn x-btn-danger btn btn-success btn-xs']) ?>
                 </td>
             </tr>
-            <?php endforeach; ?>
+            <?php 
+            }
+            endforeach; ?>
             <?php endforeach; ?>
                         
                       </tbody>
