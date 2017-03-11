@@ -142,7 +142,7 @@ class UsersController extends AppController
         // Allow users to register and logout.
         // You should not add the "login" action to allow list. Doing so would
         // cause problems with normal functioning of AuthComponent.
-        $this->Auth->allow(['logout']);
+        $this->Auth->allow(['logout','register']);
     }
 
     public function login()
@@ -191,10 +191,76 @@ class UsersController extends AppController
     		if ($userlevel==4){
     			return $this->redirect(['controller' => 'DeliveryNotifications', 'action' => 'listSuppliervice']);
     		}
+    		if ($userlevel==5){
+    			
+    			return $this->redirect(['controller' => 'Front', 'action' => 'index']);
+    		}
     	}else {
     		return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     	}
     	 
     	 
     }
+    
+/*register user*/
+    public function register()
+    {
+    	$user = $this->Users->newEntity();
+    	if ($this->request->is('post')) {
+    		$data=$this->request->data;
+    		
+    		$user_data=[
+    				'username'=>$data['email'],
+    				'user_type'=>5,
+    				'password'=>$data['password'],
+    				'confirm_password'=>$data['confirm_password'],
+    				'status'=>1,
+    				'form-type'=>$data['form-type']
+    		];
+    		//$customer_data[];
+    		$data['status']=1;
+    		
+    		$user = $this->Users->patchEntity($user, $user_data);
+    		//print_r($user);
+    		//die($user->id);
+    		if ($this->Users->save($user)) {
+    			$data['user_id']=$user->id;
+    			$customer_model=$this->loadModel('customers');
+    			$customer=$customer_model->newEntity(); 
+    			$customer= $customer_model->patchEntity($customer, $data);
+    			
+    			if ($customer_model->save($customer)){
+    				$this->Flash->success(__('The user has been saved.'));
+    				// Retrieve user from DB
+    				$authUser = $this->Users->get($user->id)->toArray();
+    				
+    				// Log user in using Auth
+    				$this->Auth->setUser($authUser);
+    				
+    				// Redirect user
+    				return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
+    			}
+    			else {
+    				$this->Flash->error(__('Ops, Something went wrong'));
+    			}
+    
+    			return $this->redirect(['action' => 'register']);
+    		} else {
+    			$this->Flash->error(__('The user could not be saved. Please, try again.'));
+    		}
+    	}
+    	$this->set(compact('user'));
+    	$this->set('_serialize', ['user']);
+    	$cityModel=$this->loadModel('city');
+    	$cities = $cityModel->find ()->select ( [
+    			'cid',
+    			'cname'
+    	] )->formatResults ( function ($results) {
+    		/* @var $results \Cake\Datasource\ResultSetInterface|\Cake\Collection\CollectionInterface */
+    		return $results->combine ( 'cid', function ($row) {
+    			return $row ['cname'];
+    		} );
+    	} );
+    	$this->set ( compact ( 'cities' ) );
+    }    
 }
