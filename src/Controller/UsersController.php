@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Utility\Security;
+use Cake\Mailer\Email;
 
 /**
  * Users Controller
@@ -142,7 +144,7 @@ class UsersController extends AppController
         // Allow users to register and logout.
         // You should not add the "login" action to allow list. Doing so would
         // cause problems with normal functioning of AuthComponent.
-        $this->Auth->allow(['logout','register']);
+        $this->Auth->allow(['logout','register','forgotpassword']);
     }
 
     public function login()
@@ -262,5 +264,79 @@ class UsersController extends AppController
     		} );
     	} );
     	$this->set ( compact ( 'cities' ) );
-    }    
+    }  
+
+    /**
+     * Allow a user to request a password reset.
+     * @return
+     */
+    function forgotpassword() {
+    	if (!empty($this->request->data)) {  
+    		$user_name=$this->request->data('username');
+    		$user = $this->Users->findByUsername($user_name)->first();   
+    		if (empty($user)) {    			
+    			$this->Flash->error(__('Sorry, the username entered was not found.'));
+    			$this->redirect('/users/forgotpassword');
+    		} else {    			
+    			$user = $this->__generatePasswordToken($user);    			
+    			$this->Users->save($user);    			
+    			die();
+    			$this->Users->save($user);
+    			if ($this->Users->save($user) && $this->__sendForgotPasswordEmail($user['User']['id'])) {
+    				$this->Session->setflash('Password reset instructions have been sent to your email address.
+						You have 24 hours to complete the request.');
+    				$this->redirect('/users/login');
+    			}
+    		}
+    	}
+    }
+    
+    /**
+     * Generate a unique hash / token.
+     * @param Object User
+     * @return Object User
+     */
+    function __generatePasswordToken($user) {
+    	if (empty($user)) {
+    		return null;
+    	}
+    	// Generate a random string 100 chars in length.
+    	$token = "";
+    	for ($i = 0; $i < 100; $i++) {
+    		$d = rand(1, 100000) % 2;
+    		$d ? $token .= chr(rand(33,79)) : $token .= chr(rand(80,126));
+    	}
+    	(rand(1, 100000) % 2) ? $token = strrev($token) : $token = $token;
+    	// Generate hash of random string
+    	$hash = Security::hash($token, 'sha256', true);;
+    	for ($i = 0; $i < 20; $i++) {
+    		$hash = Security::hash($hash, 'sha256', true);
+    	}
+    	
+    	$user->reset_password_token = $hash;
+    	$user->token_created_at  = date('Y-m-d H:i:s');
+    	return $user;
+    }
+    
+    /**
+     * Sends password reset email to user's email address.
+     * @param $id
+     * @return
+     */
+    function __sendForgotPasswordEmail($id = null) {
+    	if (!empty($id)) {
+    		$this->User->id = $id;
+    		$User = $this->User->read();    		
+    		$this->Email->to 		= $User['User']['email'];
+    		$this->Email->subject 	= 'Password Reset Request - DO NOT REPLY';
+    		$this->Email->replyTo 	= 'do-not-reply@example.com';
+    		$this->Email->from 		= 'Do Not Reply <do-not-reply@example.com>';
+    		$this->Email->template 	= 'reset_password_request';
+    		$this->Email->sendAs 	= 'both';
+    		$this->set('User', $User);
+    		$this->Email->send();
+    		return true;
+    	}
+    	return false;
+    }
 }
