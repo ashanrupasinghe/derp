@@ -388,7 +388,7 @@ class UsersController extends AppController
     		$user = $this->Users->patchEntity($user, $this->request->data);
     		//$this->User->id = $user['User']['id'];
     		
-    		if ($this->Users->save($user, array('validate' => 'only'))) {   
+    		if ($this->Users->save($user)) {   
     			
     			$user->reset_password_token = null;
     			$user->token_created_at = null;
@@ -399,7 +399,9 @@ class UsersController extends AppController
     				$this->redirect('/users/login');
     			}
     		}else{
-    			$this->Flash->error(__('xx'));
+    			$this->Flash->error(__('Somthing went wrong please try again'));
+    			$token=$this->request->session()->read('pwreset.reset_password_token');
+    			$this->redirect('/users/resetpasswordtoken/'.$token);
     		}
     	} 
     	
