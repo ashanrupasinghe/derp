@@ -5,6 +5,8 @@ use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Utility\Security;
 use Cake\Mailer\Email;
+use Cake\View\Helper\SessionHelper;
+
 
 /**
  * Users Controller
@@ -144,7 +146,7 @@ class UsersController extends AppController
         // Allow users to register and logout.
         // You should not add the "login" action to allow list. Doing so would
         // cause problems with normal functioning of AuthComponent.
-        $this->Auth->allow(['logout','register','forgotpassword']);
+        $this->Auth->allow(['logout','register','forgotpassword','resetpasswordtoken']);
     }
 
     public function login()
@@ -279,13 +281,16 @@ class UsersController extends AppController
     			$this->redirect('/users/forgotpassword');
     		} else {    			
     			$user = $this->__generatePasswordToken($user);    			
-    			$this->Users->save($user);    			
-    			die();
-    			$this->Users->save($user);
-    			if ($this->Users->save($user) && $this->__sendForgotPasswordEmail($user['User']['id'])) {
-    				$this->Session->setflash('Password reset instructions have been sent to your email address.
-						You have 24 hours to complete the request.');
+    			//$this->Users->save($user);    
+    			//$this->__sendForgotPasswordEmail();
+    			
+    			//$this->Users->save($user);    			
+    			if ($this->Users->save($user) && $this->__sendForgotPasswordEmail($user->id)) {    				
+    				$this->Flash->success(__('Password reset instructions have been sent to your email address.
+						You have 24 hours to complete the request.'));
     				$this->redirect('/users/login');
+    			}else{
+    				$this->Flash->error(__('Sorry, Something went wrong please try again'));
     			}
     		}
     	}
@@ -325,18 +330,124 @@ class UsersController extends AppController
      */
     function __sendForgotPasswordEmail($id = null) {
     	if (!empty($id)) {
-    		$this->User->id = $id;
-    		$User = $this->User->read();    		
-    		$this->Email->to 		= $User['User']['email'];
-    		$this->Email->subject 	= 'Password Reset Request - DO NOT REPLY';
-    		$this->Email->replyTo 	= 'do-not-reply@example.com';
-    		$this->Email->from 		= 'Do Not Reply <do-not-reply@example.com>';
-    		$this->Email->template 	= 'reset_password_request';
-    		$this->Email->sendAs 	= 'both';
-    		$this->set('User', $User);
-    		$this->Email->send();
-    		return true;
+            $User = $this->Users->get($id);
+            $email = new Email('default');
+            $email ->to($User->username)
+            ->replyTo('donotreply@example.com')
+            ->subject('Password Reset Request - DO NOT REPLY')
+            ->from('donotreply@example.com')
+            ->template('reset_password_request')  
+            ->emailFormat('html')
+            ->set('User', $User);
+            try {
+            if($email->send()){
+            	return true;
+            }else{
+            	return false;
+            }
+            } catch ( Exception $e ) {
+            	$this->Flash->error(__('Sorry, Error in sending email please try again'));
+            }
+            
+            
+            
+            
+    		
     	}
     	return false;
     }
+    
+    
+    /**
+     * Allow user to reset password if $token is valid.
+     * @return
+     */
+    function resetpasswordtoken($reset_password_token = null) {  
+    	
+    	
+     	if (empty($this->request->data)) {    		    		
+    		$data= $this->Users->findByResetPasswordToken($reset_password_token)->first();
+    		
+    		if (!empty($data->reset_password_token) && !empty($data->token_created_at) && $this->__validToken($data->token_created_at)) {
+    					
+    			$data->id = null;    			
+    			 $this->request->session()->write('pwreset.reset_password_token', $reset_password_token);
+    			 //echo $this->request->session()->read('pwreset.token');
+    		} else {    					
+    					$this->Flash->error(__('The password reset request has either expired or is invalid.'));
+    					$this->redirect('/users/login');
+    		}
+    	} else {
+    		
+    		
+    		if ($this->request->data('reset_password_token') != $this->request->session()->read('pwreset.reset_password_token')) {
+    			$this->Flash->error(__('The password reset request has either expired or is invalid.'));
+    			$this->redirect('/users/login');
+    		}
+    		$user = $this->Users->findByResetPasswordToken($this->request->data('reset_password_token'))->first();
+    		$user = $this->Users->patchEntity($user, $this->request->data);
+    		//$this->User->id = $user['User']['id'];
+    		
+    		if ($this->Users->save($user, array('validate' => 'only'))) {   
+    			
+    			$user->reset_password_token = null;
+    			$user->token_created_at = null;
+    			
+    			if ($this->Users->save($user) && $this->__sendPasswordChangedEmail($user->id)) {    				
+    				$this->request->session()->delete('pwreset.reset_password_token');
+    				$this->Flash->success(__('Your password was changed successfully. Please login to continue.'));
+    				$this->redirect('/users/login');
+    			}
+    		}else{
+    			$this->Flash->error(__('xx'));
+    		}
+    	} 
+    	
+    	$this->set ( 'reset_password_token',$reset_password_token );
+    }
+    
+    /**
+     * Validate token created at time.
+     * @param String $token_created_at
+     * @return Boolean
+     */
+    function __validToken($token_created_at) {
+    	$expired = strtotime($token_created_at) + 86400;
+    	$time = strtotime("now");
+    	if ($time < $expired) {
+    		return true;
+    	}
+    	return false;
+    } 
+    /**
+     * Notifies user their password has changed.
+     * @param $id
+     * @return
+     */    
+    function __sendPasswordChangedEmail($id = null) {
+    	if (!empty($id)) {
+    		$User = $this->Users->get($id);
+    		$email = new Email('default');
+    		$email ->to($User->username)
+    		->replyTo('donotreply@example.com')
+    		->subject('Password Changed - DO NOT REPLY')
+    		->from('donotreply@example.com')
+    		->template('password_reset_success')
+    		->emailFormat('html')
+    		->set('User', $User);
+    		
+    	 try {
+            if($email->send()){
+            	return true;
+            }else{
+            	return false;
+            }
+            } catch ( Exception $e ) {
+            	$this->Flash->error(__('Sorry, Error in sending email please try again'));
+            }
+    	}
+    	return false;
+    }
+    
 }
+//https://github.com/hunzinker/CakePHP-Auth-Forgot-Password/blob/master/controllers/users_controller.php
