@@ -6,6 +6,8 @@ use Cake\Event\Event;
 use Cake\Utility\Security;
 use Cake\Mailer\Email;
 use Cake\View\Helper\SessionHelper;
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Utility\Text;
 
 
 /**
@@ -151,33 +153,76 @@ class UsersController extends AppController
 
     public function login()
     {
+    	header('Content-type: application/json');
+    	$return=[];
     	if (!$this->Auth->user()){
     		if ($this->request->is('post')) {
     			$user = $this->Auth->identify();
     			if ($user) {
+    				
     				if ($user['status']==1){
     				$this->Auth->setUser($user);
-    				return $this->redirect($this->Auth->redirectUrl());
+    				$mobtoken = $this->__getMobToken();
+    				$query = $this->Users->query();
+    				$query->update()
+    				->set(['mobtoken' => $mobtoken])
+    				->where(['id' => $user['id']])
+    				->execute();
+    				
+    				//return $this->redirect($this->Auth->redirectUrl());
+    				$return['status']=200;
+    				$return['token'] = $mobtoken;
+    				$return['message']='login successful';
+    				echo json_encode($return);
+    				die();
+    				
     				}else{
-    					$this->Flash->error(__('Your account has been disabled'));
+    					//$this->Flash->error(__('Your account has been disabled'));
+    					$return['status']=400;
+    					$return['message']='Account is disabled';
+    					echo json_encode($return);
+    					die();
+    					
     				}
     			}else{
-    			$this->Flash->error(__('Invalid username or password, try again'));
-    			}
-    		}
-    	}
-    	else{
+    			//$this->Flash->error(__('Invalid username or password, try again'));    				
+    				$return['status']=400;
+    				$return['message']='Invalid username or password';    
+    				echo json_encode($return);
+    				die();
+    			}    			
+    			
+    		}else {
+            $return['status'] = 500;
+            $return['message'] = "Unauthorized login";
+            echo json_encode($return);
+            die();
+        	}
+        	
     		
-    		return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
+    	}
+    	else{    		
+    		//return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
+    		$return['status']=200;
+    		$return['message']='already logedin';
+    		echo json_encode($return);
+    		die();
     		
     	}
+    	
         
         
     }
 
     public function logout()
     {
-        return $this->redirect($this->Auth->logout());
+    	header('Content-type: application/json');
+    	$this->Auth->logout();
+    	$return['status']=200;
+    	$return['message']='logout sucess';
+    	echo json_encode($return);
+    	die();
+        //return $this->redirect($this->Auth->logout());
     }
     public function userpage(){
     	if ($this->Auth->user()){
@@ -209,6 +254,8 @@ class UsersController extends AppController
 /*register user*/
     public function register()
     {
+    	header('Content-type: application/json');
+    	$return=[];
     	$user = $this->Users->newEntity();
     	if ($this->request->is('post')) {
     		$data=$this->request->data;
@@ -220,6 +267,7 @@ class UsersController extends AppController
     				'confirm_password'=>$data['confirm_password'],
     				'status'=>1,
     				'form-type'=>$data['form-type']
+    				
     		];
     		//$customer_data[];
     		$data['status']=1;
@@ -234,25 +282,51 @@ class UsersController extends AppController
     			$customer= $customer_model->patchEntity($customer, $data);
     			
     			if ($customer_model->save($customer)){
-    				$this->Flash->success(__('The user has been saved.'));
+    				//$this->Flash->success(__('The user has been saved.'));
     				// Retrieve user from DB
     				$authUser = $this->Users->get($user->id)->toArray();
     				
     				// Log user in using Auth
     				$this->Auth->setUser($authUser);
     				
+    				$mobtoken = $this->__getMobToken();
+    				$query = $this->Users->query();
+    				$query->update()
+    				->set(['mobtoken' => $mobtoken])
+    				->where(['id' => $user['id']])
+    				->execute();
+    				
     				// Redirect user
-    				return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
+    				//return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
+    				$return['status']=200;
+    				$return['token'] = $mobtoken;
+    				$return['message']='register and login successful';
+    				echo json_encode($return);
+    				die();
     			}
     			else {
-    				$this->Flash->error(__('Ops, Something went wrong'));
+    				//$this->Flash->error(__('Ops, Something went wrong'));
+    				$return->status = 104;
+                    $return->message = "Unable to save customer. Try again.";
+                    echo json_encode($return);
+                    die();
     			}
     
-    			return $this->redirect(['action' => 'register']);
+    			//return $this->redirect(['action' => 'register']);
     		} else {
-    			$this->Flash->error(__('The user could not be saved. Please, try again.'));
+    			//$this->Flash->error(__('The user could not be saved. Please, try again.'));
+    			$return['status'] = 104;
+    			$return['message'] = "Unable to save user. Try again.";
+    			echo json_encode($return);
+    			die();
     		}
-    	}
+    		
+    	} /* else{
+    		$return['status'] = 500;
+    		$return['message'] = "Unauthorized Request";
+    		echo json_encode($return);
+    		die();
+    	}  */
     	$this->set(compact('user'));
     	$this->set('_serialize', ['user']);
     	$cityModel=$this->loadModel('city');
@@ -266,6 +340,10 @@ class UsersController extends AppController
     		} );
     	} );
     	$this->set ( compact ( 'cities' ) );
+    	
+    	
+    	
+    	
     }  
 
     /**
@@ -273,27 +351,44 @@ class UsersController extends AppController
      * @return
      */
     function forgotpassword() {
+    	header('Content-type: application/json');
+    	$return=[];
     	if (!empty($this->request->data)) {  
     		$user_name=$this->request->data('username');
     		$user = $this->Users->findByUsername($user_name)->first();   
     		if (empty($user)) {    			
-    			$this->Flash->error(__('Sorry, the username entered was not found.'));
-    			$this->redirect('/users/forgotpassword');
+    			//$this->Flash->error(__('Sorry, the username entered was not found.'));
+    			//$this->redirect('/users/forgotpassword');
+    			$return['status']=400;
+    			$return['message']='The email address not found';
+    			echo json_encode($return);
+    			die();
     		} else {    			
     			$user = $this->__generatePasswordToken($user);    			
-    			//$this->Users->save($user);    
-    			//$this->__sendForgotPasswordEmail();
-    			
-    			//$this->Users->save($user);    			
+    			    			
     			if ($this->Users->save($user) && $this->__sendForgotPasswordEmail($user->id)) {    				
-    				$this->Flash->success(__('Password reset instructions have been sent to your email address.
-						You have 24 hours to complete the request.'));
-    				$this->redirect('/users/login');
+    				//$this->Flash->success(__('Password reset instructions have been sent to your email address. You have 24 hours to complete the request.'));
+    				//$this->redirect('/users/login');
+    				$return['status']=200;    				
+    				$return['message']='Password reset instructions have been sent to your email address. You have 24 hours to complete the request.';
+    				echo json_encode($return);
+    				die();
     			}else{
-    				$this->Flash->error(__('Sorry, Something went wrong please try again'));
+    				//$this->Flash->error(__('Sorry, Something went wrong please try again'));
+    				$return['status']=400;
+    				$return['message']='Sorry, Something went wrong please try again';
+    				echo json_encode($return);
+    				die();
     			}
     		}
+    		
+    	} else{
+    		$return['status'] = 500;
+    		$return['message'] = "Unauthorized Request";
+    		echo json_encode($return);
+    		die();
     	}
+    	
     }
     
     /**
@@ -363,8 +458,8 @@ class UsersController extends AppController
      * @return
      */
     function resetpasswordtoken($reset_password_token = null) {  
-    	
-    	
+    	header('Content-type: application/json');
+    	$return=[];
      	if (empty($this->request->data)) {    		    		
     		$data= $this->Users->findByResetPasswordToken($reset_password_token)->first();
     		
@@ -372,17 +467,33 @@ class UsersController extends AppController
     					
     			$data->id = null;    			
     			 $this->request->session()->write('pwreset.reset_password_token', $reset_password_token);
-    			 //echo $this->request->session()->read('pwreset.token');
+    			 $return['status']=400;
+    			 $return['message']='valid reset request';
+    			 $return['pw_reset_token']=$reset_password_token;
+    			 echo json_encode($return);
+    			 die();
+    					 
+
     		} else {    					
-    					$this->Flash->error(__('The password reset request has either expired or is invalid.'));
-    					$this->redirect('/users/login');
+    					//$this->Flash->error(__('The password reset request has either expired or is invalid.'));
+    					//$this->redirect('/users/login');
+    					$return['status']=400;
+    					$return['message']='The password reset request has either expired or is invalid.';    					
+    					echo json_encode($return);
+    					die(); 
     		}
+    		
+    		
     	} else {
     		
     		
     		if ($this->request->data('reset_password_token') != $this->request->session()->read('pwreset.reset_password_token')) {
-    			$this->Flash->error(__('The password reset request has either expired or is invalid.'));
-    			$this->redirect('/users/login');
+    			//$this->Flash->error(__('The password reset request has either expired or is invalid.'));
+    			//$this->redirect('/users/login');
+    			$return['status']=400;
+    			$return['message']='The password reset request has either expired or is invalid.';
+    			echo json_encode($return);
+    			die();
     		}
     		$user = $this->Users->findByResetPasswordToken($this->request->data('reset_password_token'))->first();
     		$user = $this->Users->patchEntity($user, $this->request->data);
@@ -395,17 +506,29 @@ class UsersController extends AppController
     			
     			if ($this->Users->save($user) && $this->__sendPasswordChangedEmail($user->id)) {    				
     				$this->request->session()->delete('pwreset.reset_password_token');
-    				$this->Flash->success(__('Your password was changed successfully. Please login to continue.'));
-    				$this->redirect('/users/login');
+    				//$this->Flash->success(__('Your password was changed successfully. Please login to continue.'));
+    				//$this->redirect('/users/login');
+    				$return['status']=200;
+    				$return['message']='Your password was changed successfully. Please login to continue.';
+    				echo json_encode($return);
+    				die();
     			}
     		}else{
-    			$this->Flash->error(__('Somthing went wrong please try again'));
+    			//$this->Flash->error(__('Somthing went wrong please try again'));
     			$token=$this->request->session()->read('pwreset.reset_password_token');
-    			$this->redirect('/users/resetpasswordtoken/'.$token);
+    			//$this->redirect('/users/resetpasswordtoken/'.$token);
+    			$return['status']=400;
+    			$return['message']='New password is not saved, try again';
+    			$return['pw_reset_token']=$token;
+    			echo json_encode($return);
+    			die();
     		}
+    		
+    		
     	} 
     	
     	$this->set ( 'reset_password_token',$reset_password_token );
+    	
     }
     
     /**
@@ -449,6 +572,12 @@ class UsersController extends AppController
             }
     	}
     	return false;
+    }
+    
+    function __getMobToken(){
+    	$hasher = new DefaultPasswordHasher();
+    	$token=$hasher->hash(sha1(Text::uuid()));
+    	return $token;
     }
     
 }
