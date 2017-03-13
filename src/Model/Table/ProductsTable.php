@@ -43,8 +43,12 @@ class ProductsTable extends Table
         $this->hasMany('OrderProducts', [
             'foreignKey' => 'product_id'
         ]);
+        $this->hasMany('productSuppliers', [
+        		'foreignKey' => 'product_id'
+        ]);
 		
-		$this->belongsTo('suppliers',['foreignKey'=>'supplierId']);
+		//$this->belongsTo('suppliers',['foreignKey'=>'supplierId']);
+		$this->belongsTo('packageType',['foreignKey'=>'package']);
     }
 
     /**
@@ -70,6 +74,10 @@ class ProductsTable extends Table
             ->numeric('price')
             ->requirePresence('price', 'create')
             ->notEmpty('price');
+        $validator
+        ->numeric('package')
+        ->requirePresence('package', 'create')
+        ->notEmpty('package');
 
         $validator
             ->requirePresence('availability', 'create')
@@ -78,10 +86,10 @@ class ProductsTable extends Table
         $validator
             ->allowEmpty('image');
 
-        $validator
-            ->integer('supplierId')
+        /* $validator
+            ->array('supplierId')
             ->requirePresence('supplierId', 'create')
-            ->notEmpty('supplierId');
+            ->notEmpty('supplierId'); */
 
         $validator
             ->requirePresence('status', 'create')

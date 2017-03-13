@@ -16,6 +16,8 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\I18n\Time;
+
 
 /**
  * Application Controller
@@ -61,15 +63,34 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->loadComponent('Notification');
 		//$this->loadComponent('Auth');
         $this->loadComponent('Auth',['authorize' => ['Controller']]);
 		$this->set('authUser', $this->Auth->user());//set a variable for view, for check userloged in or not
 		$this->set('userLevel', $this->Auth->user('user_type'));
+		$this->set('userName', $this->Auth->user('username'));
+		$this->set('userId', $this->Auth->user('id'));
+		$now=$current__date_time=Time::now();//now
+		$current__date=$current__date_time->format('Y-m-d');
+		$current__time=$current__date_time->format('H:i:s');
+		$this->set('dateTimeNow',$now);
+		$this->set('timeNow',$current__time);
+		$this->set('dateNow',$current__date);
     }
     
-//    public function beforeFilter() {
+    public function beforeFilter(\Cake\Event\Event $event) {
 //       // $this->Auth->allow('login');
-//    }
+//echo("ajshahsjh");
+			//$notify=$this->loadModel('UserNotifications');
+    		//$this->set('UserNotificationCount', $notify->getNotificationCount());
+    		if($this->Auth->user()){
+    		$notificationCount=$this->Notification->getNotificationCount($this->Auth->user('id'));
+    		$notificationContent=$this->Notification->getLatestNotifications($this->Auth->user('id'));
+    	 	$this->set('notificationCount', $notificationCount);    	
+    		$this->set('notificationContent', $notificationContent);
+    		
+    		}
+    }
     /**
      * Before render callback.
      *

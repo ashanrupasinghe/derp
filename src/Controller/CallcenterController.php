@@ -10,6 +10,22 @@ use App\Controller\AppController;
  */
 class CallcenterController extends AppController
 {
+	
+	public function isAuthorized($user)
+	{
+	
+	
+		// The owner of an article can edit and delete it
+		if (in_array($this->request->action, ['view'])) {
+				
+			if (isset($user['user_type']) && $user['user_type'] == 2) {
+				return true;
+			}
+		}
+	
+		return parent::isAuthorized($user);
+	}
+	
 
     /**
      * Index method
@@ -19,7 +35,7 @@ class CallcenterController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Users']
+            'contain' => ['Users','city']
         ];
         $callcenter = $this->paginate($this->Callcenter);
 
@@ -37,7 +53,7 @@ class CallcenterController extends AppController
     public function view($id = null)
     {
         $callcenter = $this->Callcenter->get($id, [
-            'contain' => ['Users']
+            'contain' => ['Users','city']
         ]);
 
         $this->set('callcenter', $callcenter);
@@ -68,7 +84,7 @@ class CallcenterController extends AppController
         		'table' => 'users',
         		'alias' => 'u',
         		'type' => 'INNER',
-        		'conditions' => 'u.id = callcenter.user_id'
+        		'conditions' => 'u.id = user_id'
         ] );
         
         $users = $this->Callcenter->Users->find ( 'all', [
@@ -132,7 +148,7 @@ class CallcenterController extends AppController
         		'table' => 'users',
         		'alias' => 'u',
         		'type' => 'INNER',
-        		'conditions' => 'u.id = callcenter.user_id'
+        		'conditions' => 'u.id = user_id'
         ] );
         
         $users = $this->Callcenter->Users->find ( 'all', [

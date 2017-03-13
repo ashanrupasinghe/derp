@@ -22,6 +22,7 @@ use Cake\Core\Plugin;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\Routing\Route\DashedRoute;
+use Cake\Core\Configure;//for pdf 
 
 /**
  * The default class to use for all routes
@@ -42,7 +43,20 @@ use Cake\Routing\Route\DashedRoute;
  *
  */
 Router::defaultRouteClass(DashedRoute::class);
-
+Router::extensions(['pdf']);//for pdf
+//https://github.com/FriendsOfCake/CakePdf   for pdf
+Configure::write('CakePdf', [
+'engine' => 'CakePdf.DomPdf',
+'margin' => [
+'bottom' => 15,
+'left' => 50,
+'right' => 30,
+'top' => 45
+],
+'orientation' => 'landscape',
+'download' => true
+]);
+Router::extensions('xlsx');
 Router::scope('/', function (RouteBuilder $routes) {
 		
     /**
@@ -51,7 +65,8 @@ Router::scope('/', function (RouteBuilder $routes) {
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
     //$routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-    $routes->connect('/', ['controller' => 'Customers', 'action' => 'search', 'home']);
+    //$routes->connect('/', ['controller' => 'Customers', 'action' => 'search', 'home']);
+	$routes->connect('/', ['controller' => 'Users', 'action' => 'login']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
@@ -84,3 +99,4 @@ Router::scope('/', function (RouteBuilder $routes) {
 Plugin::routes();
 
 //http://stackoverflow.com/questions/34150502/cakephp-3-different-login-redirection-depending-on-user-roles
+

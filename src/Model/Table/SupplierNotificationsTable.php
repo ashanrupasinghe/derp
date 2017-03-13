@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * SupplierNotifications Model
@@ -35,7 +36,17 @@ class SupplierNotificationsTable extends Table
         $this->table('supplier_notifications');
         $this->displayField('id');
         $this->primaryKey('id');
-
+        
+        $this->belongsTo('Orders', [
+        		'foreignKey' => 'orderId',
+        		'joinType' => 'INNER'
+        ]);
+        
+        $this->belongsTo('Suppliers', [
+        		'foreignKey' => 'supplierId'
+        ]);
+      
+        
         $this->addBehavior('Timestamp');
     }
 
@@ -71,4 +82,8 @@ class SupplierNotificationsTable extends Table
 
         return $validator;
     }
+    public function isAssigned($supplierId){
+    	return $this->exists(['supplierId'=>$supplierId]);
+    }
+    
 }

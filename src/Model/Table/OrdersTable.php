@@ -43,9 +43,21 @@ class OrdersTable extends Table
         $this->hasMany('OrderProducts', [
             'foreignKey' => 'order_id'
         ]);
+        $this->hasMany('SupplierNotifications',[
+        	'foreignKey' => 'orderId'	
+        ]);
+        $this->hasMany('DeliveryNotifications',[
+        		'foreignKey' => 'orderId'
+        ]);
+        $this->hasMany('UserNotifications',[
+        		'foreignKey' => 'orderId'
+        ]);
+        
+        
 		$this->belongsTo('callcenter',['foreignKey'=>'callcenterId']);
 		$this->belongsTo('delivery',['foreignKey'=>'deliveryId']);
 		$this->belongsTo('city',['foreignKey'=>'city','propertyName'=>'cid']);
+		$this->belongsTo('customers',['foreignKey'=>'customerId']);
 		
     }
 
@@ -98,8 +110,8 @@ class OrdersTable extends Table
 
         $validator
             ->numeric('tax')
-            ->requirePresence('tax', 'create')
-            ->notEmpty('tax');
+            /* ->requirePresence('tax', 'create') */
+            ->allowEmpty('tax');
 
         $validator
             ->numeric('discount')

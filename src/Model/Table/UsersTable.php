@@ -51,6 +51,9 @@ class UsersTable extends Table
         $this->hasMany('Suppliers', [
             'foreignKey' => 'user_id'
         ]);
+        $this->hasMany('UserNotifications', [
+        		'foreignKey' => 'userId'
+        ]);
     }
 
     /**
@@ -84,6 +87,16 @@ class UsersTable extends Table
         $validator
             ->requirePresence('status', 'create')
             ->notEmpty('status');
+        //confirm pw
+        $validator->add('password', 'passwordsEqual', [
+        		'rule' => function ($value, $context) {
+        			
+        			if (isset($context['data']['form-type']) && $context['data']['form-type'] === 'login-customer') {
+        				return isset($context['data']['confirm_password']) && $context['data']['confirm_password'] === $value;
+        			}
+        			return false;
+        		}
+        ]);
 
         return $validator;
     }

@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * SupplierNotification Entity
@@ -30,4 +31,16 @@ class SupplierNotification extends Entity
         '*' => true,
         'id' => false
     ];
+    
+    protected $_virtual = ['delivery_status'];
+    /**
+     * to check deliver piked the product from this supp notification
+     * @return number
+     */
+    protected function _getDeliveryStatus(){
+    	$order_products=TableRegistry::get('OrderProducts');
+    	$q=$order_products->find('all',['conditions'=>['supplier_id'=>$this->_properties['supplierId'],'order_id'=>$this->_properties['orderId'],'status_d'=>0]]);
+    	$count=$q->count();
+    	return $count;
+    }
 }
