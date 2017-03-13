@@ -266,7 +266,7 @@ class UsersController extends AppController
     				'password'=>$data['password'],
     				'confirm_password'=>$data['confirm_password'],
     				'status'=>1,
-    				'form-type'=>$data['form-type']
+    				'formType'=>$data['formType']
     				
     		];
     		//$customer_data[];
@@ -467,7 +467,7 @@ class UsersController extends AppController
     					
     			$data->id = null;    			
     			 $this->request->session()->write('pwreset.reset_password_token', $reset_password_token);
-    			 $return['status']=400;
+    			 $return['status']=200;
     			 $return['message']='valid reset request';
     			 $return['pw_reset_token']=$reset_password_token;
     			 echo json_encode($return);

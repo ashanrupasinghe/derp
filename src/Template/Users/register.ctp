@@ -30,7 +30,7 @@
 			  <div>
                 <input type="password" class="form-control" placeholder="Confirm Password" required="" name="confirm_password" />
               </div>
-              <input type="hidden" class="form-control" placeholder="form type" value="login-customer" name="form-type" />
+              <input type="hidden" class="form-control" placeholder="form type" value="login-customer" name="formType" />
               <div>                
                 <?= $this->Form->button(__('Signup'),['class'=>'btn btn-default submit']); ?>
                 <a class="reset_pass" href="#">Lost your password?</a>

@@ -91,7 +91,7 @@ class UsersTable extends Table
         $validator->add('password', 'passwordsEqual', [
         		'rule' => function ($value, $context) {
         			
-        			if (isset($context['data']['form-type']) && $context['data']['form-type'] === 'login-customer') {
+        			if (isset($context['data']['formType']) && $context['data']['formType'] === 'login-customer') {
         				return isset($context['data']['confirm_password']) && $context['data']['confirm_password'] === $value;
         			}
         			return false;
