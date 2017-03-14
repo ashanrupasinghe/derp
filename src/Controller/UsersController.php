@@ -170,7 +170,7 @@ class UsersController extends AppController
     				->execute();
     				
     				//return $this->redirect($this->Auth->redirectUrl());
-    				$return['status']=200;
+    				$return['status']=0;
     				$return['token'] = $mobtoken;
     				$return['message']='login successful';
     				echo json_encode($return);
@@ -203,7 +203,7 @@ class UsersController extends AppController
     	}
     	else{    		
     		//return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
-    		$return['status']=200;
+    		$return['status']=0;
     		$return['message']='already logedin';
     		echo json_encode($return);
     		die();
@@ -218,7 +218,7 @@ class UsersController extends AppController
     {
     	header('Content-type: application/json');
     	$this->Auth->logout();
-    	$return['status']=200;
+    	$return['status']=0;
     	$return['message']='logout sucess';
     	echo json_encode($return);
     	die();
@@ -258,8 +258,7 @@ class UsersController extends AppController
     	$return=[];
     	$user = $this->Users->newEntity();
     	if ($this->request->is('post')) {
-    		$data=$this->request->data;
-    		
+    		$data=$this->request->data;    		
     		$user_data=[
     				'username'=>$data['email'],
     				'user_type'=>5,
@@ -298,7 +297,7 @@ class UsersController extends AppController
     				
     				// Redirect user
     				//return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
-    				$return['status']=200;
+    				$return['status']=0;
     				$return['token'] = $mobtoken;
     				$return['message']='register and login successful';
     				echo json_encode($return);
@@ -321,12 +320,12 @@ class UsersController extends AppController
     			die();
     		}
     		
-    	} /* else{
+    	} else{
     		$return['status'] = 500;
     		$return['message'] = "Unauthorized Request";
     		echo json_encode($return);
     		die();
-    	}  */
+    	}  
     	$this->set(compact('user'));
     	$this->set('_serialize', ['user']);
     	$cityModel=$this->loadModel('city');
@@ -369,7 +368,7 @@ class UsersController extends AppController
     			if ($this->Users->save($user) && $this->__sendForgotPasswordEmail($user->id)) {    				
     				//$this->Flash->success(__('Password reset instructions have been sent to your email address. You have 24 hours to complete the request.'));
     				//$this->redirect('/users/login');
-    				$return['status']=200;    				
+    				$return['status']=0;    				
     				$return['message']='Password reset instructions have been sent to your email address. You have 24 hours to complete the request.';
     				echo json_encode($return);
     				die();
@@ -467,7 +466,7 @@ class UsersController extends AppController
     					
     			$data->id = null;    			
     			 $this->request->session()->write('pwreset.reset_password_token', $reset_password_token);
-    			 $return['status']=200;
+    			 $return['status']=0;
     			 $return['message']='valid reset request';
     			 $return['pw_reset_token']=$reset_password_token;
     			 echo json_encode($return);
@@ -508,7 +507,7 @@ class UsersController extends AppController
     				$this->request->session()->delete('pwreset.reset_password_token');
     				//$this->Flash->success(__('Your password was changed successfully. Please login to continue.'));
     				//$this->redirect('/users/login');
-    				$return['status']=200;
+    				$return['status']=0;
     				$return['message']='Your password was changed successfully. Please login to continue.';
     				echo json_encode($return);
     				die();

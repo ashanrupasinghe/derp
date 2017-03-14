@@ -60,14 +60,12 @@ class CustomersTable extends Table
         $validator
             ->allowEmpty('lastName');
 
-        $validator
-            ->requirePresence('address', 'create')
-            ->notEmpty('address');
+        $validator            
+            ->allowEmpty('address');
 
         $validator
-            ->integer('city')
-            ->requirePresence('city', 'create')
-            ->notEmpty('city');
+            ->integer('city')            
+            ->allowEmpty('city');
 
         $validator
             ->allowEmpty('latitude');
@@ -79,9 +77,8 @@ class CustomersTable extends Table
             ->email('email')
             ->allowEmpty('email');
 
-        $validator
-            ->requirePresence('mobileNo', 'create')
-            ->notEmpty('mobileNo');
+        $validator            
+            ->allowEmpty('mobileNo');
 
         $validator
             ->requirePresence('status', 'create')
