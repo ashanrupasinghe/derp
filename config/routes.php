@@ -67,6 +67,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     //$routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
     //$routes->connect('/', ['controller' => 'Customers', 'action' => 'search', 'home']);
 	$routes->connect('/', ['controller' => 'Users', 'action' => 'login']);
+	$routes->connect('/user/register',['controller' => 'Users', 'action' => 'register']);
+	$routes->connect('/user/login',['controller' => 'Users', 'action' => 'login']);
+	$routes->connect('/user/logout',['controller' => 'Users', 'action' => 'logout']);
+	$routes->connect('/user/forgotpassword',['controller' => 'Users', 'action' => 'forgotpassword']);
+	$routes->connect('/user/resetpasswordtoken/*',['controller' => 'Users', 'action' => 'resetpasswordtoken']);
+	$routes->connect('/user/resetpasswordtoken',['controller' => 'Users', 'action' => 'resetpasswordtoken']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
