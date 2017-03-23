@@ -28,7 +28,10 @@ class ProductsController extends AppController
 		ini_set('memory_limit', '256M');
 		//set_time_limit(0); Infinite
 	}
-	
+	public function beforeFilter(\Cake\Event\Event $event) {
+		// allow all action
+		$this->Auth->allow(['products','product','featuredProducts']);
+	}
     /**
      * Index method
      *
@@ -42,7 +45,7 @@ class ProductsController extends AppController
         $this->set('package_type',$package_type);
         $this->set(compact('products'));
         $this->set('_serialize', ['products']);
-    }
+    } 
 
     /**
      * View method
@@ -405,5 +408,85 @@ class ProductsController extends AppController
     	 //https://github.com/cewi/excel
     	 // * http://stackoverflow.com/questions/4557564/how-to-save-other-languages-in-mysql-table
  //* ALTER TABLE posts MODIFY title VARCHAR(255) CHARACTER SET UTF8;
+    }
+    
+ /**
+  * return frontend page product list
+  * @param string $category : slug
+  * @param string $subcategory :slug
+  * @param string $product: product sku
+  */
+    public function products($category=null,$subcategory=null,$product=null){    	   	
+    	header('Content-type: application/json');
+    	$conditions=['status'=>1];//enabled broducts
+    	    
+    	if ($category!=null && $subcategory!=null && $product!=null){
+    		$parent=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>0,'slug'=>$category]])->first();
+    		$subcategory=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>$parent['id'],'slug'=>$subcategory]])->first();//get correct chiled
+    		$conditions=['category_id '=>$subcategory['id'],'sku'=>$product];    		
+    	}
+    	elseif ($category!=null && $subcategory!=null && $product==null){//chiled category
+    		$parent=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>0,'slug'=>$category]])->first();
+    		$subcategory=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>$parent['id'],'slug'=>$subcategory]])->first();//get correct chiled
+    		$conditions=['category_id '=>$subcategory['id']];
+    	}
+    	elseif($category!=null && $subcategory==null && $product==null){//parent categories
+    		$parent=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>0,'slug'=>$category]])->first();
+    		$sub_cat=$this->Products->Categories->find('list',['conditions'=>['parent_id'=>$parent['id']]])->toArray();//get all chiled categories
+    	
+    		foreach ($sub_cat as $key=>$val){
+    			$sub_categories[]=$key;
+    		}
+    		$conditions=['category_id IN '=>$sub_categories];
+    	}
+    	
+    	$product_list=$this->Products->find('all',['conditions'=>$conditions,'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();    	
+    	
+    	$return['status']=0;
+    	if (sizeof($product_list)>0){
+    		$return['message']='Success';
+    	}else{
+    		$return['message']='products not found';
+    	}
+    	$return['result']=$product_list;
+    	
+    	echo json_encode($return);
+    	die();
+    }
+    /**
+     * retrn the product
+     * @param string $slug
+     */
+    public function product($slug=null){
+    	header('Content-type: application/json');
+    	$product=$this->Products->find('all',['conditions'=>['sku'=>$slug],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
+    	$return['status']=0;
+    	if (sizeof($product)>0){
+    		$return['message']='Success';
+    	}else{
+    		$return['message']='Product not found';
+    	}
+    	$return['result']=$product;
+    	
+    	echo json_encode($return);
+    	die();
+    }
+    /**
+     * return featured product list
+     * @param number $limit
+     */
+    public function featuredProducts($limit=10){
+    	header('Content-type: application/json');
+    	$products=$this->Products->find('all',['conditions'=>['is_featured'=>1],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->limit($limit)->toArray();
+    	$return['status']=0;
+    	if (sizeof($products)>0){
+    		$return['message']='Success';
+    	}else{
+    		$return['message']='Products not found';
+    	}
+    	$return['result']=$products;
+    	
+    	echo json_encode($return);
+    	die();
     }
 }

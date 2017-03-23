@@ -10,6 +10,21 @@ use App\Controller\AppController;
  */
 class CategoriesController extends AppController
 {
+	public function isAuthorized($user)
+	{
+		if (in_array($this->request->action, ['view','index','edit'])) {				
+			if (isset($user['user_type']) && $user['user_type'] == 2) {
+				return true;
+			}
+		}	
+		return parent::isAuthorized($user);
+	}
+	
+	public function beforeFilter(\Cake\Event\Event $event) {    
+       // allow all action
+        $this->Auth->allow(['categories']);
+    }
+	
 
     /**
      * Index method
@@ -112,5 +127,24 @@ class CategoriesController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+/*Mobile:
+ * return a list of all categories
+ * */    
+    public function categories(){
+    	header('Content-type: application/json');
+    	$categories=$this->Categories->find('all',['fields'=>[]])->toArray();   
+    	 	
+    	$return['status']=0;
+    	if (sizeof($categories)>0){
+    		$return['message']='Success';
+    	}else{
+    		$return['message']='Products not found';
+    	}
+    	$return['result']=$categories;
+    	
+    	echo json_encode($return);
+    	die();
     }
 }

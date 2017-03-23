@@ -49,6 +49,7 @@ class ProductsTable extends Table
 		
 		//$this->belongsTo('suppliers',['foreignKey'=>'supplierId']);
 		$this->belongsTo('packageType',['foreignKey'=>'package']);
+		$this->belongsTo('categories',['foreignKey'=>'category_id']);
     }
 
     /**
