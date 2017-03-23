@@ -457,9 +457,9 @@ class ProductsController extends AppController
      * retrn the product
      * @param string $slug
      */
-    public function product($slug=null){
+    public function product($sku=null){
     	header('Content-type: application/json');
-    	$product=$this->Products->find('all',['conditions'=>['sku'=>$slug],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
+    	$product=$this->Products->find('all',['conditions'=>['sku'=>$sku],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
     	$return['status']=0;
     	if (sizeof($product)>0){
     		$return['message']='Success';
