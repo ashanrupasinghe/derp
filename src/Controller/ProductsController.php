@@ -421,7 +421,9 @@ class ProductsController extends AppController
     	    
     	if ($id!=null){
     		//check is a perent
-    		$cat=$this->Products->Categories->get($id);
+    		$cat=$this->Products->Categories->find('all',['conditions'=>['id'=>$id]])->first();
+    		if(sizeof($cat)>0){
+    		
     		if($cat['parent_id']==0){//parent
     			$sub_cat=$this->Products->Categories->find('list',['conditions'=>['parent_id'=>$cat['id']]])->toArray();//get correct chileds
     			foreach ($sub_cat as $key=>$val){
@@ -441,6 +443,11 @@ class ProductsController extends AppController
     			$return['message']='products not found';
     		}
     		$return['result']=$product_list;
+    		}else{
+    			$return['status']=404;
+    			$return['message']='category not found';    			
+    			$return['result']=[];
+    		}
     	}else{
     		$return['status']=404;
     		$return['message']='Please subply category id';
@@ -455,18 +462,27 @@ class ProductsController extends AppController
      * retrn the product
      * @param int $id
      */
-    public function view($id){
+    public function view($id=null){
     	header('Content-type: application/json');
-    	$product = $this->Products->get($id,['conditions'=>['status'=>1],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
-    	//$product = $this->Products->find('all',['conditions'=>['sku'=>$sku],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])
-    	$return['status']=0;
-    	if (sizeof($product)>0){
-    		$return['message']='Success';
-    	}else{
-    		$return['message']='Product not found';
-    	}
-    	$return['result']=$product;
+    	if($id!=null){
+    	$product = $this->Products->find('all',['conditions'=>['status'=>1,'id'=>$id],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->first();
     	
+    	//$product = $this->Products->find('all',['conditions'=>['sku'=>$sku],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])
+    	if(sizeof($product)>0){
+    		$product=$product->toArray();
+    		$return['status']=0;    	
+    		$return['message']='Success';    	
+    		$return['result']=$product;
+    	}else{
+    		$return['status']=404;
+    		$return['message']='Product not found';
+    		$return['result']=[];
+    	}
+    	}else{
+    		$return['status']=404;
+    		$return['message']='please provide product id';
+    		$return['result']=[];
+    	}
     	echo json_encode($return);
     	die();
     }
