@@ -507,16 +507,22 @@ class ProductsController extends AppController
     
     /*Mobile:
      * return a list of all categories
+     * @param number $id: parent id for geting chiled categories
      * */
-    public function categories(){
+    public function categories($id=null){
     	header('Content-type: application/json');
-    	$categories=$this->Products->Categories->find('all',['conditions'=>['status'=>1],'fields'=>[]])->toArray();
-    	 
+    	$conditions=['status'=>1];
+    	if($id==null){
+    		$conditions=['level'=>0];    	
+    	}else{
+    		$conditions=['parent_id'=>$id];
+    	}
+    	$categories=$this->Products->Categories->find('all',['conditions'=>$conditions,'fields'=>[]])->toArray();
     	$return['status']=0;
     	if (sizeof($categories)>0){
     		$return['message']='Success';
     	}else{
-    		$return['message']='Products not found';
+    		$return['message']='No Category found';
     	}
     	$return['result']=$categories;
     	 

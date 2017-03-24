@@ -2,7 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
-
+use Cake\ORM\TableRegistry;
 /**
  * Category Entity
  *
@@ -32,4 +32,19 @@ class Category extends Entity
         '*' => true,
         'id' => false
     ];
+    
+    protected $_virtual = ['has_sub_category'];
+    protected function _getHasSubCategory()
+    {
+    	
+    	$categories=TableRegistry::get('Categories');
+    	$q=$categories->find('all',['conditions'=>['parent_id'=>$this->_properties['id'],'status'=>1]]);
+    	$count=$q->count();
+    	if ($count>0){
+    		return true;
+    	}
+    	return false;
+    }
+    
+    
 }
