@@ -13,7 +13,7 @@ class ProductsController extends AppController
 
 	public function isAuthorized($user)
 	{
-		if (in_array($this->request->action, ['view','index','edit'])) {				
+		if (in_array($this->request->action, ['view_admin','index','edit'])) {				
 			if (isset($user['user_type']) && $user['user_type'] == 2) {
 				return true;
 			}
@@ -30,7 +30,7 @@ class ProductsController extends AppController
 	}
 	public function beforeFilter(\Cake\Event\Event $event) {
 		// allow all action
-		$this->Auth->allow(['products','product','featuredProducts']);
+		$this->Auth->allow(['category','featured','categories','view']);
 	}
     /**
      * Index method
@@ -54,7 +54,7 @@ class ProductsController extends AppController
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
+    public function view_admin($id = null)
     {
         $product = $this->Products->get($id, ['contain' => ['OrderProducts','productSuppliers']]);
 		$package_type_query=$this->Products->packageType->find('list',['keyField'=>'id','valueField'=>'type']);
@@ -412,54 +412,53 @@ class ProductsController extends AppController
     
  /**
   * return frontend page product list
-  * @param string $category : slug
-  * @param string $subcategory :slug
-  * @param string $product: product sku
+  * @param int $id : category id
+  
   */
-    public function products($category=null,$subcategory=null,$product=null){    	   	
+    public function category($id=null){    	   	
     	header('Content-type: application/json');
     	$conditions=['status'=>1];//enabled broducts
     	    
-    	if ($category!=null && $subcategory!=null && $product!=null){
-    		$parent=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>0,'slug'=>$category]])->first();
-    		$subcategory=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>$parent['id'],'slug'=>$subcategory]])->first();//get correct chiled
-    		$conditions=['category_id '=>$subcategory['id'],'sku'=>$product];    		
-    	}
-    	elseif ($category!=null && $subcategory!=null && $product==null){//chiled category
-    		$parent=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>0,'slug'=>$category]])->first();
-    		$subcategory=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>$parent['id'],'slug'=>$subcategory]])->first();//get correct chiled
-    		$conditions=['category_id '=>$subcategory['id']];
-    	}
-    	elseif($category!=null && $subcategory==null && $product==null){//parent categories
-    		$parent=$this->Products->Categories->find('all',['fields'=>['id','slug'],'conditions'=>['parent_id'=>0,'slug'=>$category]])->first();
-    		$sub_cat=$this->Products->Categories->find('list',['conditions'=>['parent_id'=>$parent['id']]])->toArray();//get all chiled categories
-    	
-    		foreach ($sub_cat as $key=>$val){
-    			$sub_categories[]=$key;
-    		}
+    	if ($id!=null){
+    		//check is a perent
+    		$cat=$this->Products->Categories->get($id);
+    		if($cat['parent_id']==0){//parent
+    			$sub_cat=$this->Products->Categories->find('list',['conditions'=>['parent_id'=>$cat['id']]])->toArray();//get correct chileds
+    			foreach ($sub_cat as $key=>$val){
+    				$sub_categories[]=$key;
+    			}
     		$conditions=['category_id IN '=>$sub_categories];
-    	}
-    	
-    	$product_list=$this->Products->find('all',['conditions'=>$conditions,'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();    	
-    	
-    	$return['status']=0;
-    	if (sizeof($product_list)>0){
-    		$return['message']='Success';
+    		
+    		}else{//chiled
+    			$conditions=['category_id '=>$cat['id']];
+    		}
+    		
+    		$product_list=$this->Products->find('all',['conditions'=>$conditions,'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
+    		$return['status']=0;
+    		if (sizeof($product_list)>0){
+    			$return['message']='Success';
+    		}else{
+    			$return['message']='products not found';
+    		}
+    		$return['result']=$product_list;
     	}else{
-    		$return['message']='products not found';
-    	}
-    	$return['result']=$product_list;
+    		$return['status']=404;
+    		$return['message']='Please subply category id';
+    		$return['result']=[];
+    	}    	
+    	
     	
     	echo json_encode($return);
     	die();
     }
     /**
      * retrn the product
-     * @param string $slug
+     * @param int $id
      */
-    public function product($sku=null){
+    public function view($id){
     	header('Content-type: application/json');
-    	$product=$this->Products->find('all',['conditions'=>['sku'=>$sku],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
+    	$product = $this->Products->get($id,['conditions'=>['status'=>1],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->toArray();
+    	//$product = $this->Products->find('all',['conditions'=>['sku'=>$sku],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])
     	$return['status']=0;
     	if (sizeof($product)>0){
     		$return['message']='Success';
@@ -475,7 +474,7 @@ class ProductsController extends AppController
      * return featured product list
      * @param number $limit
      */
-    public function featuredProducts($limit=10){
+    public function featured($limit=10){
     	header('Content-type: application/json');
     	$products=$this->Products->find('all',['conditions'=>['is_featured'=>1],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])->limit($limit)->toArray();
     	$return['status']=0;
@@ -486,6 +485,25 @@ class ProductsController extends AppController
     	}
     	$return['result']=$products;
     	
+    	echo json_encode($return);
+    	die();
+    }
+    
+    /*Mobile:
+     * return a list of all categories
+     * */
+    public function categories(){
+    	header('Content-type: application/json');
+    	$categories=$this->Products->Categories->find('all',['conditions'=>['status'=>1],'fields'=>[]])->toArray();
+    	 
+    	$return['status']=0;
+    	if (sizeof($categories)>0){
+    		$return['message']='Success';
+    	}else{
+    		$return['message']='Products not found';
+    	}
+    	$return['result']=$categories;
+    	 
     	echo json_encode($return);
     	die();
     }
