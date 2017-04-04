@@ -576,8 +576,8 @@ class ProductsController extends AppController {
 		if ($id != null) {
 			$product = $this->Products->find ( 'all', [ 
 					'conditions' => [ 
-							'status' => 1,
-							'id' => $id 
+							'Products.status' => 1,
+							'Products.id' => $id 
 					],
 					'fields' => [ 
 							'id',
@@ -591,7 +591,11 @@ class ProductsController extends AppController {
 							'availability',
 							'image' 
 					] 
-			] )->first ();
+			] )->contain(['packageType' => function ($q) {
+							return $q->select ( [ 
+									'id',
+									'type' 
+							] );}])->first ();
 			
 			// $product = $this->Products->find('all',['conditions'=>['sku'=>$sku],'fields'=>['id','category_id','name','name_si','name_ta','sku','price','package','availability','image']])
 			if (sizeof ( $product ) > 0) {
