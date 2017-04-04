@@ -639,7 +639,11 @@ class ProductsController extends AppController {
 						'availability',
 						'image' 
 				] 
-		] )->limit ( $limit )->toArray ();
+		] )->contain(['packageType'=> function ($q) {
+							return $q->select ( [ 
+									'id',
+									'type' 
+							] );}])->limit ( $limit )->toArray ();
 		$return ['status'] = 0;
 		if (sizeof ( $products ) > 0) {
 			$return ['message'] = 'Success';
