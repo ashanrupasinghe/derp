@@ -13,7 +13,8 @@ class CartController extends AppController {
 	public function beforeFilter(\Cake\Event\Event $event) {
 		// allow all action
 		$this->Auth->allow ( [ 
-				'addproduct' 
+				'addproduct',
+				'deleteproduct' 
 		] );
 	}
 	
@@ -187,8 +188,8 @@ class CartController extends AppController {
 				'session_id' => $session_id 
 		] )->toArray ();
 		
-		if (sizeof ( $cart_id ) == 1) {
-			$cart_id = $cart_id [0]->id;
+		if (sizeof ( $cart_id ) > 0) {
+			$cart_id = $cart_id [sizeof ( $cart_id )-1]->id;
 		} else {
 			$cart_data = [ 
 					'user_id' => $user_id,
@@ -201,13 +202,31 @@ class CartController extends AppController {
 		
 		return $cart_id;
 	}
-	public function __isInCart($cart_id, $product_id,$type) {
+	public function __getCurrentCartId() {
+		$session_id = $this->__getSessionId ();
+		$user_id = $this->__getUserId ();
+		$cart_id = $this->Cart->find ( 'all', [ 
+				'fields' => [ 
+						'id' 
+				] 
+		] )->orWhere ( [ 
+				'user_id' => $user_id 
+		] )->orWhere ( [ 
+				'session_id' => $session_id 
+		] )->toArray ();
+		
+		if (sizeof ( $cart_id ) > 0) {
+			$cart_id = $cart_id [sizeof ( $cart_id )-1]->id;
+		}
+		return $cart_id;
+	}
+	public function __isInCart($cart_id, $product_id, $type) {
 		$cart_product_model = $this->loadModel ( 'CartProducts' );
 		$result = $cart_product_model->find ( 'all', [ 
 				'conditions' => [ 
 						'cart_id' => $cart_id,
 						'product_id' => $product_id,
-						'type'=>$type 
+						'type' => $type 
 				] 
 		] )->toArray ();
 		if (sizeof ( $result ) > 0) {
@@ -223,8 +242,7 @@ class CartController extends AppController {
 			$product_qty = $this->request->data ( 'qty' );
 			if ($product_id != null && $product_qty != null) {
 				$cart_id = $this->__getCartId ();
-			if(!$this->__isInCart($cart_id,$product_id,1))
-				{
+				if (! $this->__isInCart ( $cart_id, $product_id, 1 )) {
 					$data = [ 
 							'cart_id' => $cart_id,
 							'product_id' => $product_id,
@@ -242,8 +260,7 @@ class CartController extends AppController {
 						$return ['status'] = 500;
 						$return ['message'] = 'Pruduct is not added to catr';
 					}
-				}else
-				{
+				} else {
 					$return ['status'] = 0;
 					$return ['message'] = 'The pruduct already in your catr';
 				}
@@ -257,5 +274,54 @@ class CartController extends AppController {
 		}
 		echo json_encode ( $return );
 		die ();
+	}
+	public function editqty($product_id) {
+	}
+	public function deleteproduct() {
+		$this->request->allowMethod ( [ 
+				'post',
+				'delete' 
+		] );
+		
+		header ( 'Content-type: application/json' );
+		if ($this->request->is ( 'post' )) {
+			$product_id = $this->request->data ( 'product_id' );
+			if ($product_id != null) {
+				$cart_id = $this->__getCurrentCartId ();
+				$cart_product_model = $this->loadModel ( 'CartProducts' );
+				
+				$product = $cart_product_model->find ( 'all', [ 
+						'fields' => [ 
+								'id' 
+						],
+						'conditions' => [ 
+								'cart_id' => $cart_id,
+								'product_id' => $product_id 
+						] 
+				] )->toArray ();
+				if (sizeof ( $product ) > 0) {
+					if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
+						$return ['status'] = 0;
+						$return ['message'] = 'Pruduct deleted successfully';
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = 'Culd not delete the product';
+					}
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = 'The product not found in th cart';
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = 'please post product id';
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized acess";
+		}
+		echo json_encode ( $return );
+		die ();
+	}
+	public function clearcart() {
 	}
 }
