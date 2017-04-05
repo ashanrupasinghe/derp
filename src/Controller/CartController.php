@@ -201,12 +201,13 @@ class CartController extends AppController {
 		
 		return $cart_id;
 	}
-	public function __isInCart($cart_id, $product_id) {
+	public function __isInCart($cart_id, $product_id,$type) {
 		$cart_product_model = $this->loadModel ( 'CartProducts' );
 		$result = $cart_product_model->find ( 'all', [ 
 				'conditions' => [ 
 						'cart_id' => $cart_id,
-						'product_id' => $product_id 
+						'product_id' => $product_id,
+						'type'=>$type 
 				] 
 		] )->toArray ();
 		if (sizeof ( $result ) > 0) {
@@ -222,7 +223,7 @@ class CartController extends AppController {
 			$product_qty = $this->request->data ( 'qty' );
 			if ($product_id != null && $product_qty != null) {
 				$cart_id = $this->__getCartId ();
-			if(!$this->__isInCart($cart_id,$product_id))
+			if(!$this->__isInCart($cart_id,$product_id,1))
 				{
 					$data = [ 
 							'cart_id' => $cart_id,
