@@ -36,9 +36,9 @@ class CartTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('cart');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey('id');
+        $this->table('cart');
+        $this->displayField('id');
+        $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 

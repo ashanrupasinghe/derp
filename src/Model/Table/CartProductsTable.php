@@ -35,9 +35,9 @@ class CartProductsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('cart_products');
-        $this->setDisplayField('id');
-        $this->setPrimaryKey('id');
+        $this->table('cart_products');
+        $this->displayField('id');
+        $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
