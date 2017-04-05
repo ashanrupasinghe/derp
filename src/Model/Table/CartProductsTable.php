@@ -41,7 +41,7 @@ class CartProductsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Carts', [
+        $this->belongsTo('Cart', [
             'foreignKey' => 'cart_id',
             'joinType' => 'INNER'
         ]);
@@ -85,7 +85,7 @@ class CartProductsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['cart_id'], 'Carts'));
+        $rules->add($rules->existsIn(['cart_id'], 'Cart'));
         $rules->add($rules->existsIn(['product_id'], 'Products'));
 
         return $rules;

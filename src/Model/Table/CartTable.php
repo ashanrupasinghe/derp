@@ -45,10 +45,10 @@ class CartTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
-        $this->belongsTo('Sessions', [
+        /* $this->belongsTo('Sessions', [
             'foreignKey' => 'session_id',
             'joinType' => 'INNER'
-        ]);
+        ]); */
         $this->belongsToMany('Products', [
             'foreignKey' => 'cart_id',
             'targetForeignKey' => 'product_id',
@@ -81,7 +81,7 @@ class CartTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['session_id'], 'Sessions'));
+       // $rules->add($rules->existsIn(['session_id'], 'Sessions'));
 
         return $rules;
     }
