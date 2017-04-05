@@ -15,7 +15,8 @@ class CartController extends AppController {
 		$this->Auth->allow ( [ 
 				'addproduct',
 				'deleteproduct',
-				'clearcart' 
+				'clearcart',
+				'editqty' 
 		] );
 	}
 	
@@ -320,7 +321,7 @@ class CartController extends AppController {
 				}
 			} else {
 				$return ['status'] = 500;
-				$return ['message'] = 'please post product id';
+				$return ['message'] = 'please select product id';
 			}
 		} else {
 			$return ['status'] = 500;
@@ -330,6 +331,10 @@ class CartController extends AppController {
 		die ();
 	}
 	public function clearcart() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
 		$cart_id = $this->__getCurrentCartId ();
 		if ($cart_id) {
 			$cart_product_model = $this->loadModel ( 'CartProducts' );
@@ -338,7 +343,7 @@ class CartController extends AppController {
 					'type' => 1 
 			] )) {
 				$return ['status'] = 0;
-				$return ['message'] = 'cartclear success';
+				$return ['message'] = 'cart clear success';
 			} else {
 				$return ['status'] = 500;
 				$return ['message'] = 'cartclear not clear or car is empty';
@@ -350,6 +355,52 @@ class CartController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
-	public function editqty($product_id) {
+	public function editqty() {
+		header ( 'Content-type: application/json' );
+		if ($this->request->is ( 'post' )) {
+			$product_id = $this->request->data ( 'product_id' );
+			$qty = $this->request->data ( 'qty' );
+			if ($product_id != null && $qty != null) {
+				$cart_id = $this->__getCurrentCartId ();
+				if ($cart_id) {
+					$cart_product_model = $this->loadModel ( 'CartProducts' );
+					$product = $cart_product_model->find ( 'all', [ 
+							'fields' => [ 
+									'id' 
+							],
+							'conditions' => [ 
+									'cart_id' => $cart_id,
+									'product_id' => $product_id,
+									'type' => 1 
+							] 
+					] )->toArray ();
+					if (sizeof ( $product ) > 0) {
+						$product = $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id );
+						$product->qty = $qty;
+						if ($cart_product_model->save ( $product )) {
+							$return ['status'] = 0;
+							$return ['message'] = 'Pruduct qty updated successfully';
+						} else {
+							$return ['status'] = 500;
+							$return ['message'] = 'Culd not update the qty';
+						}
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = 'The product not found in the cart';
+					}
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = 'you havent create a cart';
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = 'please select product id and qty';
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized acess";
+		}
+		echo json_encode ( $return );
+		die ();
 	}
 }
