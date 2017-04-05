@@ -14,7 +14,8 @@ class CartController extends AppController {
 		// allow all action
 		$this->Auth->allow ( [ 
 				'addproduct',
-				'deleteproduct' 
+				'deleteproduct',
+				'clearcart' 
 		] );
 	}
 	
@@ -189,7 +190,7 @@ class CartController extends AppController {
 		] )->toArray ();
 		
 		if (sizeof ( $cart_id ) > 0) {
-			$cart_id = $cart_id [sizeof ( $cart_id )-1]->id;
+			$cart_id = $cart_id [sizeof ( $cart_id ) - 1]->id;
 		} else {
 			$cart_data = [ 
 					'user_id' => $user_id,
@@ -216,7 +217,9 @@ class CartController extends AppController {
 		] )->toArray ();
 		
 		if (sizeof ( $cart_id ) > 0) {
-			$cart_id = $cart_id [sizeof ( $cart_id )-1]->id;
+			$cart_id = $cart_id [sizeof ( $cart_id ) - 1]->id;
+		} else {
+			$cart_id = null;
 		}
 		return $cart_id;
 	}
@@ -275,8 +278,6 @@ class CartController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
-	public function editqty($product_id) {
-	}
 	public function deleteproduct() {
 		$this->request->allowMethod ( [ 
 				'post',
@@ -288,28 +289,34 @@ class CartController extends AppController {
 			$product_id = $this->request->data ( 'product_id' );
 			if ($product_id != null) {
 				$cart_id = $this->__getCurrentCartId ();
-				$cart_product_model = $this->loadModel ( 'CartProducts' );
-				
-				$product = $cart_product_model->find ( 'all', [ 
-						'fields' => [ 
-								'id' 
-						],
-						'conditions' => [ 
-								'cart_id' => $cart_id,
-								'product_id' => $product_id 
-						] 
-				] )->toArray ();
-				if (sizeof ( $product ) > 0) {
-					if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
-						$return ['status'] = 0;
-						$return ['message'] = 'Pruduct deleted successfully';
+				if ($cart_id) {
+					$cart_product_model = $this->loadModel ( 'CartProducts' );
+					
+					$product = $cart_product_model->find ( 'all', [ 
+							'fields' => [ 
+									'id' 
+							],
+							'conditions' => [ 
+									'cart_id' => $cart_id,
+									'product_id' => $product_id,
+									'type' => 1 
+							] 
+					] )->toArray ();
+					if (sizeof ( $product ) > 0) {
+						if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
+							$return ['status'] = 0;
+							$return ['message'] = 'Pruduct deleted successfully';
+						} else {
+							$return ['status'] = 500;
+							$return ['message'] = 'Culd not delete the product';
+						}
 					} else {
 						$return ['status'] = 500;
-						$return ['message'] = 'Culd not delete the product';
+						$return ['message'] = 'The product not found in the cart';
 					}
 				} else {
 					$return ['status'] = 500;
-					$return ['message'] = 'The product not found in th cart';
+					$return ['message'] = 'you havent create a cart';
 				}
 			} else {
 				$return ['status'] = 500;
@@ -323,5 +330,26 @@ class CartController extends AppController {
 		die ();
 	}
 	public function clearcart() {
+		$cart_id = $this->__getCurrentCartId ();
+		if ($cart_id) {
+			$cart_product_model = $this->loadModel ( 'CartProducts' );
+			if ($cart_product_model->deleteAll ( [ 
+					'cart_id' => $cart_id,
+					'type' => 1 
+			] )) {
+				$return ['status'] = 0;
+				$return ['message'] = 'cartclear success';
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = 'cartclear not clear or car is empty';
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = 'you havent create a cart';
+		}
+		echo json_encode ( $return );
+		die ();
+	}
+	public function editqty($product_id) {
 	}
 }
