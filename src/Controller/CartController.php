@@ -196,34 +196,65 @@ class CartController extends AppController {
 			];
 			$cart_entity = $this->Cart->newEntity ( $cart_data );
 			$saving = $this->Cart->save ( $cart_entity );
-			$cart_id = $cart->id;
+			$cart_id = $cart_entity->id;
 		}
 		
 		return $cart_id;
 	}
+	public function __isInCart($cart_id, $product_id) {
+		$cart_product_model = $this->loadModel ( 'CartProducts' );
+		$result = $cart_product_model->find ( 'all', [ 
+				'conditions' => [ 
+						'cart_id' => $cart_id,
+						'product_id' => $product_id 
+				] 
+		] )->toArray ();
+		if (sizeof ( $result ) > 0) {
+			return true;
+		}
+		return false;
+	}
 	public function addproduct() {
+		header ( 'Content-type: application/json' );
 		if ($this->request->is ( 'post' )) {
 			// $data=$this->request->data();//cart_id,product_id,qty,type[default-1]
-			
-			$cart_id = $this->__getCartId ();
-			$data = [ 
-					'cart_id' => $cart_id,
-					'product_id' => $data=$this->request->data('product_id'),
-					'qty' => $data=$this->request->data('qty'),
-					'type' => 1 
-			];
-			
-		
-			$cart_product_model = $this->loadModel ( 'CartProducts' );
-			$product_entity = $cart_product_model->newEntity ( $data );
-			$saving = $cart_product_model->save ( $product_entity );
-			if ($saving){
-				
-			}else{
-				
+			$product_id = $this->request->data ( 'product_id' );
+			$product_qty = $this->request->data ( 'qty' );
+			if ($product_id != null && $product_qty != null) {
+				$cart_id = $this->__getCartId ();
+			if(!$this->__isInCart($cart_id,$product_id))
+				{
+					$data = [ 
+							'cart_id' => $cart_id,
+							'product_id' => $product_id,
+							'qty' => $product_qty,
+							'type' => 1 
+					];
+					
+					$cart_product_model = $this->loadModel ( 'CartProducts' );
+					$product_entity = $cart_product_model->newEntity ( $data );
+					$saving = $cart_product_model->save ( $product_entity );
+					if ($saving) {
+						$return ['status'] = 0;
+						$return ['message'] = 'Pruduct is added to catr';
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = 'Pruduct is not added to catr';
+					}
+				}else
+				{
+					$return ['status'] = 0;
+					$return ['message'] = 'The pruduct already in your catr';
+				}
+			} else {
+				$return ['status'] = 401;
+				$return ['message'] = "please select product to add cart";
 			}
 		} else {
-			
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized acess";
 		}
+		echo json_encode ( $return );
+		die ();
 	}
 }
