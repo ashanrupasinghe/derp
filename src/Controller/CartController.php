@@ -3,6 +3,10 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Cart;
+use App\Model\Entity\CartProduct;
+use App\Model\Table\CartProductsTable;
+use App\Model\Table\CartTable;
 
 /**
  * Cart Controller
@@ -16,7 +20,8 @@ class CartController extends AppController {
 				'addproduct',
 				'deleteproduct',
 				'clearcart',
-				'editqty' 
+				'editqty',
+				'getcart' 
 		] );
 	}
 	
@@ -402,5 +407,54 @@ class CartController extends AppController {
 		}
 		echo json_encode ( $return );
 		die ();
+	}
+	public function getcart() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		$cart_id = $this->__getCurrentCartId ();
+		
+		
+		
+		if ($cart_id) {
+			
+			$total=$this->__getTotal($cart_id);
+			$cart_products = CartProductsTable::getCart($cart_id,1);
+			
+			if (sizeof ( $cart_products ) > 0) {
+				$return ['status'] = 0;
+				$return ['message'] = 'success';
+				$return ['result']['product_list'] = $cart_products;
+				$return ['result']['total'] = $total;
+			} else {
+				$return ['status'] = 0;
+				$return ['message'] = 'your cart is empty';
+				$return ['result'] = [ ];
+			} 
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "you haven't create a cart";
+		}
+		echo json_encode ( $return );
+		die ();
+	}
+	
+	public function __getTotal($cart_id) {
+		$tax_p=0;//tax persontage 10
+		$discount_p=0;//discount persentage 5
+		$counpon_value=0;//call to a function to find coupon values
+		$sub_total=CartTable::getTotal($cart_id, 1);
+		
+	
+		$tax=$sub_total*$tax_p/100;
+		$discount=$sub_total*$discount_p/100;
+		$grand_total=$sub_total+$tax-$discount-$counpon_value;
+	
+		$total ['sub_total'] = $sub_total;
+		$total ['tax'] = $tax;
+		$total ['discount'] = $discount;
+		$total ['grand_total'] = $grand_total;
+		return $total;
 	}
 }

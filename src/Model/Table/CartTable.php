@@ -5,7 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-
+use Cake\Datasource\ConnectionManager;
 /**
  * Cart Model
  *
@@ -54,6 +54,10 @@ class CartTable extends Table
             'targetForeignKey' => 'product_id',
             'joinTable' => 'cart_products'
         ]);
+        
+        $this->hasMany('CartProducts', [
+        		'foreignKey' => 'cart_id'
+        ]);
     }
 
     /**
@@ -84,5 +88,17 @@ class CartTable extends Table
        // $rules->add($rules->existsIn(['session_id'], 'Sessions'));
 
         return $rules;
+    }
+
+    /*teturn sub total for a given cart
+     * cartID
+     * type: 1-cart, 0-wish list
+     */
+    public static function getTotal($cartID,$type){
+    	$connection = ConnectionManager::get('default');
+    	$query="SELECT SUM(cart_products.qty*products.price) subtotal FROM ".
+    			"cart_products JOIN products ON products.id=cart_products.product_id WHERE cart_products.cart_id=".$cartID." AND cart_products.type=".$type;
+    	$results = $connection->execute($query)->fetchAll('assoc');
+    	return $results[0]['subtotal'];
     }
 }

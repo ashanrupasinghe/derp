@@ -5,7 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-
+use Cake\Datasource\ConnectionManager;
 /**
  * CartProducts Model
  *
@@ -89,5 +89,13 @@ class CartProductsTable extends Table
         $rules->add($rules->existsIn(['product_id'], 'Products'));
 
         return $rules;
+    }
+    
+    public static function getCart($cartID,$type){
+    	$connection = ConnectionManager::get('default');
+    	$query="SELECT products.name,products.image,products.price,cart_products.qty as quantity,products.price*cart_products.qty as total FROM ".
+    			"cart_products JOIN products ON products.id=cart_products.product_id WHERE cart_products.cart_id=".$cartID." AND cart_products.type=".$type." ORDER BY cart_products.modified";
+    	$results = $connection->execute($query)->fetchAll('assoc');
+    	return $results;
     }
 }
