@@ -312,6 +312,7 @@ class CartController extends AppController {
 						if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
 							$return ['status'] = 0;
 							$return ['message'] = 'Pruduct deleted successfully';
+							$return ['result'] = $this->__getcartIn();
 						} else {
 							$return ['status'] = 500;
 							$return ['message'] = 'Culd not delete the product';
@@ -385,6 +386,7 @@ class CartController extends AppController {
 						if ($cart_product_model->save ( $product )) {
 							$return ['status'] = 0;
 							$return ['message'] = 'Pruduct qty updated successfully';
+							$return ['result'] = $this->__getcartIn();
 						} else {
 							$return ['status'] = 500;
 							$return ['message'] = 'Culd not update the qty';
@@ -410,12 +412,10 @@ class CartController extends AppController {
 	}
 	public function getcart() {
 		$this->request->allowMethod ( [ 
-				'post' 
+				'post'
 		] );
 		header ( 'Content-type: application/json' );
 		$cart_id = $this->__getCurrentCartId ();
-		
-		
 		
 		if ($cart_id) {
 			
@@ -439,6 +439,37 @@ class CartController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
+	
+	public function __getcartIn() {
+		$this->request->allowMethod ( [
+				'post',
+				'get'
+		] );
+		header ( 'Content-type: application/json' );
+		$cart_id = $this->__getCurrentCartId ();
+	
+		if ($cart_id) {
+				
+			$total=$this->__getTotal($cart_id);
+			$cart_products = CartProductsTable::getCart($cart_id,1);
+				
+			if (sizeof ( $cart_products ) > 0) {
+				$return ['status'] = 0;
+				$return ['message'] = 'success';
+				$return ['result']['product_list'] = $cart_products;
+				$return ['result']['total'] = $total;
+			} else {
+				$return ['status'] = 0;
+				$return ['message'] = 'your cart is empty';
+				$return ['result'] = [ ];
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "you haven't create a cart";
+		}
+		return $return;
+		die ();
+	}	
 	
 	public function __getTotal($cart_id) {
 		$tax_p=0;//tax persontage 10
