@@ -166,7 +166,7 @@ class UsersController extends AppController
     				$mobtoken = $this->__getMobToken();
     				$query = $this->Users->query();
     				$query->update()
-    				->set(['mobtoken' => $mobtoken])
+    				->set(['mobtoken' => $mobtoken,'mobtoken_created_at'=>date('Y-m-d H:i:s')])
     				->where(['id' => $user['id']])
     				->execute();
     				
@@ -292,7 +292,7 @@ class UsersController extends AppController
     				$mobtoken = $this->__getMobToken();
     				$query = $this->Users->query();
     				$query->update()
-    				->set(['mobtoken' => $mobtoken])
+    				->set(['mobtoken' => $mobtoken,'mobtoken_created_at'=>date('Y-m-d H:i:s')])
     				->where(['id' => $user['id']])
     				->execute();
     				
