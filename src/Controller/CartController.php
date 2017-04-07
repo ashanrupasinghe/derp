@@ -391,42 +391,50 @@ class CartController extends AppController {
 		if ($this->request->is ( 'post' )) {
 			$product_id = $this->request->data ( 'product_id' );
 			$qty = $this->request->data ( 'qty' );
-			if ($product_id != null && $qty != null) {
-				$cart_id = $this->__getCurrentCartId ();
-				if ($cart_id) {
-					$cart_product_model = $this->loadModel ( 'CartProducts' );
-					$product = $cart_product_model->find ( 'all', [ 
-							'fields' => [ 
-									'id' 
-							],
-							'conditions' => [ 
-									'cart_id' => $cart_id,
-									'product_id' => $product_id,
-									'type' => 1 
-							] 
-					] )->toArray ();
-					if (sizeof ( $product ) > 0) {
-						$product = $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id );
-						$product->qty = $qty;
-						if ($cart_product_model->save ( $product )) {
-							$return ['status'] = 0;
-							$return ['message'] = 'Pruduct qty updated successfully';
-							$return ['result'] = $this->__getcartIn ();
+			$token = $this->request->data ( 'token' );
+			$chck = $this->__checkToken ( $token );
+			if ($chck ['boolean']) {
+				
+				if ($product_id != null && $qty != null) {
+					$cart_id = $this->__getCurrentCartId ();
+					if ($cart_id) {
+						$cart_product_model = $this->loadModel ( 'CartProducts' );
+						$product = $cart_product_model->find ( 'all', [ 
+								'fields' => [ 
+										'id' 
+								],
+								'conditions' => [ 
+										'cart_id' => $cart_id,
+										'product_id' => $product_id,
+										'type' => 1 
+								] 
+						] )->toArray ();
+						if (sizeof ( $product ) > 0) {
+							$product = $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id );
+							$product->qty = $qty;
+							if ($cart_product_model->save ( $product )) {
+								$return ['status'] = 0;
+								$return ['message'] = 'Pruduct qty updated successfully';
+								$return ['result'] = $this->__getcartIn ();
+							} else {
+								$return ['status'] = 500;
+								$return ['message'] = 'Culd not update the qty';
+							}
 						} else {
 							$return ['status'] = 500;
-							$return ['message'] = 'Culd not update the qty';
+							$return ['message'] = 'The product not found in the cart';
 						}
 					} else {
 						$return ['status'] = 500;
-						$return ['message'] = 'The product not found in the cart';
+						$return ['message'] = 'you havent create a cart';
 					}
 				} else {
 					$return ['status'] = 500;
-					$return ['message'] = 'you havent create a cart';
+					$return ['message'] = 'please select product id and qty';
 				}
 			} else {
 				$return ['status'] = 500;
-				$return ['message'] = 'please select product id and qty';
+				$return ['message'] = $chck ['message'];
 			}
 		} else {
 			$return ['status'] = 500;
@@ -550,14 +558,16 @@ class CartController extends AppController {
 		} else {
 			$mobtoken_created_at = $user->mobtoken_created_at;
 			$mobtoken_created_at = new Time ( $mobtoken_created_at );
-			if ($mobtoken_created_at->wasWithinLast ( '720mins' )) {
+			/* echo $mobtoken_created_at;
+			die (); */
+			if ($mobtoken_created_at->wasWithinLast (1)) {
 				$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
 				$user_model->save ( $user );
 				
 				return [ 
 						'boolean' => true,
 						'message' => 'token matched',
-						'user_id' =>$user->id 
+						'user_id' => $user->id 
 				];
 			} else {
 				return [ 
