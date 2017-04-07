@@ -16,7 +16,7 @@ use Cake\I18n\Time;
  * @property \App\Model\Table\CartTable $Cart
  */
 class CartController extends AppController {
-	public function beforeFilter(\Cake\Event\Event $event) {
+/* 	public function beforeFilter(\Cake\Event\Event $event) {
 		// allow all action
 		$this->Auth->allow ( [ 
 				'addproduct',
@@ -25,6 +25,27 @@ class CartController extends AppController {
 				'editqty',
 				'getcart' 
 		] );
+	}
+	 */
+	
+	public function isAuthorized($user) {
+	
+		// The owner of an article can edit and delete it
+		if (in_array ( $this->request->action, [
+				'addproduct',
+				'deleteproduct',
+				'clearcart',
+				'editqty',
+				'getcart'
+		] )) {
+				
+			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 5) {
+				return true;
+			}
+				
+		}
+	
+		return parent::isAuthorized ( $user );
 	}
 	
 	/**
@@ -184,48 +205,45 @@ class CartController extends AppController {
 		}
 		return null;
 	}
-	public function __getCartId() {
-		$session_id = $this->__getSessionId ();
-		$user_id = $this->__getUserId ();
+	public function __getCartId($user_id) {
+		//$session_id = $this->__getSessionId ();
+		//$user_id = $this->__getUserId ();
 		$cart_id = $this->Cart->find ( 'all', [ 
 				'fields' => [ 
 						'id' 
 				] 
-		] )->orWhere ( [ 
+		] )->where ( [ 
 				'user_id' => $user_id 
-		] )->orWhere ( [ 
-				'session_id' => $session_id 
 		] )->toArray ();
 		
 		if (sizeof ( $cart_id ) > 0) {
-			$cart_id = $cart_id [sizeof ( $cart_id ) - 1]->id;
+			$cart_id = $cart_id [0]->id;
 		} else {
-			$cart_data = [ 
+			return false;
+			/* $cart_data = [ 
 					'user_id' => $user_id,
 					'session_id' => $session_id 
 			];
 			$cart_entity = $this->Cart->newEntity ( $cart_data );
 			$saving = $this->Cart->save ( $cart_entity );
-			$cart_id = $cart_entity->id;
+			$cart_id = $cart_entity->id; */
 		}
 		
 		return $cart_id;
 	}
-	public function __getCurrentCartId() {
-		$session_id = $this->__getSessionId ();
-		$user_id = $this->__getUserId ();
+	public function __getCurrentCartId($user_id) {
+		//$session_id = $this->__getSessionId ();
+		//$user_id = $this->__getUserId ();
 		$cart_id = $this->Cart->find ( 'all', [ 
 				'fields' => [ 
 						'id' 
 				] 
-		] )->orWhere ( [ 
+		] )->where ( [ 
 				'user_id' => $user_id 
-		] )->orWhere ( [ 
-				'session_id' => $session_id 
 		] )->toArray ();
 		
 		if (sizeof ( $cart_id ) > 0) {
-			$cart_id = $cart_id [sizeof ( $cart_id ) - 1]->id;
+			$cart_id = $cart_id [0]->id;
 		} else {
 			$cart_id = null;
 		}
@@ -252,11 +270,12 @@ class CartController extends AppController {
 			$product_id = $this->request->data ( 'product_id' );
 			$product_qty = $this->request->data ( 'qty' );
 			$token = $this->request->data ( 'token' );
+			
 			$chck = $this->__checkToken ( $token );
 			if ($chck ['boolean']) {
 				if ($product_id != null && $product_qty != null) {
-					$cart_id = $this->__getCartId ();
-					if (! $this->__isInCart ( $cart_id, $product_id, 1 )) {
+					$cart_id = $this->__getCartId ($chck ['user_id']);
+					if ($cart_id && ! $this->__isInCart ( $cart_id, $product_id, 1 )) {
 						$data = [ 
 								'cart_id' => $cart_id,
 								'product_id' => $product_id,
@@ -306,7 +325,7 @@ class CartController extends AppController {
 			$chck = $this->__checkToken ( $token );
 			if ($chck ['boolean']) {
 				if ($product_id != null) {
-					$cart_id = $this->__getCurrentCartId ();
+					$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
 					if ($cart_id) {
 						$cart_product_model = $this->loadModel ( 'CartProducts' );
 						
@@ -324,7 +343,7 @@ class CartController extends AppController {
 							if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
 								$return ['status'] = 0;
 								$return ['message'] = 'Pruduct deleted successfully';
-								$return ['result'] = $this->__getcartIn ();
+								$return ['result'] = $this->__getcartIn ($chck ['user_id']);
 							} else {
 								$return ['status'] = 500;
 								$return ['message'] = 'Culd not delete the product';
@@ -361,7 +380,7 @@ class CartController extends AppController {
 		$chck = $this->__checkToken ( $token );
 		if ($chck ['boolean']) {
 			
-			$cart_id = $this->__getCurrentCartId ();
+			$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
 			if ($cart_id) {
 				$cart_product_model = $this->loadModel ( 'CartProducts' );
 				if ($cart_product_model->deleteAll ( [ 
@@ -396,7 +415,7 @@ class CartController extends AppController {
 			if ($chck ['boolean']) {
 				
 				if ($product_id != null && $qty != null) {
-					$cart_id = $this->__getCurrentCartId ();
+					$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
 					if ($cart_id) {
 						$cart_product_model = $this->loadModel ( 'CartProducts' );
 						$product = $cart_product_model->find ( 'all', [ 
@@ -415,7 +434,7 @@ class CartController extends AppController {
 							if ($cart_product_model->save ( $product )) {
 								$return ['status'] = 0;
 								$return ['message'] = 'Pruduct qty updated successfully';
-								$return ['result'] = $this->__getcartIn ();
+								$return ['result'] = $this->__getcartIn ($chck ['user_id']);
 							} else {
 								$return ['status'] = 500;
 								$return ['message'] = 'Culd not update the qty';
@@ -453,7 +472,7 @@ class CartController extends AppController {
 		$chck = $this->__checkToken ( $token );
 		if ($chck ['boolean']) {
 			
-			$cart_id = $this->__getCurrentCartId ();
+			$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
 			
 			if ($cart_id) {
 				
@@ -482,13 +501,13 @@ class CartController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
-	public function __getcartIn() {
+	public function __getcartIn($user_id) {
 		$this->request->allowMethod ( [ 
 				'post',
 				'get' 
 		] );
 		header ( 'Content-type: application/json' );
-		$cart_id = $this->__getCurrentCartId ();
+		$cart_id = $this->__getCurrentCartId ($user_id);
 		
 		if ($cart_id) {
 			
