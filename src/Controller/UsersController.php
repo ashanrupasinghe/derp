@@ -296,6 +296,11 @@ class UsersController extends AppController
     				->where(['id' => $user['id']])
     				->execute();
     				
+    				//create cart
+    				$cart_model=$this->loadModel('Cart');
+    				$cart_entity=$cart_model->newEntity(['user_id'=>$user->id]);
+    				//$cart_entity->patchEntity($cart_entity,['user_id'=>$user->id]);
+    				$cart_model->save($cart_entity);
     				// Redirect user
     				//return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
     				$return['status']=0;
