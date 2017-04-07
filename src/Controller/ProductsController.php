@@ -534,7 +534,7 @@ class ProductsController extends AppController {
 								'price',
 								'package',
 								'availability',
-								'image' 
+								'image','is_new','is_sale' 
 						] 
 				] )->contain ( [ 
 						'packageType' => function ($q) {
@@ -637,7 +637,8 @@ class ProductsController extends AppController {
 						'price',
 						'package',
 						'availability',
-						'image' 
+						'image',
+						'is_new','is_sale'
 				] 
 		] )->contain(['packageType'=> function ($q) {
 							return $q->select ( [ 
