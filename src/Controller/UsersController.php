@@ -575,9 +575,22 @@ class UsersController extends AppController
     }
     
     function __getMobToken(){
-    	$hasher = new DefaultPasswordHasher();
-    	$token=$hasher->hash(sha1(Text::uuid()));
-    	return $token;
+    	/* $hasher = new DefaultPasswordHasher();
+    	$token=$hasher->hash(sha1(Text::uuid())); */    	
+    	$token = "";
+    	for ($i = 0; $i < 100; $i++) {
+    		$d = rand(1, 100000) % 2;
+    		$d ? $token .= chr(rand(33,79)) : $token .= chr(rand(80,126));
+    	}
+    	(rand(1, 100000) % 2) ? $token = strrev($token) : $token = $token;
+    	// Generate hash of random string
+    	$hash = Security::hash($token, 'sha256', true);;
+    	for ($i = 0; $i < 20; $i++) {
+    		$hash = Security::hash($hash, 'sha256', true);
+    	}	 
+    	
+    	
+    	return $hash;
     }
     
 }
