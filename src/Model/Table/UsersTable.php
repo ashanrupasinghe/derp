@@ -54,6 +54,9 @@ class UsersTable extends Table
         $this->hasMany('UserNotifications', [
         		'foreignKey' => 'userId'
         ]);
+        $this->hasOne('Cart', [
+        		'foreignKey' => 'user_id'
+        ]);
     }
 
     /**
