@@ -16,37 +16,44 @@ use Cake\I18n\Time;
  * @property \App\Model\Table\CartTable $Cart
  */
 class CartController extends AppController {
- 	public function beforeFilter(\Cake\Event\Event $event) {
+	public function beforeFilter(\Cake\Event\Event $event) {
 		// allow all action
 		$this->Auth->allow ( [ 
 				'addproduct',
 				'deleteproduct',
 				'clearcart',
 				'editqty',
-				'getcart' 
+				'getcart',
+				'getCheckout',
+				'addAddress',
+				'getAddress',
+				'updateAddress',
+				'updateDeliveryTime',
+				'completeCheckout' 
 		] );
 	}
-	 
 	
-/* 	public function isAuthorized($user) {
-	
-		// The owner of an article can edit and delete it
-		if (in_array ( $this->request->action, [
-				'addproduct',
-				'deleteproduct',
-				'clearcart',
-				'editqty',
-				'getcart'
-		] )) {
-				
-			if (isset ( $user ['user_type'] ) && $user ['user_type'] == 5) {
-				return true;
-			}
-				
-		}
-	
-		return parent::isAuthorized ( $user );
-	} */
+	/*
+	 * public function isAuthorized($user) {
+	 *
+	 * // The owner of an article can edit and delete it
+	 * if (in_array ( $this->request->action, [
+	 * 'addproduct',
+	 * 'deleteproduct',
+	 * 'clearcart',
+	 * 'editqty',
+	 * 'getcart'
+	 * ] )) {
+	 *
+	 * if (isset ( $user ['user_type'] ) && $user ['user_type'] == 5) {
+	 * return true;
+	 * }
+	 *
+	 * }
+	 *
+	 * return parent::isAuthorized ( $user );
+	 * }
+	 */
 	
 	/**
 	 * Index method
@@ -206,8 +213,8 @@ class CartController extends AppController {
 		return null;
 	}
 	public function __getCartId($user_id) {
-		//$session_id = $this->__getSessionId ();
-		//$user_id = $this->__getUserId ();
+		// $session_id = $this->__getSessionId ();
+		// $user_id = $this->__getUserId ();
 		$cart_id = $this->Cart->find ( 'all', [ 
 				'fields' => [ 
 						'id' 
@@ -220,20 +227,22 @@ class CartController extends AppController {
 			$cart_id = $cart_id [0]->id;
 		} else {
 			return false;
-			/* $cart_data = [ 
-					'user_id' => $user_id,
-					'session_id' => $session_id 
-			];
-			$cart_entity = $this->Cart->newEntity ( $cart_data );
-			$saving = $this->Cart->save ( $cart_entity );
-			$cart_id = $cart_entity->id; */
+			/*
+			 * $cart_data = [
+			 * 'user_id' => $user_id,
+			 * 'session_id' => $session_id
+			 * ];
+			 * $cart_entity = $this->Cart->newEntity ( $cart_data );
+			 * $saving = $this->Cart->save ( $cart_entity );
+			 * $cart_id = $cart_entity->id;
+			 */
 		}
 		
 		return $cart_id;
 	}
 	public function __getCurrentCartId($user_id) {
-		//$session_id = $this->__getSessionId ();
-		//$user_id = $this->__getUserId ();
+		// $session_id = $this->__getSessionId ();
+		// $user_id = $this->__getUserId ();
 		$cart_id = $this->Cart->find ( 'all', [ 
 				'fields' => [ 
 						'id' 
@@ -274,7 +283,7 @@ class CartController extends AppController {
 			$chck = $this->__checkToken ( $token );
 			if ($chck ['boolean']) {
 				if ($product_id != null && $product_qty != null) {
-					$cart_id = $this->__getCartId ($chck ['user_id']);
+					$cart_id = $this->__getCartId ( $chck ['user_id'] );
 					if ($cart_id && ! $this->__isInCart ( $cart_id, $product_id, 1 )) {
 						$data = [ 
 								'cart_id' => $cart_id,
@@ -325,7 +334,7 @@ class CartController extends AppController {
 			$chck = $this->__checkToken ( $token );
 			if ($chck ['boolean']) {
 				if ($product_id != null) {
-					$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
+					$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
 					if ($cart_id) {
 						$cart_product_model = $this->loadModel ( 'CartProducts' );
 						
@@ -343,7 +352,7 @@ class CartController extends AppController {
 							if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
 								$return ['status'] = 0;
 								$return ['message'] = 'Pruduct deleted successfully';
-								$return ['result'] = $this->__getcartIn ($chck ['user_id']);
+								$return ['result'] = $this->__getcartIn ( $chck ['user_id'] );
 							} else {
 								$return ['status'] = 500;
 								$return ['message'] = 'Culd not delete the product';
@@ -380,7 +389,7 @@ class CartController extends AppController {
 		$chck = $this->__checkToken ( $token );
 		if ($chck ['boolean']) {
 			
-			$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
 			if ($cart_id) {
 				$cart_product_model = $this->loadModel ( 'CartProducts' );
 				if ($cart_product_model->deleteAll ( [ 
@@ -415,7 +424,7 @@ class CartController extends AppController {
 			if ($chck ['boolean']) {
 				
 				if ($product_id != null && $qty != null) {
-					$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
+					$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
 					if ($cart_id) {
 						$cart_product_model = $this->loadModel ( 'CartProducts' );
 						$product = $cart_product_model->find ( 'all', [ 
@@ -434,7 +443,7 @@ class CartController extends AppController {
 							if ($cart_product_model->save ( $product )) {
 								$return ['status'] = 0;
 								$return ['message'] = 'Pruduct qty updated successfully';
-								$return ['result'] = $this->__getcartIn ($chck ['user_id']);
+								$return ['result'] = $this->__getcartIn ( $chck ['user_id'] );
 							} else {
 								$return ['status'] = 500;
 								$return ['message'] = 'Culd not update the qty';
@@ -472,7 +481,7 @@ class CartController extends AppController {
 		$chck = $this->__checkToken ( $token );
 		if ($chck ['boolean']) {
 			
-			$cart_id = $this->__getCurrentCartId ($chck ['user_id']);
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
 			
 			if ($cart_id) {
 				
@@ -487,7 +496,8 @@ class CartController extends AppController {
 				} else {
 					$return ['status'] = 0;
 					$return ['message'] = 'your cart is empty';
-					$return ['result'] = [ ];
+					$return ['result'] ['product_list'] = $cart_products;
+					$return ['result'] ['total'] = $total;
 				}
 			} else {
 				$return ['status'] = 500;
@@ -507,7 +517,7 @@ class CartController extends AppController {
 				'get' 
 		] );
 		header ( 'Content-type: application/json' );
-		$cart_id = $this->__getCurrentCartId ($user_id);
+		$cart_id = $this->__getCurrentCartId ( $user_id );
 		
 		if ($cart_id) {
 			
@@ -522,7 +532,8 @@ class CartController extends AppController {
 			} else {
 				$return ['status'] = 0;
 				$return ['message'] = 'your cart is empty';
-				$return ['result'] = [ ];
+				$return ['result'] ['product_list'] = $cart_products;
+				$return ['result'] ['total'] = $total;
 			}
 		} else {
 			$return ['status'] = 500;
@@ -544,6 +555,7 @@ class CartController extends AppController {
 		$total ['sub_total'] = $sub_total;
 		$total ['tax'] = $tax;
 		$total ['discount'] = $discount;
+		$total ['counpon_value'] = $counpon_value;
 		$total ['grand_total'] = $grand_total;
 		return $total;
 	}
@@ -577,9 +589,11 @@ class CartController extends AppController {
 		} else {
 			$mobtoken_created_at = $user->mobtoken_created_at;
 			$mobtoken_created_at = new Time ( $mobtoken_created_at );
-			/* echo $mobtoken_created_at;
-			die (); */
-			if ($mobtoken_created_at->wasWithinLast (1)) {
+			/*
+			 * echo $mobtoken_created_at;
+			 * die ();
+			 */
+			if ($mobtoken_created_at->wasWithinLast ( 1 )) {
 				$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
 				$user_model->save ( $user );
 				
@@ -595,5 +609,451 @@ class CartController extends AppController {
 				];
 			}
 		}
+	}
+	public function getCheckout() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+			
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			
+			if ($cart_id) {
+				// $now=Time::now();
+				$return ['status'] = 0;
+				$return ['message'] = "success";
+				$return ['delivery_time'] = '';
+				$return ['delivery_address'] = $this->__getLastAddress ( $cart_id );
+				$return ['unavailable_date'] = $this->__getUnavailableDates ();
+				$return ['delivery_start_time'] = new Time ( '06:00:00' );
+				$return ['delivery_end_time'] = new Time ( '18:00:00' );
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	function __getLastAddress($cart_id) {
+		$shippingModel = $this->loadModel ( 'Shipping' );
+		$last_shipping = $shippingModel->find ( 'all', [ 
+				'conditions' => [ 
+						'cart_id' => $cart_id 
+				],
+				'order' => [ 
+						'Shipping.created_at' => 'DESC' 
+				] 
+		] )->toArray ();
+		if (sizeof ( $last_shipping ) > 0) {
+			return $last_shipping [0]->address;
+		} else {
+			return null;
+		}
+	}
+	function __getUnavailableDates() {
+		$unavailableModel = $this->loadModel ( 'Unavailabledate' );
+		$result = $unavailableModel->find ( 'list', [ 
+				'keyField' => 'id',
+				'valueField' => 'date' 
+		] )->toArray ();
+		return $result;
+	}
+	public function addAddress() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$phone_number = $this->request->data ( 'phone_number' );
+		$street_number = $this->request->data ( 'street_number' );
+		$street_address = $this->request->data ( 'street_address' );
+		$city = $this->request->data ( 'city' );
+		$country = $this->request->data ( 'country' );
+		
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+			
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			$data = [ 
+					'cart_id' => $cart_id,
+					'street_number' => $street_number,
+					'street_address' => $street_address,
+					'city' => $city,
+					'country' => $country,
+					'phone_number' => $phone_number 
+			];
+			if ($cart_id) {
+				$shippingModel = $this->loadModel ( 'Shipping' );
+				$currrent_shipping_details = $shippingModel->find ( 'all', [ 
+						'conditions' => [ 
+								'cart_id' => $cart_id,
+								'order_id' => 0 
+						] 
+				] )->toArray ();
+				if (sizeof ( $currrent_shipping_details ) > 0) {
+					$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+					$currrent_shipping->street_number = $data ['street_number'];
+					$currrent_shipping->street_address = $data ['street_address'];
+					$currrent_shipping->city = $data ['city'];
+					$currrent_shipping->country = $data ['country'];
+					$currrent_shipping->phone_number = $data ['phone_number'];
+					if ($shippingModel->save ( $currrent_shipping )) {
+						$return ['status'] = 0;
+						$return ['message'] = "Success";
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = "Address not saved";
+					}
+				} else {
+					$shippingEntity = $shippingModel->newEntity ( $data );
+					if ($shippingModel->save ( $shippingEntity )) {
+						$return ['status'] = 0;
+						$return ['message'] = "Success";
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = "Address not saved";
+					}
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	public function getAddress() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+			
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			
+			if ($cart_id) {
+				$shippingModel = $this->loadModel ( 'Shipping' );
+				$shipping = $shippingModel->find ( 'list', [ 
+						'keyField' => 'id',
+						'valueField' => 'street_address',
+						'conditions' => [ 
+								'cart_id' => $cart_id 
+						],
+						'order' => [ 
+								'Shipping.created_at' => 'DESC' 
+						] 
+				] )->toArray ();
+				$return ['status'] = 0;
+				$return ['message'] = "Success";
+				$return ['result'] = $shipping;
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	public function updateAddress() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$address_id = $this->request->data ( 'address_id' );
+		// print_r($address_id);
+		
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			
+			if ($cart_id) {
+				$shippingModel = $this->loadModel ( 'Shipping' );
+				$address = $shippingModel->get ( $address_id ); // selected address
+				/*
+				 * print '<pre>';
+				 * print_r($cart_id);
+				 * die();
+				 */
+				$currrent_shipping_details = $shippingModel->find ( 'all', [ 
+						'conditions' => [ 
+								'cart_id' => $cart_id,
+								'order_id' => 0 
+						] 
+				] )->toArray ();
+				$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+				$currrent_shipping->street_number = $address->street_number;
+				$currrent_shipping->street_address = $address->street_address;
+				$currrent_shipping->city = $address->city;
+				$currrent_shipping->country = $address->country;
+				
+				if ($shippingModel->save ( $currrent_shipping )) {
+					$return ['status'] = 0;
+					$return ['message'] = "success";
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = "Culd not update address";
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	public function updateDeliveryTime() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$delivery_time = $this->request->data ( 'delivery_time' );
+		
+		$delivery_time_string = strtotime ( $delivery_time ); // new Time($delivery_time);//$delivery_time->i18nFormat('yyyy-MM-dd HH:mm:ss');
+		$delivery_time_formated = date ( 'Y-m-d h:m:s', $delivery_time_string );
+		
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			
+			if ($cart_id) {
+				$shippingModel = $this->loadModel ( 'Shipping' );
+				$currrent_shipping_details = $shippingModel->find ( 'all', [ 
+						'conditions' => [ 
+								'cart_id' => $cart_id,
+								'order_id' => 0 
+						] 
+				] )->toArray ();
+				$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+				$currrent_shipping->delivery_date_time = $delivery_time_formated;
+				
+				if ($shippingModel->save ( $currrent_shipping )) {
+					$return ['status'] = 0;
+					$return ['message'] = "success";
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = "Culd not save delivery time";
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	public function completeCheckout() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+			
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			
+			if ($cart_id) {
+				if ($this->__iscartEmpty ( $cart_id )) {
+					$return ['status'] = 500;
+					$return ['message'] = "you cart is empty";
+				} else {
+					// add shipping details
+					// echo 'ssss';
+					$order_id = $this->__addOrder ( $cart_id, $chck ['user_id'] );
+					if ($order_id) {
+						$addOrderProducts = $this->__addOrderProducts ( $cart_id, $order_id );
+						if ($addOrderProducts) {
+							if ($this->__clearCart ( $cart_id )) {
+								$return ['status'] = 0;
+								$return ['message'] = "success";
+							} else {
+								$return ['status'] = 500;
+								$return ['message'] = "something went wrong, cart not clear";
+							}
+						} else {
+							$return ['status'] = 500;
+							$return ['message'] = "something went wrong, order products not saved";
+						}
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = "something went wrong, order data not saved";
+					}
+					$order_id = "";
+					// cad ored products
+					
+					// update shipping order id
+					$update_shipping_order_id = $this->__updateShippingOrderId ( $cart_id, $order_id );
+					
+					$return ['status'] = 0;
+					$return ['message'] = "success";
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	function __iscartEmpty($cartID) {
+		$cart_products = $this->loadModel ( 'CartProducts' );
+		$cart_products->find ( 'all', [ 
+				'conditions' => [ 
+						'cart_id' => $cartID 
+				] 
+		] )->toArray ();
+		if (sizeof ( $cartID > 0 )) {
+			return false;
+		}
+		return true;
+	}
+	function __clearCart($cart_id) {
+		if ($cart_id) {
+			$cart_product_model = $this->loadModel ( 'CartProducts' );
+			if ($cart_product_model->deleteAll ( [ 
+					'cart_id' => $cart_id,
+					'type' => 1 
+			] )) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	function __updateShippingOrderId($cart_id, $order_id) {
+		$shippingModel = $this->loadModel ( 'Shipping' );
+		$currrent_shipping_details = $shippingModel->find ( 'all', [ 
+				'conditions' => [ 
+						'cart_id' => $cart_id,
+						'order_id' => 0 
+				] 
+		] )->toArray ();
+		$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+		$currrent_shipping->order_id = $order_id;
+		$update_shipping_order_id = $shippingModel->save ( $currrent_shipping );
+	}
+	function __addOrder($cart_id, $user_id) {
+		$shippingModel = $this->loadModel ( 'Shipping' );
+		$currrent_shipping_details = $shippingModel->find ( 'all', [ 
+				'conditions' => [ 
+						'cart_id' => $cart_id,
+						'order_id' => 0 
+				] 
+		] )->toArray ();
+		$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+		$total = $this->__getTotal ( $cart_id );
+		$delivery_date_time = $currrent_shipping->delivery_date_time;
+		$delivery_date_time = strtotime ( $delivery_date_time );
+		
+		$delivery_date = date ( 'Y-m-d', $delivery_date_time );
+		$delivery_time = date ( 'H:i:s', $delivery_date_time );
+		$order = [ 
+				'customerId' => $user_id,
+				'address' => $currrent_shipping->street_number . ' ' . $currrent_shipping->street_address . ' ' . $currrent_shipping->city . '' . $currrent_shipping->country,
+				'city' => '000', // id
+				'callcenterId' => 0, // have to null
+				'deliveryId' => 7, // default
+				'subTotal' => $total ['sub_total'],
+				'tax' => $total ['tax'],
+				'discount' => $total ['discount'],
+				'couponCode' => $total ['counpon_value'],
+				'total' => $total ['grand_total'],
+				'deliveryDate' => $delivery_date,
+				'deliveryTime' => $delivery_time,
+				'note' => $currrent_shipping->note,
+				'supplier_note' => '',
+				'paymentStatus' => 1,
+				'status' => 2,
+				'deleted' => 0 
+		];
+		
+		$orderModel = $this->loadModel ( 'Orders' );
+		$orderEntity = $orderModel->newEntity ( $order );
+		
+		$orderSaved = $orderModel->save ( $orderEntity );
+		if ($orderSaved) {
+			return $orderSaved->id;
+		}
+		return false;
+	}
+	function __addOrderProducts($cart_id, $order_id = 1) {
+		// cart products
+		$productModel = $this->loadModel ( 'Products' );
+		$cartproductsModel = $this->loadModel ( 'CartProducts' );
+		$cartProducts = $cartproductsModel->find ( 'all', [ 
+				'conditions' => [ 
+						'cart_id' => $cart_id,
+						'type' => 1 
+				] 
+		] )->toArray ();
+		/*
+		 * $cartProductsArray = array_reduce($cartProducts, function ($result, $item) {
+		 * $item = (array) $item;
+		 * $result[] = $item;
+		 * return $result;
+		 * }, array());
+		 */
+		
+		// order products
+		$ordeProducts = [ ];
+		$i = 0;
+		foreach ( $cartProducts as $prduct ) {
+			$product = $productModel->get ( $prduct->product_id )->toArray ();
+			$ordeProducts [$i] ['order_id'] = $order_id;
+			$ordeProducts [$i] ['product_id'] = $prduct->product_id;
+			$ordeProducts [$i] ['product_quantity'] = $prduct->qty;
+			$ordeProducts [$i] ['product_price'] = $product ['price'];
+			$ordeProducts [$i] ['supplier_id'] = '000';
+			$ordeProducts [$i] ['status_s'] = 1;
+			$ordeProducts [$i] ['status_d'] = 0;
+			$ordeProducts [$i] ['deleted'] = 0;
+			$i ++;
+		}
+		$orderProductsModel = $this->loadModel ( 'OrderProducts' );
+		$entitiies = $orderProductsModel->newEntities ( $ordeProducts );
+		$savedOrderProducts = $orderProductsModel->saveMany ( $entitiies );
+		
+		if ($savedOrderProducts) {
+			return true;
+		}
+		return false;
 	}
 }
