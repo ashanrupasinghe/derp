@@ -99,6 +99,11 @@ class CartTable extends Table
     	$query="SELECT SUM(cart_products.qty*products.price) subtotal FROM ".
     			"cart_products JOIN products ON products.id=cart_products.product_id WHERE cart_products.cart_id=".$cartID." AND cart_products.type=".$type;
     	$results = $connection->execute($query)->fetchAll('assoc');
-    	return $results[0]['subtotal'];
+    	
+    	if ($results[0]['subtotal']==null){
+    		return 0;
+    	}else{
+    	return (int)$results[0]['subtotal'];
+    	}
     }
 }
