@@ -803,12 +803,23 @@ class CartController extends AppController {
 								'order_id' => 0 
 						] 
 				] )->toArray ();
-				$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
-				$currrent_shipping->street_number = $address->street_number;
-				$currrent_shipping->street_address = $address->street_address;
-				$currrent_shipping->city = $address->city;
-				$currrent_shipping->country = $address->country;
-				
+				if (sizeof ( $currrent_shipping_details )>0) {
+					$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+					$currrent_shipping->street_number = $address->street_number;
+					$currrent_shipping->street_address = $address->street_address;
+					$currrent_shipping->city = $address->city;
+					$currrent_shipping->country = $address->country;
+				} else {
+					$data = [ 
+							'cart_id' => $cart_id,
+							'street_number'=>$address->street_number,
+							'street_address'=>$address->street_address,
+							'city'=>$address->city,
+							'country'=>$address->country,
+							'phone_number'=>$address->phone_number 
+					];
+					$currrent_shipping = $shippingModel->newEntity ($data);
+				}
 				if ($shippingModel->save ( $currrent_shipping )) {
 					$return ['status'] = 0;
 					$return ['message'] = "success";
@@ -897,6 +908,8 @@ class CartController extends AppController {
 					if ($order_id) {
 						$addOrderProducts = $this->__addOrderProducts ( $cart_id, $order_id );
 						if ($addOrderProducts) {
+							// update shipping order id
+							$this->__updateShippingOrderId ( $cart_id, $order_id );
 							if ($this->__clearCart ( $cart_id )) {
 								$return ['status'] = 0;
 								$return ['message'] = "success";
@@ -912,11 +925,7 @@ class CartController extends AppController {
 						$return ['status'] = 500;
 						$return ['message'] = "something went wrong, order data not saved";
 					}
-					$order_id = "";
-					// cad ored products
 					
-					// update shipping order id
-					$update_shipping_order_id = $this->__updateShippingOrderId ( $cart_id, $order_id );
 					
 					$return ['status'] = 0;
 					$return ['message'] = "success";
@@ -987,7 +996,7 @@ class CartController extends AppController {
 		$delivery_time = date ( 'H:i:s', $delivery_date_time );
 		$order = [ 
 				'customerId' => $user_id,
-				'address' => $currrent_shipping->street_number . ' ' . $currrent_shipping->street_address . ' ' . $currrent_shipping->city . '' . $currrent_shipping->country,
+				'address' => $currrent_shipping->street_number . ' ' . $currrent_shipping->street_address . ' ' . $currrent_shipping->city . ' ' . $currrent_shipping->country,
 				'city' => '000', // id
 				'callcenterId' => 0, // have to null
 				'deliveryId' => 7, // default
