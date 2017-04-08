@@ -93,7 +93,7 @@ class CartProductsTable extends Table
     
     public static function getCart($cartID,$type){
     	$connection = ConnectionManager::get('default');
-    	$query="SELECT products.name,products.image,products.price,cart_products.qty as quantity, package_type.type as package,products.price*cart_products.qty as total FROM ".
+    	$query="SELECT products.id,products.name,products.image,products.price,cart_products.qty as quantity, package_type.type as package,products.price*cart_products.qty as total FROM ".
     			"cart_products JOIN products ON products.id=cart_products.product_id JOIN package_type ON package_type.id=products.package WHERE cart_products.cart_id=".$cartID." AND cart_products.type=".$type." ORDER BY cart_products.modified";
     	$results = $connection->execute($query)->fetchAll('assoc');
     	return $results;
