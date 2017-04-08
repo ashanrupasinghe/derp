@@ -16,7 +16,7 @@ use Cake\I18n\Time;
  * @property \App\Model\Table\CartTable $Cart
  */
 class CartController extends AppController {
-/* 	public function beforeFilter(\Cake\Event\Event $event) {
+ 	public function beforeFilter(\Cake\Event\Event $event) {
 		// allow all action
 		$this->Auth->allow ( [ 
 				'addproduct',
@@ -26,9 +26,9 @@ class CartController extends AppController {
 				'getcart' 
 		] );
 	}
-	 */
+	 
 	
-	public function isAuthorized($user) {
+/* 	public function isAuthorized($user) {
 	
 		// The owner of an article can edit and delete it
 		if (in_array ( $this->request->action, [
@@ -46,7 +46,7 @@ class CartController extends AppController {
 		}
 	
 		return parent::isAuthorized ( $user );
-	}
+	} */
 	
 	/**
 	 * Index method
