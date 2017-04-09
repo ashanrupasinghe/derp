@@ -32,7 +32,8 @@ class CartController extends AppController {
 				'completeCheckout',
 				'addWishListItem',
 				'deleteWishListItem',
-				'getWishList' 
+				'getWishList',
+				'placeOrder' 
 		] );
 	}
 	
@@ -1248,6 +1249,72 @@ class CartController extends AppController {
 			$return ['message'] = "you haven't create a wishlist";
 		}
 		return $return;
+		die ();
+	}
+	
+	public function placeOrder() {
+		$this->request->allowMethod ( [
+				'post'
+		] );
+		header ( 'Content-type: application/json' );
+	
+		$token = $this->request->data ( 'token' );
+		$order_id = $this->request->data ( 'order_id' );
+	
+		$chck = $this->__checkToken ( $token );
+	
+		if ($chck ['boolean']) {
+			if ($order_id) {
+				$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+				$orderModel=$this->loadModel('Orders');
+				$order = $orderModel->find ( 'all', [
+						'conditions' => [
+								'Orders.id' => $order_id
+						],
+						'contain' => [
+								'OrderProducts'
+						]
+				] )->toArray ();
+				if (sizeof ( $order ) > 0) {
+					$i = 0;
+					foreach ( $order [0]->order_products as $product ) {
+						$cart_products [$i] ['cart_id'] = $cart_id;
+						$cart_products [$i] ['product_id'] = $product ['product_id'];
+						$cart_products [$i] ['qty'] = $product ['product_quantity'];
+						$cart_products [$i] ['type'] = 1;
+						$i ++;
+					}
+					/* print_r( $cart_products);
+					die(); */
+					if (sizeof ( $cart_products ) > 0) {
+						$this->__clearCart($cart_id);
+						$cartProductModel = $this->loadModel ( 'CartProducts' );
+						$cartPrdoductsEntities = $cartProductModel->newEntities ( $cart_products );
+						if ($cartProductModel->saveMany ( $cartPrdoductsEntities )) {
+							$return ['status'] = 0;
+							$return ['message'] = 'Success';
+						} else {
+							$return ['status'] = 500;
+							$return ['message'] = 'products not saved';
+						}
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = 'no products found';
+					}
+						
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = 'no order found';
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = 'product id can not be empty';
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		echo json_encode ( $return );
 		die ();
 	}
 }

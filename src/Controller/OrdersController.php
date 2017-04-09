@@ -61,8 +61,8 @@ class OrdersController extends AppController {
 		// allow all action
 		$this->Auth->allow ( [ 
 				'getOrderList',
-				'viewOrder',
-				'placeOrder' 
+				'viewOrder'
+				 
 		] );
 	}
 	
@@ -1795,8 +1795,8 @@ class OrdersController extends AppController {
 		die ();
 	}
 	public function viewOrder() {
-		$this->request->allowMethod ( [
-				'post'
+		$this->request->allowMethod ( [ 
+				'post' 
 		] );
 		header ( 'Content-type: application/json' );
 		
@@ -1806,30 +1806,32 @@ class OrdersController extends AppController {
 		$chck = $this->__checkToken ( $token );
 		
 		if ($chck ['boolean']) {
-			if ($order_id){
-			$order = $this->Orders->find ( 'all', [ 'conditions'=>['Orders.id'=>$order_id],
-				'contain' => [ 
-						'OrderProducts',
-						'city',
-						'OrderProducts.Products',
-						'OrderProducts.Products.packageType',
-						
-				] 
-		] )->toArray();
-			if (sizeof ( $order ) > 0) {
-				$return ['status'] = 0;
-				$return ['message'] = 'Success';
-				$return ['result'] = $order;
+			if ($order_id) {
+				$order = $this->Orders->find ( 'all', [ 
+						'conditions' => [ 
+								'Orders.id' => $order_id 
+						],
+						'contain' => [ 
+								'OrderProducts',
+								'city',
+								'OrderProducts.Products',
+								'OrderProducts.Products.packageType' 
+						]
+						 
+				] )->toArray ();
+				if (sizeof ( $order ) > 0) {
+					$return ['status'] = 0;
+					$return ['message'] = 'Success';
+					$return ['result'] = $order [0];
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = 'no order found';
+					$return ['result'] = $order [0];
+				}
 			} else {
 				$return ['status'] = 500;
-				$return ['message'] = 'no order found';
-				$return ['result'] = $order;
+				$return ['message'] = 'product id can not be empty';
 			}
-		}else{
-			$return ['status'] = 500;
-			$return ['message'] = 'product id can not be empty';
-		}
-			
 		} else {
 			$return ['status'] = 500;
 			$return ['message'] = $chck ['message'];
@@ -1837,8 +1839,7 @@ class OrdersController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
-	public function placeOrder() {
-	}
+	
 }
 //http://www.jqueryscript.net/form/jQuery-Plugin-To-Duplicate-and-Remove-Form-Fieldsets-Multifield.html
 //http://stackoverflow.com/questions/17175534/clonned-select2-is-not-responding

@@ -82,7 +82,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 	//order related api calls
 	$routes->connect('/order/getOrderList',['controller' => 'Orders', 'action' => 'getOrderList']);
 	$routes->connect('/order/viewOrder',['controller' => 'Orders', 'action' => 'viewOrder']);
-	$routes->connect('/order/placeOrder',['controller' => 'Orders', 'action' => 'placeOrder']);
+	$routes->connect('/order/placeOrder',['controller' => 'Cart', 'action' => 'placeOrder']);
 	
 
     /**
