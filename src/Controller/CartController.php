@@ -1048,12 +1048,13 @@ class CartController extends AppController {
 		$ordeProducts = [ ];
 		$i = 0;
 		foreach ( $cartProducts as $prduct ) {
-			$product = $productModel->get ( $prduct->product_id )->toArray ();
+			$product = $productModel->get ( $prduct->product_id,['contain'=>['ProductSuppliers','ProductSuppliers.Suppliers'=>['conditions'=>['status'=>1]]]] )->toArray ();
+			
 			$ordeProducts [$i] ['order_id'] = $order_id;
 			$ordeProducts [$i] ['product_id'] = $prduct->product_id;
 			$ordeProducts [$i] ['product_quantity'] = $prduct->qty;
 			$ordeProducts [$i] ['product_price'] = $product ['price'];
-			$ordeProducts [$i] ['supplier_id'] = '000';
+			$ordeProducts [$i] ['supplier_id'] = $product['product_suppliers'][0]['supplier_id'];
 			$ordeProducts [$i] ['status_s'] = 1;
 			$ordeProducts [$i] ['status_d'] = 0;
 			$ordeProducts [$i] ['deleted'] = 0;
