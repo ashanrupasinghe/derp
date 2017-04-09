@@ -999,8 +999,8 @@ class CartController extends AppController {
 		$order = [ 
 				'customerId' => $user_id,
 				'address' => $currrent_shipping->street_number . ' ' . $currrent_shipping->street_address . ' ' . $currrent_shipping->city . ' ' . $currrent_shipping->country,
-				'city' => '000', // id
-				'callcenterId' => 0, // have to null
+				'city' => '1', // city id
+				'callcenterId' => 11, // have to null
 				'deliveryId' => 7, // default
 				'subTotal' => $total ['sub_total'],
 				'tax' => $total ['tax'],
