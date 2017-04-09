@@ -73,6 +73,11 @@ Router::scope('/', function (RouteBuilder $routes) {
 	$routes->connect('/user/forgotpassword',['controller' => 'Users', 'action' => 'forgotpassword']);
 	$routes->connect('/user/resetpasswordtoken/*',['controller' => 'Users', 'action' => 'resetpasswordtoken']);
 	$routes->connect('/user/resetpasswordtoken',['controller' => 'Users', 'action' => 'resetpasswordtoken']);
+	
+	//wish list routs
+	$routes->connect('/user/addWishListItem',['controller' => 'Cart', 'action' => 'addWishListItem']);
+	$routes->connect('/user/deleteWishListItem',['controller' => 'Cart', 'action' => 'deleteWishListItem']);
+	$routes->connect('/user/getWishList',['controller' => 'Cart', 'action' => 'getWishList']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.

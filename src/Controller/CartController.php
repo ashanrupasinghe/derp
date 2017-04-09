@@ -29,7 +29,10 @@ class CartController extends AppController {
 				'getAddress',
 				'updateAddress',
 				'updateDeliveryTime',
-				'completeCheckout' 
+				'completeCheckout',
+				'addWishListItem',
+				'deleteWishListItem',
+				'getWishList' 
 		] );
 	}
 	
@@ -803,7 +806,7 @@ class CartController extends AppController {
 								'order_id' => 0 
 						] 
 				] )->toArray ();
-				if (sizeof ( $currrent_shipping_details )>0) {
+				if (sizeof ( $currrent_shipping_details ) > 0) {
 					$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
 					$currrent_shipping->street_number = $address->street_number;
 					$currrent_shipping->street_address = $address->street_address;
@@ -812,13 +815,13 @@ class CartController extends AppController {
 				} else {
 					$data = [ 
 							'cart_id' => $cart_id,
-							'street_number'=>$address->street_number,
-							'street_address'=>$address->street_address,
-							'city'=>$address->city,
-							'country'=>$address->country,
-							'phone_number'=>$address->phone_number 
+							'street_number' => $address->street_number,
+							'street_address' => $address->street_address,
+							'city' => $address->city,
+							'country' => $address->country,
+							'phone_number' => $address->phone_number 
 					];
-					$currrent_shipping = $shippingModel->newEntity ($data);
+					$currrent_shipping = $shippingModel->newEntity ( $data );
 				}
 				if ($shippingModel->save ( $currrent_shipping )) {
 					$return ['status'] = 0;
@@ -925,7 +928,6 @@ class CartController extends AppController {
 						$return ['status'] = 500;
 						$return ['message'] = "something went wrong, order data not saved";
 					}
-					
 					
 					$return ['status'] = 0;
 					$return ['message'] = "success";
@@ -1064,5 +1066,188 @@ class CartController extends AppController {
 			return true;
 		}
 		return false;
+	}
+	
+	// wish list functions
+	public function addWishListItem() {
+		header ( 'Content-type: application/json' );
+		if ($this->request->is ( 'post' )) {
+			// $data=$this->request->data();//cart_id,product_id,qty,type[default-1]
+			$product_id = $this->request->data ( 'product_id' );
+			$token = $this->request->data ( 'token' );
+			
+			$chck = $this->__checkToken ( $token );
+			if ($chck ['boolean']) {
+				if ($product_id != null) {
+					$cart_id = $this->__getCartId ( $chck ['user_id'] );
+					if ($cart_id && ! $this->__isInCart ( $cart_id, $product_id, 0 )) {
+						
+						
+							$data = [ 
+									'cart_id' => $cart_id,
+									'product_id' => $product_id,
+									'qty' => 0,
+									'type' => 0 
+							];
+							
+							$cart_product_model = $this->loadModel ( 'CartProducts' );
+							$product_entity = $cart_product_model->newEntity ( $data );
+							$saving = $cart_product_model->save ( $product_entity );
+							if ($saving) {
+								$return ['status'] = 0;
+								$return ['message'] = 'Pruduct is added to wishlist';
+							} else {
+								$return ['status'] = 500;
+								$return ['message'] = 'Pruduct is not added to wishlist';
+							}
+						
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = 'The pruduct already in your wishist';
+					}
+				} else {
+					$return ['status'] = 401;
+					$return ['message'] = "please select product to add cart";
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = $chck ['message'];
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized acess";
+		}
+		echo json_encode ( $return );
+		die ();
+	}
+	public function deleteWishListItem() {
+		$this->request->allowMethod ( [ 
+				'post',
+				'delete' 
+		] );
+		
+		header ( 'Content-type: application/json' );
+		if ($this->request->is ( 'post' )) {
+			$product_id = $this->request->data ( 'product_id' );
+			$token = $this->request->data ( 'token' );
+			$chck = $this->__checkToken ( $token );
+			if ($chck ['boolean']) {
+				if ($product_id != null) {
+					$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+					if ($cart_id) {
+						$cart_product_model = $this->loadModel ( 'CartProducts' );
+						
+						$product = $cart_product_model->find ( 'all', [ 
+								'fields' => [ 
+										'id' 
+								],
+								'conditions' => [ 
+										'cart_id' => $cart_id,
+										'product_id' => $product_id,
+										'type' => 0 
+								] 
+						] )->toArray ();
+						if (sizeof ( $product ) > 0) {
+							if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
+								$return ['status'] = 0;
+								$return ['message'] = 'Pruduct deleted successfully';
+								$return ['result'] = $this->__getWishListIn ( $chck ['user_id'] );//need wishlist in
+							} else {
+								$return ['status'] = 500;
+								$return ['message'] = 'Culd not delete the product';
+							}
+						} else {
+							$return ['status'] = 500;
+							$return ['message'] = 'The product not found in the wishlist';
+						}
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = 'you havent create a wishlist';
+					}
+				} else {
+					$return ['status'] = 500;
+					$return ['message'] = 'please select product id';
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = $chck ['message'];
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized acess";
+		}
+		echo json_encode ( $return );
+		die ();
+	}
+	public function getWishList() {
+
+		$this->request->allowMethod ( [
+				'post'
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {
+				
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+				
+			if ($cart_id) {
+				$wishlist_products = CartProductsTable::getCart ( $cart_id, 0 );
+		
+				if (sizeof ( $wishlist_products ) > 0) {
+					$return ['status'] = 0;
+					$return ['message'] = 'success';
+					$return ['result'] = $wishlist_products;
+					
+				} else {
+					$return ['status'] = 0;
+					$return ['message'] = 'your wishlist is empty';
+					$return ['result'] = $wishlist_products;
+					
+				}
+			} else {
+				$return ['status'] = 500;
+				$return ['message'] = "you haven't create a cart";
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = $chck ['message'];
+		}
+		
+		echo json_encode ( $return );
+		die ();
+	}
+	
+	function __getWishListIn($user_id) {
+	
+		$this->request->allowMethod ( [ 
+				'post',
+				'get' 
+		] );
+		header ( 'Content-type: application/json' );
+		$cart_id = $this->__getCurrentCartId ( $user_id );
+		
+		if ($cart_id) {			
+			$total = $this->__getTotal ( $cart_id );
+			$cart_products = CartProductsTable::getCart ( $cart_id, 0 );
+			
+			if (sizeof ( $cart_products ) > 0) {
+				$return ['status'] = 0;
+				$return ['message'] = 'success';
+				$return ['result'] = $cart_products;
+				
+			} else {
+				$return ['status'] = 0;
+				$return ['message'] = 'your cart is empty';
+				$return ['result'] = $cart_products;
+				
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "you haven't create a wishlist";
+		}
+		return $return;
+		die ();
 	}
 }
