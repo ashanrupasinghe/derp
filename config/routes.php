@@ -73,6 +73,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 	$routes->connect('/user/forgotpassword',['controller' => 'Users', 'action' => 'forgotpassword']);
 	$routes->connect('/user/resetpasswordtoken/*',['controller' => 'Users', 'action' => 'resetpasswordtoken']);
 	$routes->connect('/user/resetpasswordtoken',['controller' => 'Users', 'action' => 'resetpasswordtoken']);
+	$routes->connect('/user/verifytoken',['controller' => 'Users', 'action' => 'verifytoken']);
 	
 	//wish list routs
 	$routes->connect('/user/addWishListItem',['controller' => 'Cart', 'action' => 'addWishListItem']);

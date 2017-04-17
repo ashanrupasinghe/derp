@@ -172,7 +172,8 @@ class UsersController extends AppController {
 				'login',
 				'register',
 				'forgotpassword',
-				'resetpasswordtoken' 
+				'resetpasswordtoken',
+				'verifytoken' 
 		] );
 	}
 	public function login() {
@@ -776,6 +777,35 @@ class UsersController extends AppController {
 		}
 		
 		return $hash;
+	}
+	/**
+	 * return status 0 if token has in db
+	 */
+	public function verifytoken(){
+		if ($this->request->is ( 'post' )) {
+			$token=$this->request->data('token');
+			
+			$user = $this->Users->find ( 'all', [
+					'conditions' => [
+							'mobtoken' => $token
+					]
+			] );
+			if ($user->count()>0){
+				$return ['status'] = 0;
+				$return ['message'] = "success";
+			}else{
+				$return ['status'] = 500;
+				$return ['message'] = "token not found";
+			}
+			
+			
+		}else{
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized access";
+		}
+		
+		echo json_encode($return);
+		die();
 	}
 }
 //https://github.com/hunzinker/CakePHP-Auth-Forgot-Password/blob/master/controllers/users_controller.php
