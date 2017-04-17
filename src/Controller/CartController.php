@@ -593,13 +593,15 @@ class CartController extends AppController {
 					'message' => 'token not found' 
 			];
 		} else {
-			$mobtoken_created_at = $user->mobtoken_created_at;
-			$mobtoken_created_at = new Time ( $mobtoken_created_at );
+			/* $mobtoken_created_at = $user->mobtoken_created_at;
+			$mobtoken_created_at = new Time ( $mobtoken_created_at ); */
+			
 			/*
 			 * echo $mobtoken_created_at;
 			 * die ();
 			 */
-			if ($mobtoken_created_at->wasWithinLast ( 1 )) {
+			
+			/* if ($mobtoken_created_at->wasWithinLast ( 1 )) {
 				$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
 				$user_model->save ( $user );
 				
@@ -613,7 +615,15 @@ class CartController extends AppController {
 						'boolean' => false,
 						'message' => 'token expired' 
 				];
-			}
+			} */
+			$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
+			$user_model->save ( $user );
+			
+			return [
+					'boolean' => true,
+					'message' => 'token matched',
+					'user_id' => $user->id
+			];
 		}
 	}
 	public function getCheckout() {
