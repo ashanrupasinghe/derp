@@ -754,16 +754,24 @@ class CartController extends AppController {
 			
 			if ($cart_id) {
 				$shippingModel = $this->loadModel ( 'Shipping' );
-				$shipping = $shippingModel->find ( 'list', [ 
-						'keyField' => 'id',
-						'valueField' => 'street_address',
-						'conditions' => [ 
-								'cart_id' => $cart_id 
-						],
-						'order' => [ 
-								'Shipping.created_at' => 'DESC' 
-						] 
-				] )->toArray ();
+				$shipping = $shippingModel->find ( 'all', [
+						 'fields'=>['id','street_number','street_address','city'],
+						'conditions' => ['cart_id' => $cart_id],
+						'order' => ['Shipping.created_at' => 'DESC']
+				] )->formatResults ( function ($results) {			
+						return $results->combine ( '{n}', function ($row) {
+														return [
+																'id'=>$row['id'],
+																'address'=>
+																			$row ['street_number'] . ', ' . 
+															   				$row ['street_address'] . ', ' . 
+															   				$row ['city']
+																
+														];
+			} );
+		} )
+				
+				->toArray ();
 				$return ['status'] = 0;
 				$return ['message'] = "Success";
 				$return ['result'] = $shipping;
