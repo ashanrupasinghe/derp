@@ -491,6 +491,7 @@ class CartController extends AppController {
 				
 				$total = $this->__getTotal ( $cart_id );
 				$cart_products = CartProductsTable::getCart ( $cart_id, 1 );
+				// $cart_products = $this->__getProductList ( $cart_id, 1 );
 				
 				if (sizeof ( $cart_products ) > 0) {
 					$return ['status'] = 0;
@@ -527,6 +528,7 @@ class CartController extends AppController {
 			
 			$total = $this->__getTotal ( $cart_id );
 			$cart_products = CartProductsTable::getCart ( $cart_id, 1 );
+			// $cart_products = $this->__getProductList ( $cart_id, 1 );
 			
 			if (sizeof ( $cart_products ) > 0) {
 				$return ['status'] = 0;
@@ -649,27 +651,93 @@ class CartController extends AppController {
 	}
 	function __getLastAddress($cart_id) {
 		$shippingModel = $this->loadModel ( 'Shipping' );
+		/*
+		 * $last_shipping = $shippingModel->find ( 'all', [
+		 * 'conditions' => [
+		 * 'cart_id' => $cart_id
+		 * ],
+		 * 'order' => [
+		 * 'Shipping.created_at' => 'DESC'
+		 * ]
+		 * ] )->toArray ();
+		 */
 		$last_shipping = $shippingModel->find ( 'all', [ 
+				'fields' => [ 
+						'id',
+						'street_number',
+						'street_address',
+						'city' 
+				],
 				'conditions' => [ 
 						'cart_id' => $cart_id 
 				],
 				'order' => [ 
 						'Shipping.created_at' => 'DESC' 
 				] 
-		] )->toArray ();
-		if (sizeof ( $last_shipping ) > 0) {
-			return $last_shipping [0]->address;
+		] )->formatResults ( function ($results) {
+			return $results->combine ( '{n}', function ($row) {
+				return [ 
+						'id' => $row ['id'],
+						'address' => $row ['street_number'] . ', ' . $row ['street_address'] . ', ' . $row ['city'] 
+				];
+			} );
+		} )->toArray ();
+		
+		$current_shipping = $shippingModel->find ( 'all', [ 
+				'fields' => [ 
+						'id',
+						'street_number',
+						'street_address',
+						'city' 
+				],
+				'conditions' => [ 
+						'cart_id' => $cart_id,
+						'order_id' => 0 
+				],
+				'order' => [ 
+						'Shipping.created_at' => 'DESC' 
+				] 
+		] )->formatResults ( function ($results) {
+			return $results->combine ( '{n}', function ($row) {
+				return [ 
+						'id' => $row ['id'],
+						'address' => $row ['street_number'] . ', ' . $row ['street_address'] . ', ' . $row ['city'] 
+				];
+			} );
+		} )->toArray ();
+		/*
+		 * print '<pre>';
+		 * print_r($current_shipping[0]);
+		 * die();
+		 */
+		if (sizeof ( $current_shipping ) <= 0) {
+			if (sizeof ( $last_shipping ) > 0) {
+				return $last_shipping [0];
+			} else {
+				return null;
+			}
 		} else {
-			return null;
+			return $current_shipping[0];
 		}
 	}
 	function __getUnavailableDates() {
 		$unavailableModel = $this->loadModel ( 'Unavailabledate' );
-		$result = $unavailableModel->find ( 'list', [ 
-				'keyField' => 'id',
-				'valueField' => 'date' 
-		] )->toArray ();
-		return array_values($result);
+		/*
+		 * $result = $unavailableModel->find ( 'list', [
+		 * 'keyField' => 'id',
+		 * 'valueField' => 'date'
+		 * ] )->toArray ();
+		 * return array_values ( $result );
+		 */
+		$result = $unavailableModel->find ( 'all', [ 
+				'fields' => [ 
+						'date' 
+				] 
+		]
+		 )->toArray ();
+		return array_map ( function ($result) {
+			return $result;
+		}, $result );
 	}
 	public function addAddress() {
 		$this->request->allowMethod ( [ 
@@ -754,24 +822,27 @@ class CartController extends AppController {
 			
 			if ($cart_id) {
 				$shippingModel = $this->loadModel ( 'Shipping' );
-				$shipping = $shippingModel->find ( 'all', [
-						 'fields'=>['id','street_number','street_address','city'],
-						'conditions' => ['cart_id' => $cart_id],
-						'order' => ['Shipping.created_at' => 'DESC']
-				] )->formatResults ( function ($results) {			
-						return $results->combine ( '{n}', function ($row) {
-														return [
-																'id'=>$row['id'],
-																'address'=>
-																			$row ['street_number'] . ', ' . 
-															   				$row ['street_address'] . ', ' . 
-															   				$row ['city']
-																
-														];
-			} );
-		} )
-				
-				->toArray ();
+				$shipping = $shippingModel->find ( 'all', [ 
+						'fields' => [ 
+								'id',
+								'street_number',
+								'street_address',
+								'city' 
+						],
+						'conditions' => [ 
+								'cart_id' => $cart_id 
+						],
+						'order' => [ 
+								'Shipping.created_at' => 'DESC' 
+						] 
+				] )->formatResults ( function ($results) {
+					return $results->combine ( '{n}', function ($row) {
+						return [ 
+								'id' => $row ['id'],
+								'address' => $row ['street_number'] . ', ' . $row ['street_address'] . ', ' . $row ['city'] 
+						];
+					} );
+				} )->toArray ();
 				$return ['status'] = 0;
 				$return ['message'] = "Success";
 				$return ['result'] = $shipping;
@@ -1056,13 +1127,22 @@ class CartController extends AppController {
 		$ordeProducts = [ ];
 		$i = 0;
 		foreach ( $cartProducts as $prduct ) {
-			$product = $productModel->get ( $prduct->product_id,['contain'=>['ProductSuppliers','ProductSuppliers.Suppliers'=>['conditions'=>['status'=>1]]]] )->toArray ();
+			$product = $productModel->get ( $prduct->product_id, [ 
+					'contain' => [ 
+							'ProductSuppliers',
+							'ProductSuppliers.Suppliers' => [ 
+									'conditions' => [ 
+											'status' => 1 
+									] 
+							] 
+					] 
+			] )->toArray ();
 			
 			$ordeProducts [$i] ['order_id'] = $order_id;
 			$ordeProducts [$i] ['product_id'] = $prduct->product_id;
 			$ordeProducts [$i] ['product_quantity'] = $prduct->qty;
 			$ordeProducts [$i] ['product_price'] = $product ['price'];
-			$ordeProducts [$i] ['supplier_id'] = $product['product_suppliers'][0]['supplier_id'];
+			$ordeProducts [$i] ['supplier_id'] = $product ['product_suppliers'] [0] ['supplier_id'];
 			$ordeProducts [$i] ['status_s'] = 1;
 			$ordeProducts [$i] ['status_d'] = 0;
 			$ordeProducts [$i] ['deleted'] = 0;
@@ -1092,25 +1172,23 @@ class CartController extends AppController {
 					$cart_id = $this->__getCartId ( $chck ['user_id'] );
 					if ($cart_id && ! $this->__isInCart ( $cart_id, $product_id, 0 )) {
 						
+						$data = [ 
+								'cart_id' => $cart_id,
+								'product_id' => $product_id,
+								'qty' => 0,
+								'type' => 0 
+						];
 						
-							$data = [ 
-									'cart_id' => $cart_id,
-									'product_id' => $product_id,
-									'qty' => 0,
-									'type' => 0 
-							];
-							
-							$cart_product_model = $this->loadModel ( 'CartProducts' );
-							$product_entity = $cart_product_model->newEntity ( $data );
-							$saving = $cart_product_model->save ( $product_entity );
-							if ($saving) {
-								$return ['status'] = 0;
-								$return ['message'] = 'Pruduct is added to wishlist';
-							} else {
-								$return ['status'] = 500;
-								$return ['message'] = 'Pruduct is not added to wishlist';
-							}
-						
+						$cart_product_model = $this->loadModel ( 'CartProducts' );
+						$product_entity = $cart_product_model->newEntity ( $data );
+						$saving = $cart_product_model->save ( $product_entity );
+						if ($saving) {
+							$return ['status'] = 0;
+							$return ['message'] = 'Pruduct is added to wishlist';
+						} else {
+							$return ['status'] = 500;
+							$return ['message'] = 'Pruduct is not added to wishlist';
+						}
 					} else {
 						$return ['status'] = 500;
 						$return ['message'] = 'The pruduct already in your wishist';
@@ -1161,7 +1239,7 @@ class CartController extends AppController {
 							if ($cart_product_model->delete ( $cart_product_model->get ( $product [sizeof ( $product ) - 1]->id ) )) {
 								$return ['status'] = 0;
 								$return ['message'] = 'Pruduct deleted successfully';
-								$return ['result'] = $this->__getWishListIn ( $chck ['user_id'] );//need wishlist in
+								$return ['result'] = $this->__getWishListIn ( $chck ['user_id'] ); // need wishlist in
 							} else {
 								$return ['status'] = 500;
 								$return ['message'] = 'Culd not delete the product';
@@ -1190,31 +1268,29 @@ class CartController extends AppController {
 		die ();
 	}
 	public function getWishList() {
-
-		$this->request->allowMethod ( [
-				'post'
+		$this->request->allowMethod ( [ 
+				'post' 
 		] );
 		header ( 'Content-type: application/json' );
 		
 		$token = $this->request->data ( 'token' );
 		$chck = $this->__checkToken ( $token );
 		if ($chck ['boolean']) {
-				
+			
 			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
-				
+			
 			if ($cart_id) {
-				$wishlist_products = CartProductsTable::getCart ( $cart_id, 0 );
-		
+				// $wishlist_products = CartProductsTable::getCart ( $cart_id, 0 );
+				$wishlist_products = $this->__getProductList ( $cart_id, 0 );
+				
 				if (sizeof ( $wishlist_products ) > 0) {
 					$return ['status'] = 0;
 					$return ['message'] = 'success';
 					$return ['result'] = $wishlist_products;
-					
 				} else {
 					$return ['status'] = 0;
 					$return ['message'] = 'your wishlist is empty';
 					$return ['result'] = $wishlist_products;
-					
 				}
 			} else {
 				$return ['status'] = 500;
@@ -1228,9 +1304,7 @@ class CartController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
-	
 	function __getWishListIn($user_id) {
-	
 		$this->request->allowMethod ( [ 
 				'post',
 				'get' 
@@ -1238,20 +1312,19 @@ class CartController extends AppController {
 		header ( 'Content-type: application/json' );
 		$cart_id = $this->__getCurrentCartId ( $user_id );
 		
-		if ($cart_id) {			
+		if ($cart_id) {
 			$total = $this->__getTotal ( $cart_id );
-			$cart_products = CartProductsTable::getCart ( $cart_id, 0 );
+			// $wishlist_products = CartProductsTable::getCart ( $cart_id, 0 );
+			$wishlist_products = $this->__getProductList ( $cart_id, 0 );
 			
-			if (sizeof ( $cart_products ) > 0) {
+			if (sizeof ( $wishlist_products ) > 0) {
 				$return ['status'] = 0;
 				$return ['message'] = 'success';
-				$return ['result'] = $cart_products;
-				
+				$return ['result'] = $wishlist_products;
 			} else {
 				$return ['status'] = 0;
 				$return ['message'] = 'your cart is empty';
-				$return ['result'] = $cart_products;
-				
+				$return ['result'] = $wishlist_products;
 			}
 		} else {
 			$return ['status'] = 500;
@@ -1260,29 +1333,28 @@ class CartController extends AppController {
 		return $return;
 		die ();
 	}
-	
 	public function placeOrder() {
-		$this->request->allowMethod ( [
-				'post'
+		$this->request->allowMethod ( [ 
+				'post' 
 		] );
 		header ( 'Content-type: application/json' );
-	
+		
 		$token = $this->request->data ( 'token' );
 		$order_id = $this->request->data ( 'order_id' );
-	
+		
 		$chck = $this->__checkToken ( $token );
-	
+		
 		if ($chck ['boolean']) {
 			if ($order_id) {
 				$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
-				$orderModel=$this->loadModel('Orders');
-				$order = $orderModel->find ( 'all', [
-						'conditions' => [
-								'Orders.id' => $order_id
+				$orderModel = $this->loadModel ( 'Orders' );
+				$order = $orderModel->find ( 'all', [ 
+						'conditions' => [ 
+								'Orders.id' => $order_id 
 						],
-						'contain' => [
-								'OrderProducts'
-						]
+						'contain' => [ 
+								'OrderProducts' 
+						] 
 				] )->toArray ();
 				if (sizeof ( $order ) > 0) {
 					$i = 0;
@@ -1293,10 +1365,12 @@ class CartController extends AppController {
 						$cart_products [$i] ['type'] = 1;
 						$i ++;
 					}
-					/* print_r( $cart_products);
-					die(); */
+					/*
+					 * print_r( $cart_products);
+					 * die();
+					 */
 					if (sizeof ( $cart_products ) > 0) {
-						$this->__clearCart($cart_id);
+						$this->__clearCart ( $cart_id );
 						$cartProductModel = $this->loadModel ( 'CartProducts' );
 						$cartPrdoductsEntities = $cartProductModel->newEntities ( $cart_products );
 						if ($cartProductModel->saveMany ( $cartPrdoductsEntities )) {
@@ -1310,7 +1384,6 @@ class CartController extends AppController {
 						$return ['status'] = 500;
 						$return ['message'] = 'no products found';
 					}
-						
 				} else {
 					$return ['status'] = 500;
 					$return ['message'] = 'no order found';
@@ -1325,5 +1398,39 @@ class CartController extends AppController {
 		}
 		echo json_encode ( $return );
 		die ();
+	}
+	/**
+	 *
+	 * @param unknown $cart_id:        	
+	 * @param unknown $list_type:
+	 *        	0-wish lis, 1-cart
+	 */
+	function __getProductList($cart_id, $list_type) {
+		$list = $this->Cart->CartProducts->find ( 'all', [ 
+				'conditions' => [ 
+						'CartProducts.cart_id' => $cart_id,
+						'CartProducts.type' => $list_type 
+				],
+				'contain' => [ 
+						'Products',
+						'Products.PackageType' 
+				] 
+		] )->toArray ();
+		/*
+		 * print '<pre>';
+		 * print_r($list);
+		 * die();
+		 */
+		/*
+		 * $output= $list[0]['product'];
+		 * $output['package_type']=$list[0]['packageType'];
+		 */
+		return array_map ( function ($list) {
+			$output = $list ['product'];
+			$output ['package_type'] = $list ['packageType'];
+			
+			return $output;
+		}, $list );
+		// return $list;
 	}
 }
