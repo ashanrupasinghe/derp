@@ -669,7 +669,7 @@ class CartController extends AppController {
 				'keyField' => 'id',
 				'valueField' => 'date' 
 		] )->toArray ();
-		return $result;
+		return array_values($result);
 	}
 	public function addAddress() {
 		$this->request->allowMethod ( [ 
