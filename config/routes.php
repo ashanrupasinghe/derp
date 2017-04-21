@@ -79,6 +79,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 	$routes->connect('/user/addWishListItem',['controller' => 'Cart', 'action' => 'addWishListItem']);
 	$routes->connect('/user/deleteWishListItem',['controller' => 'Cart', 'action' => 'deleteWishListItem']);
 	$routes->connect('/user/getWishList',['controller' => 'Cart', 'action' => 'getWishList']);
+	$routes->connect('/user/isWishListItem',['controller' => 'Cart', 'action' => 'isWishListItem']);
 	
 	//order related api calls
 	$routes->connect('/order/getOrderList',['controller' => 'Orders', 'action' => 'getOrderList']);

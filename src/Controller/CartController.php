@@ -33,6 +33,7 @@ class CartController extends AppController {
 				'addWishListItem',
 				'deleteWishListItem',
 				'getWishList',
+				'isWishListItem',
 				'placeOrder' 
 		] );
 	}
@@ -593,36 +594,40 @@ class CartController extends AppController {
 					'message' => 'token not found' 
 			];
 		} else {
-			/* $mobtoken_created_at = $user->mobtoken_created_at;
-			$mobtoken_created_at = new Time ( $mobtoken_created_at ); */
+			/*
+			 * $mobtoken_created_at = $user->mobtoken_created_at;
+			 * $mobtoken_created_at = new Time ( $mobtoken_created_at );
+			 */
 			
 			/*
 			 * echo $mobtoken_created_at;
 			 * die ();
 			 */
 			
-			/* if ($mobtoken_created_at->wasWithinLast ( 1 )) {
-				$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
-				$user_model->save ( $user );
-				
-				return [ 
-						'boolean' => true,
-						'message' => 'token matched',
-						'user_id' => $user->id 
-				];
-			} else {
-				return [ 
-						'boolean' => false,
-						'message' => 'token expired' 
-				];
-			} */
+			/*
+			 * if ($mobtoken_created_at->wasWithinLast ( 1 )) {
+			 * $user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
+			 * $user_model->save ( $user );
+			 *
+			 * return [
+			 * 'boolean' => true,
+			 * 'message' => 'token matched',
+			 * 'user_id' => $user->id
+			 * ];
+			 * } else {
+			 * return [
+			 * 'boolean' => false,
+			 * 'message' => 'token expired'
+			 * ];
+			 * }
+			 */
 			$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
 			$user_model->save ( $user );
 			
-			return [
+			return [ 
 					'boolean' => true,
 					'message' => 'token matched',
-					'user_id' => $user->id
+					'user_id' => $user->id 
 			];
 		}
 	}
@@ -727,7 +732,7 @@ class CartController extends AppController {
 				return null;
 			}
 		} else {
-			return $current_shipping[0];
+			return $current_shipping [0];
 		}
 	}
 	function __getUnavailableDates() {
@@ -743,8 +748,7 @@ class CartController extends AppController {
 				'fields' => [ 
 						'date' 
 				] 
-		]
-		 )->toArray ();
+		] )->toArray ();
 		return array_map ( function ($result) {
 			return $result;
 		}, $result );
@@ -915,31 +919,31 @@ class CartController extends AppController {
 				}
 				if ($shippingModel->save ( $currrent_shipping )) {
 					
-					$shipping = $shippingModel->find ( 'all', [
-							'fields' => [
+					$shipping = $shippingModel->find ( 'all', [ 
+							'fields' => [ 
 									'id',
 									'street_number',
 									'street_address',
-									'city'
+									'city' 
 							],
-							'conditions' => [
-									'cart_id' => $cart_id
+							'conditions' => [ 
+									'cart_id' => $cart_id 
 							],
-							'order' => [
-									'Shipping.created_at' => 'DESC'
-							]
+							'order' => [ 
+									'Shipping.created_at' => 'DESC' 
+							] 
 					] )->formatResults ( function ($results) {
 						return $results->combine ( '{n}', function ($row) {
-							return [
+							return [ 
 									'id' => $row ['id'],
-									'address' => $row ['street_number'] . ', ' . $row ['street_address'] . ', ' . $row ['city']
+									'address' => $row ['street_number'] . ', ' . $row ['street_address'] . ', ' . $row ['city'] 
 							];
 						} );
 					} )->toArray ();
 					
 					$return ['status'] = 0;
 					$return ['message'] = "success";
-					$return ['result']=$shipping;
+					$return ['result'] = $shipping;
 				} else {
 					$return ['status'] = 500;
 					$return ['message'] = "Culd not update address";
@@ -1365,6 +1369,49 @@ class CartController extends AppController {
 			$return ['message'] = "you haven't create a wishlist";
 		}
 		return $return;
+		die ();
+	}
+	public function isWishListItem() {
+		$this->request->allowMethod ( [ 
+				'post' 
+		] );
+		header ( 'Content-type: application/json' );
+		
+		$token = $this->request->data ( 'token' );
+		$product_id = $this->request->data ( 'product_id' );
+		
+		$chck = $this->__checkToken ( $token );
+		if ($chck ['boolean']) {			
+			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
+			
+			if ($cart_id) {
+				$query = $this->Cart->CartProducts->find ( 'all', [ 
+				'conditions' => [ 
+						'CartProducts.cart_id' => $cart_id,
+						'CartProducts.type' => 0,
+						'CartProducts.product_id' => $product_id
+				]				 
+		] )->toArray ();
+				
+				if (sizeof ( $query ) > 0) {
+					$return =true;
+					
+					
+				} else {
+					$return =false;
+					
+					
+				}
+			} else {
+				$return =false;
+				
+			}
+		} else {
+			$return =false;
+			
+		}
+		
+		echo json_encode ( $return );
 		die ();
 	}
 	public function placeOrder() {
