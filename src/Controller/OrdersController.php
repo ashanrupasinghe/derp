@@ -1737,7 +1737,7 @@ class OrdersController extends AppController {
 			 * echo $mobtoken_created_at;
 			 * die ();
 			 */
-			if ($mobtoken_created_at->wasWithinLast ( 1 )) {
+			/* if ($mobtoken_created_at->wasWithinLast ( 1 )) { */
 				$user->mobtoken_created_at = date ( 'Y-m-d H:i:s' );
 				$user_model->save ( $user );
 				
@@ -1746,12 +1746,12 @@ class OrdersController extends AppController {
 						'message' => 'token matched',
 						'user_id' => $user->id 
 				];
-			} else {
+			/* } else {
 				return [ 
 						'boolean' => false,
 						'message' => 'token expired' 
 				];
-			}
+			} */
 		}
 	}
 	public function getOrderList() {
@@ -1763,8 +1763,9 @@ class OrdersController extends AppController {
 		
 		$token = $this->request->data ( 'token' );
 		$chck = $this->__checkToken ( $token );
+		
 		if ($chck ['boolean']) {
-			$orders = $this->Orders->find ( 'all', [ 
+			$orders = $this->Orders->find ( 'all', [ 'conditions'=>['Orders.customerId'=>$chck ['user_id']],
 					'fields' => [ 
 							'id',
 							'subTotal',
@@ -1777,7 +1778,8 @@ class OrdersController extends AppController {
 							'deliveryTime',
 							'created' 
 					] 
-			] )->where ( 'callcenterId', $chck ['user_id'] )->toArray ();
+			] )->toArray ();
+			
 			if (sizeof ( $orders ) > 0) {
 				$return ['status'] = 0;
 				$return ['message'] = 'Success';

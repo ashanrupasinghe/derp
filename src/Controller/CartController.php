@@ -914,8 +914,32 @@ class CartController extends AppController {
 					$currrent_shipping = $shippingModel->newEntity ( $data );
 				}
 				if ($shippingModel->save ( $currrent_shipping )) {
+					
+					$shipping = $shippingModel->find ( 'all', [
+							'fields' => [
+									'id',
+									'street_number',
+									'street_address',
+									'city'
+							],
+							'conditions' => [
+									'cart_id' => $cart_id
+							],
+							'order' => [
+									'Shipping.created_at' => 'DESC'
+							]
+					] )->formatResults ( function ($results) {
+						return $results->combine ( '{n}', function ($row) {
+							return [
+									'id' => $row ['id'],
+									'address' => $row ['street_number'] . ', ' . $row ['street_address'] . ', ' . $row ['city']
+							];
+						} );
+					} )->toArray ();
+					
 					$return ['status'] = 0;
 					$return ['message'] = "success";
+					$return ['result']=$shipping;
 				} else {
 					$return ['status'] = 500;
 					$return ['message'] = "Culd not update address";
@@ -1139,8 +1163,8 @@ class CartController extends AppController {
 		foreach ( $cartProducts as $prduct ) {
 			$product = $productModel->get ( $prduct->product_id, [ 
 					'contain' => [ 
-							'ProductSuppliers',
-							'ProductSuppliers.Suppliers' => [ 
+							'productSuppliers',
+							'productSuppliers.Suppliers' => [ 
 									'conditions' => [ 
 											'status' => 1 
 									] 
@@ -1194,7 +1218,7 @@ class CartController extends AppController {
 						$saving = $cart_product_model->save ( $product_entity );
 						if ($saving) {
 							$return ['status'] = 0;
-							$return ['message'] = 'Pruduct is added to wishlist';
+							$return ['message'] = 'Success';
 						} else {
 							$return ['status'] = 500;
 							$return ['message'] = 'Pruduct is not added to wishlist';
@@ -1423,7 +1447,7 @@ class CartController extends AppController {
 				],
 				'contain' => [ 
 						'Products',
-						'Products.PackageType' 
+						'Products.packageType' 
 				] 
 		] )->toArray ();
 		/*

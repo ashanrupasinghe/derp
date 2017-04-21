@@ -189,7 +189,8 @@ class UsersController extends AppController {
 						'login_type' => $data ['login_type'],
 						'firstName' => $data ['firstname'],
 						'lastName' => $data ['lastname'],
-						'fbid' => $data ['fbid'] 
+						'fbid' => $data ['fbid'],
+						'username' => $data ['email']
 				];
 				$query = $this->Users->find ( 'all', [ 
 						'conditions' => [ 
