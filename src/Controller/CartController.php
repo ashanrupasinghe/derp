@@ -1508,7 +1508,7 @@ class CartController extends AppController {
 		 */
 		return array_map ( function ($list) {
 			$output = $list ['product'];
-			$output ['package_type'] = $list ['packageType'];
+			//$output ['package_type'] = $list ['packageType'];
 			
 			return $output;
 		}, $list );
