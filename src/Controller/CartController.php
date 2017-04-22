@@ -647,7 +647,7 @@ class CartController extends AppController {
 				// $now=Time::now();
 				$return ['status'] = 0;
 				$return ['message'] = "success";
-				$return ['delivery_time'] = '';
+				$return ['delivery_time'] = $this->__getDeliveryTime($cart_id);
 				$return ['delivery_address'] = $this->__getLastAddress ( $cart_id );
 				$return ['unavailable_date'] = $this->__getUnavailableDates ();
 				$return ['delivery_start_time'] = new Time ( '06:00:00' );
@@ -663,6 +663,30 @@ class CartController extends AppController {
 		
 		echo json_encode ( $return );
 		die ();
+	}
+	function __getDeliveryTime($cart_id){
+		$shippingModel = $this->loadModel ( 'Shipping' );
+		
+		$current_shipping = $shippingModel->find ( 'all', [
+				'fields' => [
+						'delivery_date_time'
+				],
+				'conditions' => [
+						'cart_id' => $cart_id,
+						'order_id' => 0
+				],
+				'order' => [
+						'Shipping.created_at' => 'DESC'
+				]
+		] )->toArray();
+		if (sizeof($current_shipping)>0){
+			if ($current_shipping[0]->delivery_date_time!=null){
+				return $current_shipping[0]->delivery_date_time;
+			}
+			return '';
+		}else {
+			return '';
+		}
 	}
 	function __getLastAddress($cart_id) {
 		$shippingModel = $this->loadModel ( 'Shipping' );
@@ -984,15 +1008,57 @@ class CartController extends AppController {
 								'order_id' => 0 
 						] 
 				] )->toArray ();
-				$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
-				$currrent_shipping->delivery_date_time = $delivery_time_formated;
 				
-				if ($shippingModel->save ( $currrent_shipping )) {
-					$return ['status'] = 0;
-					$return ['message'] = "success";
+				if (sizeof ( $currrent_shipping_details ) > 0) {
+					$currrent_shipping = $shippingModel->get ( $currrent_shipping_details [0]->id );
+					$currrent_shipping->delivery_date_time = $delivery_time_formated;
+					
+					if ($shippingModel->save ( $currrent_shipping )) {
+						$return ['status'] = 0;
+						$return ['message'] = "success";
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = "Culd not save delivery time";
+					}
 				} else {
-					$return ['status'] = 500;
-					$return ['message'] = "Culd not save delivery time";
+					$last_shipping = $shippingModel->find ( 'all', [
+							'fields' => [
+									'id',
+									'street_number',
+									'street_address',
+									'city',
+									'country',
+									'phone_number'
+							],
+							'conditions' => [
+									'cart_id' => $cart_id
+							],
+							'order' => [
+									'Shipping.created_at' => 'DESC'
+							],
+							'limit'=>1
+					] )->toArray();
+					/* print '<pre>';
+					print_r($last_shipping);
+					die(); */
+					$data = [
+							'cart_id' => $cart_id,
+							'street_number' => $last_shipping[0]->street_number,
+							'street_address' => $last_shipping[0]->street_address,
+							'city' => $last_shipping[0]->city,
+							'country' => $last_shipping[0]->country,
+							'phone_number' => $last_shipping[0]->phone_number,
+							'delivery_date_time'=>$delivery_time_formated
+					];
+					
+					$shippingEntity = $shippingModel->newEntity ( $data );
+					if ($shippingModel->save ( $shippingEntity )) {
+						$return ['status'] = 0;
+						$return ['message'] = "Success";
+					} else {
+						$return ['status'] = 500;
+						$return ['message'] = "Address and time not saved";
+					}
 				}
 			} else {
 				$return ['status'] = 500;
@@ -1381,34 +1447,28 @@ class CartController extends AppController {
 		$product_id = $this->request->data ( 'product_id' );
 		
 		$chck = $this->__checkToken ( $token );
-		if ($chck ['boolean']) {			
+		if ($chck ['boolean']) {
 			$cart_id = $this->__getCurrentCartId ( $chck ['user_id'] );
 			
 			if ($cart_id) {
 				$query = $this->Cart->CartProducts->find ( 'all', [ 
-				'conditions' => [ 
-						'CartProducts.cart_id' => $cart_id,
-						'CartProducts.type' => 0,
-						'CartProducts.product_id' => $product_id
-				]				 
-		] )->toArray ();
+						'conditions' => [ 
+								'CartProducts.cart_id' => $cart_id,
+								'CartProducts.type' => 0,
+								'CartProducts.product_id' => $product_id 
+						] 
+				] )->toArray ();
 				
 				if (sizeof ( $query ) > 0) {
-					$return =true;
-					
-					
+					$return = true;
 				} else {
-					$return =false;
-					
-					
+					$return = false;
 				}
 			} else {
-				$return =false;
-				
+				$return = false;
 			}
 		} else {
-			$return =false;
-			
+			$return = false;
 		}
 		
 		echo json_encode ( $return );
@@ -1508,7 +1568,7 @@ class CartController extends AppController {
 		 */
 		return array_map ( function ($list) {
 			$output = $list ['product'];
-			//$output ['package_type'] = $list ['packageType'];
+			// $output ['package_type'] = $list ['packageType'];
 			
 			return $output;
 		}, $list );
