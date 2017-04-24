@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * OrderProducts Model
@@ -62,5 +63,14 @@ class OrderProductsTable extends Table
         $rules->add($rules->existsIn(['product_id'], 'Products'));
 
         return $rules;
+    }
+    
+    
+    public static function getOrderProducts($orderId){
+    	$connection = ConnectionManager::get('default');    	
+    	$query="SELECT products.id,products.name,products.image,products.price,order_products.product_quantity as quantity, package_type.type as package,products.price*order_products.product_quantity as total FROM ".
+    			"order_products JOIN products ON products.id=order_products.product_id JOIN package_type ON package_type.id=products.package WHERE order_products.order_id=".$orderId;
+    	$results = $connection->execute($query)->fetchAll('assoc');
+    	return $results;
     }
 }

@@ -13,6 +13,7 @@ use Cake\I18n\Number;
 use App\Model\Entity\Order;
 use PHPExcel;
 use Symfony\Component\VarDumper\Cloner\Data;
+use App\Model\Table\OrderProductsTable;
 
 /**
  * Orders Controller
@@ -1785,12 +1786,12 @@ class OrdersController extends AppController {
 				$return ['message'] = 'Success';
 				$return ['result'] = $orders;
 			} else {
-				$return ['status'] = 500;
+				$return ['status'] = 400;
 				$return ['message'] = 'no order found';
 				$return ['result'] = $orders;
 			}
 		} else {
-			$return ['status'] = 500;
+			$return ['status'] = 100;
 			$return ['message'] = $chck ['message'];
 		}
 		echo json_encode ( $return );
@@ -1809,37 +1810,50 @@ class OrdersController extends AppController {
 		
 		if ($chck ['boolean']) {
 			if ($order_id) {
-				$order = $this->Orders->find ( 'all', [ 
-						'conditions' => [ 
-								'Orders.id' => $order_id 
-						],
-						'contain' => [ 
-								'OrderProducts',
-								'city',
-								'OrderProducts.Products',
-								'OrderProducts.Products.packageType' 
-						]
-						 
-				] )->toArray ();
-				if (sizeof ( $order ) > 0) {
+				
+				$total = $this->__getTotal ( $order_id );
+				$order_products = OrderProductsTable::getOrderProducts($order_id);						
+						
+				if (sizeof ( $order_products ) > 0) {
 					$return ['status'] = 0;
-					$return ['message'] = 'Success';
-					$return ['result'] = $order [0];
+					$return ['message'] = 'success';
+					$return ['result'] ['product_list'] = $order_products;
+					$return ['result'] ['total'] = $total;
 				} else {
-					$return ['status'] = 500;
-					$return ['message'] = 'no order found';
-					$return ['result'] = $order [0];
+					$return ['status'] = 400;
+					$return ['message'] = 'products not fount';
+					
 				}
 			} else {
-				$return ['status'] = 500;
-				$return ['message'] = 'product id can not be empty';
+				$return ['status'] = 410;
+				$return ['message'] = 'order id can not be empty';
 			}
 		} else {
-			$return ['status'] = 500;
+			$return ['status'] = 100;
 			$return ['message'] = $chck ['message'];
 		}
 		echo json_encode ( $return );
 		die ();
+	}
+	
+	public function __getTotal($order_id) {
+		/* $tax_p = 0; // tax persontage 10
+		$discount_p = 0; // discount persentage 5
+		$counpon_value = 0; // call to a function to find coupon values
+		$sub_total = CartTable::getTotal ( $cart_id, 1 );
+	
+		$tax = $sub_total * $tax_p / 100;
+		$discount = $sub_total * $discount_p / 100;
+		$grand_total = $sub_total + $tax - $discount - $counpon_value; */
+		
+		$order=$this->Orders->get($order_id);
+	
+		$total ['sub_total'] = $order->subTotal;
+		$total ['tax'] = $order->tax;
+		$total ['discount'] = $order->discount;
+		$total ['counpon_value'] = (int)$order->couponCode;
+		$total ['grand_total'] = $order->total;
+		return $total;
 	}
 	
 }

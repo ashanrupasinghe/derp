@@ -49,8 +49,8 @@ class CityTable extends Table
 
         $validator
             ->integer('did')
-            ->requirePresence('did', 'create')
-            ->notEmpty('did');
+            //->requirePresence('did', 'create')
+            ->allowEmpty('did');
 
         $validator
             ->requirePresence('cname', 'create')

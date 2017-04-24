@@ -201,10 +201,10 @@ class UsersController extends AppController {
 					// loged in
 					$userDetails = $query->first ();
 					$user_id = $userDetails->id;
-					$token = $this->__getMobToken ();
+					$mobtoken = $this->__getMobToken ();
 					$query = $this->Users->query ();
 					$query->update ()->set ( [ 
-							'token' => $token,
+							'mobtoken' => $mobtoken,
 							'mobtoken_created_at' => date ( 'Y-m-d H:i:s' ) 
 					] )->where ( [ 
 							'id' => $user_id 
@@ -212,6 +212,7 @@ class UsersController extends AppController {
 					
 					$return ['status'] = 0;
 					$return ['token'] = $mobtoken;
+					$return ['grand_total'] = $this->__getGrandTotal($user_id);
 					$return ['message'] = 'login successful';
 					echo json_encode ( $return );
 					die ();
@@ -264,6 +265,7 @@ class UsersController extends AppController {
 							// return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
 							$return ['status'] = 0;
 							$return ['token'] = $mobtoken;
+							$return ['grand_total'] = $this->__getGrandTotal($user->id);
 							$return ['message'] = 'register and login successful';
 							echo json_encode ( $return );
 							die ();
@@ -313,6 +315,7 @@ class UsersController extends AppController {
 						// return $this->redirect($this->Auth->redirectUrl());
 						$return ['status'] = 0;
 						$return ['token'] = $mobtoken;
+						$return ['grand_total'] = $this->__getGrandTotal($user ['id']);
 						$return ['message'] = 'login successful';
 						echo json_encode ( $return );
 						die ();
@@ -381,11 +384,11 @@ class UsersController extends AppController {
 					$return ['status'] = 0;
 					$return ['message'] = 'logout sucess';
 				} else {
-					$return ['status'] = 0;
+					$return ['status'] = 104;
 					$return ['message'] = 'something wrong';
 				}
 			}else{
-				$return ['status'] = 500;
+				$return ['status'] = 100;
 				$return ['message'] = "invalid token or already loged out";
 			}
 		} else {
@@ -494,6 +497,7 @@ class UsersController extends AppController {
 					// return $this->redirect(['controller' => 'Users', 'action' => 'userpage']);
 					$return ['status'] = 0;
 					$return ['token'] = $mobtoken;
+					$return ['grand_total'] = $this->__getGrandTotal($user->id);
 					$return ['message'] = 'register and login successful';
 					echo json_encode ( $return );
 					die ();
@@ -567,7 +571,7 @@ class UsersController extends AppController {
 					die ();
 				} else {
 					// $this->Flash->error(__('Sorry, Something went wrong please try again'));
-					$return ['status'] = 400;
+					$return ['status'] = 104;
 					$return ['message'] = 'Sorry, Something went wrong please try again';
 					echo json_encode ( $return );
 					die ();
@@ -795,7 +799,7 @@ class UsersController extends AppController {
 				$return ['status'] = 0;
 				$return ['message'] = "success";
 			}else{
-				$return ['status'] = 500;
+				$return ['status'] = 100;
 				$return ['message'] = "token not found";
 			}
 			
@@ -808,5 +812,14 @@ class UsersController extends AppController {
 		echo json_encode($return);
 		die();
 	}
+	
+	function __getGrandTotal($user_id){
+		$cart_details=$this->Users->Cart->find('all',['fields'=>['id'],'conditions'=>['user_id'=>$user_id]])->toArray();
+		$cart=new CartController();
+		$total=$cart->__getTotal($cart_details[0]->id);
+		return $total['grand_total'];
+		
+	}
+	
 }
 //https://github.com/hunzinker/CakePHP-Auth-Forgot-Password/blob/master/controllers/users_controller.php
