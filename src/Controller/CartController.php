@@ -34,7 +34,8 @@ class CartController extends AppController {
 				'deleteWishListItem',
 				'getWishList',
 				'isWishListItem',
-				'placeOrder' 
+				'placeOrder',
+				'reOrderWishList' 
 		] );
 	}
 	
@@ -647,8 +648,8 @@ class CartController extends AppController {
 				// $now=Time::now();
 				$return ['status'] = 0;
 				$return ['message'] = "success";
-				$return ['delivery_time'] = $this->__getDeliveryTime($cart_id);
-				$return ['delay_time']= 240;
+				$return ['delivery_time'] = $this->__getDeliveryTime ( $cart_id );
+				$return ['delay_time'] = 240;
 				$return ['delivery_address'] = $this->__getLastAddress ( $cart_id );
 				$return ['unavailable_date'] = $this->__getUnavailableDates ();
 				$return ['delivery_start_time'] = new Time ( '06:00:00' );
@@ -665,27 +666,27 @@ class CartController extends AppController {
 		echo json_encode ( $return );
 		die ();
 	}
-	function __getDeliveryTime($cart_id){
+	function __getDeliveryTime($cart_id) {
 		$shippingModel = $this->loadModel ( 'Shipping' );
 		
-		$current_shipping = $shippingModel->find ( 'all', [
-				'fields' => [
-						'delivery_date_time'
+		$current_shipping = $shippingModel->find ( 'all', [ 
+				'fields' => [ 
+						'delivery_date_time' 
 				],
-				'conditions' => [
+				'conditions' => [ 
 						'cart_id' => $cart_id,
-						'order_id' => 0
+						'order_id' => 0 
 				],
-				'order' => [
-						'Shipping.created_at' => 'DESC'
-				]
-		] )->toArray();
-		if (sizeof($current_shipping)>0){
-			if ($current_shipping[0]->delivery_date_time!=null){
-				return $current_shipping[0]->delivery_date_time;
+				'order' => [ 
+						'Shipping.created_at' => 'DESC' 
+				] 
+		] )->toArray ();
+		if (sizeof ( $current_shipping ) > 0) {
+			if ($current_shipping [0]->delivery_date_time != null) {
+				return $current_shipping [0]->delivery_date_time;
 			}
 			return '';
-		}else {
+		} else {
 			return '';
 		}
 	}
@@ -874,7 +875,11 @@ class CartController extends AppController {
 						'order' => [ 
 								'Shipping.created_at' => 'DESC' 
 						] 
-				] )->distinct(['street_number','street_address','city'])->formatResults ( function ($results) {
+				] )->distinct ( [ 
+						'street_number',
+						'street_address',
+						'city' 
+				] )->formatResults ( function ($results) {
 					return $results->combine ( '{n}', function ($row) {
 						return [ 
 								'id' => $row ['id'],
@@ -957,7 +962,11 @@ class CartController extends AppController {
 							'order' => [ 
 									'Shipping.created_at' => 'DESC' 
 							] 
-					] )->distinct(['street_number','street_address','city'])->formatResults ( function ($results) {
+					] )->distinct ( [ 
+							'street_number',
+							'street_address',
+							'city' 
+					] )->formatResults ( function ($results) {
 						return $results->combine ( '{n}', function ($row) {
 							return [ 
 									'id' => $row ['id'],
@@ -1022,34 +1031,36 @@ class CartController extends AppController {
 						$return ['message'] = "Culd not save delivery time";
 					}
 				} else {
-					$last_shipping = $shippingModel->find ( 'all', [
-							'fields' => [
+					$last_shipping = $shippingModel->find ( 'all', [ 
+							'fields' => [ 
 									'id',
 									'street_number',
 									'street_address',
 									'city',
 									'country',
-									'phone_number'
+									'phone_number' 
 							],
-							'conditions' => [
-									'cart_id' => $cart_id
+							'conditions' => [ 
+									'cart_id' => $cart_id 
 							],
-							'order' => [
-									'Shipping.created_at' => 'DESC'
+							'order' => [ 
+									'Shipping.created_at' => 'DESC' 
 							],
-							'limit'=>1
-					] )->toArray();
-					/* print '<pre>';
-					print_r($last_shipping);
-					die(); */
-					$data = [
+							'limit' => 1 
+					] )->toArray ();
+					/*
+					 * print '<pre>';
+					 * print_r($last_shipping);
+					 * die();
+					 */
+					$data = [ 
 							'cart_id' => $cart_id,
-							'street_number' => $last_shipping[0]->street_number,
-							'street_address' => $last_shipping[0]->street_address,
-							'city' => $last_shipping[0]->city,
-							'country' => $last_shipping[0]->country,
-							'phone_number' => $last_shipping[0]->phone_number,
-							'delivery_date_time'=>$delivery_time_formated
+							'street_number' => $last_shipping [0]->street_number,
+							'street_address' => $last_shipping [0]->street_address,
+							'city' => $last_shipping [0]->city,
+							'country' => $last_shipping [0]->country,
+							'phone_number' => $last_shipping [0]->phone_number,
+							'delivery_date_time' => $delivery_time_formated 
 					];
 					
 					$shippingEntity = $shippingModel->newEntity ( $data );
@@ -1184,7 +1195,7 @@ class CartController extends AppController {
 		$order = [ 
 				'customerId' => $user_id,
 				'address' => $currrent_shipping->street_number . ' ' . $currrent_shipping->street_address . ' ' . $currrent_shipping->city . ' ' . $currrent_shipping->country,
-				'city' => $this->__getCityID($currrent_shipping->city), // city id
+				'city' => $this->__getCityID ( $currrent_shipping->city ), // city id
 				'callcenterId' => 11, // have to null
 				'deliveryId' => 7, // default
 				'subTotal' => $total ['sub_total'],
@@ -1281,7 +1292,8 @@ class CartController extends AppController {
 								'cart_id' => $cart_id,
 								'product_id' => $product_id,
 								'qty' => 0,
-								'type' => 0 
+								'type' => 0,
+								'list_order'=>$this->__getWishlistItemPosition($cart_id,0) 
 						];
 						
 						$cart_product_model = $this->loadModel ( 'CartProducts' );
@@ -1461,20 +1473,19 @@ class CartController extends AppController {
 				] )->toArray ();
 				
 				if (sizeof ( $query ) > 0) {
-					$return['status']=0;
-					$return['result'] = true;
-					
+					$return ['status'] = 0;
+					$return ['result'] = true;
 				} else {
-					$return['status']=400;
-					$return['result'] = false;
+					$return ['status'] = 400;
+					$return ['result'] = false;
 				}
 			} else {
-				$return['status']=400;
-				$return['result'] = false;
+				$return ['status'] = 400;
+				$return ['result'] = false;
 			}
 		} else {
-			$return['status']=100;
-			$return['result'] = false;
+			$return ['status'] = 100;
+			$return ['result'] = false;
 		}
 		
 		echo json_encode ( $return );
@@ -1562,7 +1573,7 @@ class CartController extends AppController {
 						'Products',
 						'Products.packageType' 
 				] 
-		] )->toArray ();
+		] )->orderAsc('list_order')->toArray ();
 		/*
 		 * print '<pre>';
 		 * print_r($list);
@@ -1580,22 +1591,91 @@ class CartController extends AppController {
 		}, $list );
 		// return $list;
 	}
-	
-	
-	function __getCityID($cityName){
-		$cityModel=$this->loadModel('City');
-		$city=$cityModel->find('all',['conditions'=>['cname'=>$cityName]])->toArray();
-		if (sizeof($city)>0){
-			return $city[0]->cid;
-		}else{
-			$cityEntity=$cityModel->newEntity(['cname'=>$cityName]);
-			if ($cityModel->save($cityEntity)){
+	function __getCityID($cityName) {
+		$cityModel = $this->loadModel ( 'City' );
+		$city = $cityModel->find ( 'all', [ 
+				'conditions' => [ 
+						'cname' => $cityName 
+				] 
+		] )->toArray ();
+		if (sizeof ( $city ) > 0) {
+			return $city [0]->cid;
+		} else {
+			$cityEntity = $cityModel->newEntity ( [ 
+					'cname' => $cityName 
+			] );
+			if ($cityModel->save ( $cityEntity )) {
 				return $cityEntity->cid;
-			}
-			else {
+			} else {
 				return 0;
 			}
 		}
+	}
+	public function reOrderWishList() {
+		header ( 'Content-type: application/json' );
+		if ($this->request->is ( 'post' )) {
+			$token = $this->request->data ( 'token' );
+			$list_order = $this->request->data ( 'list_order' );//productid list
+			
+			$chck = $this->__checkToken ( $token );
+			
+			if ($chck ['boolean']) {				
+				$cart_product_model = $this->loadModel ( 'CartProducts' );
+				$cart_id = $this->__getCartId ( $chck ['user_id'] );
+				/* $cart_product_model = $this->loadModel ( 'CartProducts' );
+				$cart_id = $this->__getCartId ( $chck ['user_id'] );
+				$wishlist_items=$cart_product_model->find('list',['keyField' => 'product_id', 'valueField' => 'id','conditions'=>['product_id IN'=>$list_order,'type'=>0,'cart_id'=>$cart_id]])->toArray();
+				for($i=0;$i<sizeof($list_order);$i++){
+					$wishlist[]=['id'=>$wishlist_items[$list_order[$i]],'list_order'=>$i];
+				}
+				$wishlist='';
+				$wishlist[]=['id' => 46, 'list_order' => 1];
+				$entitiies = $cart_product_model->newEntities ($wishlist);
+				$patch=$cart_product_model->patchEntities($entitiies, $wishlist);
+				$savedwishlist = $cart_product_model->saveMany ( $entitiies );
+				print '<pre>';
+				print_r($savedwishlist);
+				die(); */
+				$x=0;
+			for($i=0;$i<sizeof($list_order);$i++){
+				$cart_product_model->query()
+									->update()
+									->set(['list_order' => $i])
+        							->where(['product_id' => $list_order[$i],'cart_id'=>$cart_id,'type'=>0])
+       								->execute();
+				
+			$x++;}
+				if ($x==sizeof($list_order)){
+					$return ['status'] = 0;
+					$return ['message'] = 'success';
+				}else{
+					$return ['status'] = 104;
+					$return ['message'] = 'something went wrong';
+				}
+			} else {
+				$return ['status'] = 100;
+				$return ['message'] = $chck ['message'];
+			}
+		} else {
+			$return ['status'] = 500;
+			$return ['message'] = "Unauthorized acess";
+		}
+		echo json_encode ( $return );
+		die ();
+	}
+	
+	function __getWishlistItemPosition($cart_id,$type){
+		//check available product
+		$cart_product_model = $this->loadModel ( 'CartProducts' );
+		$item = $cart_product_model->find('all',['conditions'=>['cart_id'=>$cart_id,'type'=>$type ]])->orderDesc('list_order')->limit(1)->toArray();//,'order' => [ 'list_order' => 'DESC'],'limit'=>1
+		 if (sizeof($item)>0){
+			
+		$postion= $item[0]->list_order+1;
+		}else{
+		$postion= 0;
+		} 		
+		return  $postion;
+		
 		
 	}
 }
