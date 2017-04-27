@@ -685,7 +685,26 @@ class CartController extends AppController {
 		] )->toArray ();
 		if (sizeof ( $current_shipping ) > 0) {
 			if ($current_shipping [0]->delivery_date_time != null) {
-				return $current_shipping [0]->delivery_date_time;
+				$delevery_date_time=$current_shipping [0]->delivery_date_time;
+				$delevery_date_time_format_changed=new Time($delevery_date_time);
+				
+				if ($delevery_date_time_format_changed->wasWithinLast('5 years') || $delevery_date_time_format_changed->isWithinNext('210 minutes')){
+					return '';
+				}else{
+					return $delevery_date_time;
+				}
+				
+				/* $now=new Time();
+				 $now_plus_3h=$now->modify('+3 hours'); */
+				//echo 'past'.$delevery_date_time_format_changed->wasWithinLast(1000).'<br>';
+				//echo 'next'.$delevery_date_time_format_changed->isWithinNext('210 minutes');
+				//$now_with_3_hrs=$now->addMonth(3);
+				/* print_r($now);
+				echo '<br>';
+				print_r($now_with_3_hrs); */
+				
+				//$currrent_date_time=$now->i18nFormat();
+				//$currrent_date_time_with_3_hrs=$now_with_3_hrs->i18nFormat();
 			}
 			return '';
 		} else {
