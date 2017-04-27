@@ -1055,6 +1055,7 @@ class CartController extends AppController {
 					 * print_r($last_shipping);
 					 * die();
 					 */
+					if(sizeof($last_shipping)>0){
 					$data = [ 
 							'cart_id' => $cart_id,
 							'street_number' => $last_shipping [0]->street_number,
@@ -1073,6 +1074,11 @@ class CartController extends AppController {
 						$return ['status'] = 104;
 						$return ['message'] = "Address and time not saved";
 					}
+					
+				}else{
+					$return ['status'] = 104;
+					$return ['message'] = "please fille delivery address first";
+				}
 				}
 			} else {
 				$return ['status'] = 400;
