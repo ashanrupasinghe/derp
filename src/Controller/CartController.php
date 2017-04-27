@@ -304,15 +304,15 @@ class CartController extends AppController {
 						if ($saving) {
 							$total = $this->__getTotal ( $cart_id );
 							$return ['status'] = 0;
-							$return ['message'] = 'Pruduct is added to catr';
+							$return ['message'] = 'Pruduct is added to cart';
 							$return ['total'] = $total['grand_total'];
 						} else {
 							$return ['status'] = 104;
 							$return ['message'] = 'Pruduct is not added to catr';
 						}
 					} else {
-						$return ['status'] = 0;
-						$return ['message'] = 'The pruduct already in your catr';
+						$return ['status'] = 102;
+						$return ['message'] = 'The pruduct already in your cart';
 					}
 				} else {
 					$return ['status'] = 410;
