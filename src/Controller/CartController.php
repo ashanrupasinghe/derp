@@ -302,8 +302,10 @@ class CartController extends AppController {
 						$product_entity = $cart_product_model->newEntity ( $data );
 						$saving = $cart_product_model->save ( $product_entity );
 						if ($saving) {
+							$total = $this->__getTotal ( $cart_id );
 							$return ['status'] = 0;
 							$return ['message'] = 'Pruduct is added to catr';
+							$return ['total'] = $total['grand_total'];
 						} else {
 							$return ['status'] = 104;
 							$return ['message'] = 'Pruduct is not added to catr';
