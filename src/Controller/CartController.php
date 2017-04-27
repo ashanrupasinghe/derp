@@ -1663,6 +1663,11 @@ class CartController extends AppController {
 				print '<pre>';
 				print_r($savedwishlist);
 				die(); */
+					/* print '<pre>';
+					echo $cart_id.'<br>';
+					print_r($list_order);
+					die(); */
+				
 				$x=0;
 			for($i=0;$i<sizeof($list_order);$i++){
 				$cart_product_model->query()
