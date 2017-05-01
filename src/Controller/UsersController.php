@@ -192,6 +192,9 @@ class UsersController extends AppController {
 						'fbid' => $data ['fbid'],
 						'username' => $data ['email']
 				];
+				if (isset($data['push_token'])){
+					$user_data['push_token']=$data['push_token'];
+				}
 				$query = $this->Users->find ( 'all', [ 
 						'conditions' => [ 
 								'fbid' => $user_data ['fbid'] 
@@ -203,10 +206,16 @@ class UsersController extends AppController {
 					$user_id = $userDetails->id;
 					$mobtoken = $this->__getMobToken ();
 					$query = $this->Users->query ();
-					$query->update ()->set ( [ 
+					$update_data=[ 
 							'mobtoken' => $mobtoken,
 							'mobtoken_created_at' => date ( 'Y-m-d H:i:s' ) 
-					] )->where ( [ 
+					];
+					if (isset($data['push_token'])){
+						$update_data['push_token']=$data['push_token'];
+					}
+					
+					
+					$query->update ()->set ( $update_data )->where ( [ 
 							'id' => $user_id 
 					] )->execute ();
 					
@@ -305,10 +314,15 @@ class UsersController extends AppController {
 						$this->Auth->setUser ( $user );
 						$mobtoken = $this->__getMobToken ();
 						$query = $this->Users->query ();
-						$query->update ()->set ( [ 
+						$update_data=[ 
 								'mobtoken' => $mobtoken,
 								'mobtoken_created_at' => date ( 'Y-m-d H:i:s' ) 
-						] )->where ( [ 
+						];
+						if (isset($data['push_token'])){
+							$update_data['push_token']=$data['push_token'];
+						}
+						
+						$query->update ()->set ( $update_data )->where ( [ 
 								'id' => $user ['id'] 
 						] )->execute ();
 						
@@ -457,6 +471,10 @@ class UsersController extends AppController {
 					'status' => 1,
 					'formType' => $data ['formType'] 
 			];
+			if (isset($data['push_token'])){
+				$user_data['push_token']=$data['push_token'];
+			}
+			
 			// $customer_data[];
 			$data ['status'] = 1;
 			
