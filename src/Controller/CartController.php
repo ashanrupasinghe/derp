@@ -1642,8 +1642,8 @@ class CartController extends AppController {
 		header ( 'Content-type: application/json' );
 		if ($this->request->is ( 'post' )) {
 			$token = $this->request->data ( 'token' );
-			$list_order = $this->request->data ( 'list_order' );//productid list
-			$list_order=json_decode($list_order);	
+			$list_order = $this->request->data ( 'list_order' );//productid list as string [1,2,3,..]
+			$list_order=json_decode($list_order);//convert to array format	
 					
 			$chck = $this->__checkToken ( $token );
 			
