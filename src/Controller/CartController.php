@@ -307,7 +307,7 @@ class CartController extends AppController {
 							$return ['message'] = 'Pruduct is added to cart';
 							$return ['total'] = $total['grand_total'];
 						} else {
-							$return ['status'] = 104;
+							$return ['status'] = 905;
 							$return ['message'] = 'Pruduct is not added to catr';
 						}
 					} else {
@@ -362,15 +362,15 @@ class CartController extends AppController {
 								$return ['message'] = 'Pruduct deleted successfully';
 								$return ['result'] = $this->__getcartIn ( $chck ['user_id'] );
 							} else {
-								$return ['status'] = 104;
+								$return ['status'] = 914;
 								$return ['message'] = 'Culd not delete the product';
 							}
 						} else {
-							$return ['status'] = 400;
+							$return ['status'] = 411;
 							$return ['message'] = 'The product not found in the cart';
 						}
 					} else {
-						$return ['status'] = 400;
+						$return ['status'] = 444;
 						$return ['message'] = 'you havent create a cart';
 					}
 				} else {
@@ -407,11 +407,11 @@ class CartController extends AppController {
 					$return ['status'] = 0;
 					$return ['message'] = 'cart clear success';
 				} else {
-					$return ['status'] = 104;
-					$return ['message'] = 'cartclear not clear or car is empty';
+					$return ['status'] = 913;
+					$return ['message'] = 'cart not clear or car is empty';
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = 'you havent create a cart';
 			}
 		} else {
@@ -453,19 +453,19 @@ class CartController extends AppController {
 								$return ['message'] = 'Pruduct qty updated successfully';
 								$return ['result'] = $this->__getcartIn ( $chck ['user_id'] );
 							} else {
-								$return ['status'] = 104;
+								$return ['status'] = 915;
 								$return ['message'] = 'Culd not update the qty';
 							}
 						} else {
-							$return ['status'] = 400;
+							$return ['status'] = 411;
 							$return ['message'] = 'The product not found in the cart';
 						}
 					} else {
-						$return ['status'] = 400;
+						$return ['status'] = 444;
 						$return ['message'] = 'you havent create a cart';
 					}
 				} else {
-					$return ['status'] = 410;
+					$return ['status'] = 510;
 					$return ['message'] = 'please select product id and qty';
 				}
 			} else {
@@ -509,7 +509,7 @@ class CartController extends AppController {
 					$return ['result'] ['total'] = $total;
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -546,7 +546,7 @@ class CartController extends AppController {
 				$return ['result'] ['total'] = $total;
 			}
 		} else {
-			$return ['status'] = 400;
+			$return ['status'] = 444;
 			$return ['message'] = "you haven't create a cart";
 		}
 		return $return;
@@ -657,7 +657,7 @@ class CartController extends AppController {
 				$return ['delivery_start_time'] = new Time ( '06:00:00' );
 				$return ['delivery_end_time'] = new Time ( '18:00:00' );
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -844,7 +844,7 @@ class CartController extends AppController {
 						$return ['status'] = 0;
 						$return ['message'] = "Success";
 					} else {
-						$return ['status'] = 104;
+						$return ['status'] = 912;
 						$return ['message'] = "Address not saved";
 					}
 				} else {
@@ -853,12 +853,12 @@ class CartController extends AppController {
 						$return ['status'] = 0;
 						$return ['message'] = "Success";
 					} else {
-						$return ['status'] = 104;
+						$return ['status'] = 912;
 						$return ['message'] = "Address not saved";
 					}
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -912,7 +912,7 @@ class CartController extends AppController {
 				$return ['message'] = "Success";
 				$return ['result'] = $shipping;
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -1000,11 +1000,11 @@ class CartController extends AppController {
 					$return ['message'] = "success";
 					$return ['result'] = $shipping;
 				} else {
-					$return ['status'] = 104;
+					$return ['status'] = 912;
 					$return ['message'] = "Culd not update address";
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -1048,7 +1048,7 @@ class CartController extends AppController {
 						$return ['status'] = 0;
 						$return ['message'] = "success";
 					} else {
-						$return ['status'] = 104;
+						$return ['status'] = 916;
 						$return ['message'] = "Culd not save delivery time";
 					}
 				} else {
@@ -1090,17 +1090,17 @@ class CartController extends AppController {
 						$return ['status'] = 0;
 						$return ['message'] = "Success";
 					} else {
-						$return ['status'] = 104;
+						$return ['status'] = 911;
 						$return ['message'] = "Address and time not saved";
 					}
 					
 				}else{
-					$return ['status'] = 104;
+					$return ['status'] = 910;
 					$return ['message'] = "please fille delivery address first";
 				}
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -1125,7 +1125,7 @@ class CartController extends AppController {
 			
 			if ($cart_id) {
 				if ($this->__iscartEmpty ( $cart_id )) {
-					$return ['status'] = 104;
+					$return ['status'] = 522;
 					$return ['message'] = "you cart is empty";
 				} else {
 					// add shipping details
@@ -1140,15 +1140,15 @@ class CartController extends AppController {
 								$return ['status'] = 0;
 								$return ['message'] = "success";
 							} else {
-								$return ['status'] = 104;
+								$return ['status'] = 906;
 								$return ['message'] = "something went wrong, cart not clear";
 							}
 						} else {
-							$return ['status'] = 104;
+							$return ['status'] = 907;
 							$return ['message'] = "something went wrong, order products not saved";
 						}
 					} else {
-						$return ['status'] = 104;
+						$return ['status'] = 908;
 						$return ['message'] = "something went wrong, order data not saved";
 					}
 					
@@ -1156,7 +1156,7 @@ class CartController extends AppController {
 					$return ['message'] = "success";
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 444;
 				$return ['message'] = "you haven't create a cart";
 			}
 		} else {
@@ -1330,11 +1330,11 @@ class CartController extends AppController {
 							$return ['status'] = 0;
 							$return ['message'] = 'Success';
 						} else {
-							$return ['status'] = 104;
+							$return ['status'] = 905;
 							$return ['message'] = 'Pruduct is not added to wishlist';
 						}
 					} else {
-						$return ['status'] = 0;
+						$return ['status'] = 202;
 						$return ['message'] = 'The pruduct already in your wishist';
 					}
 				} else {
@@ -1385,15 +1385,15 @@ class CartController extends AppController {
 								$return ['message'] = 'Pruduct deleted successfully';
 								$return ['result'] = $this->__getWishListIn ( $chck ['user_id'] ); // need wishlist in
 							} else {
-								$return ['status'] = 104;
+								$return ['status'] = 914;
 								$return ['message'] = 'Culd not delete the product';
 							}
 						} else {
-							$return ['status'] = 400;
+							$return ['status'] = 411;
 							$return ['message'] = 'The product not found in the wishlist';
 						}
 					} else {
-						$return ['status'] = 400;
+						$return ['status'] = 555;
 						$return ['message'] = 'you havent create a wishlist';
 					}
 				} else {
@@ -1437,8 +1437,8 @@ class CartController extends AppController {
 					$return ['result'] = $wishlist_products;
 				}
 			} else {
-				$return ['status'] = 400;
-				$return ['message'] = "you haven't create a cart";
+				$return ['status'] = 555;
+				$return ['message'] = "you haven't create a wishlist";
 			}
 		} else {
 			$return ['status'] = 100;
@@ -1471,7 +1471,7 @@ class CartController extends AppController {
 				$return ['result'] = $wishlist_products;
 			}
 		} else {
-			$return ['status'] = 400;
+			$return ['status'] = 555;
 			$return ['message'] = "you haven't create a wishlist";
 		}
 		return $return;
@@ -1503,11 +1503,11 @@ class CartController extends AppController {
 					$return ['status'] = 0;
 					$return ['result'] = true;
 				} else {
-					$return ['status'] = 400;
+					$return ['status'] = 511;
 					$return ['result'] = false;
 				}
 			} else {
-				$return ['status'] = 400;
+				$return ['status'] = 555;
 				$return ['result'] = false;
 			}
 		} else {
@@ -1562,20 +1562,20 @@ class CartController extends AppController {
 							$return ['status'] = 0;
 							$return ['message'] = 'Success';
 						} else {
-							$return ['status'] = 104;
+							$return ['status'] = 904;
 							$return ['message'] = 'products not saved';
 						}
 					} else {
-						$return ['status'] = 400;
-						$return ['message'] = 'no products found';
+						$return ['status'] = 611;
+						$return ['message'] = 'no products found in order';
 					}
 				} else {
-					$return ['status'] = 400;
+					$return ['status'] = 433;
 					$return ['message'] = 'no order found';
 				}
 			} else {
-				$return ['status'] = 410;
-				$return ['message'] = 'product id can not be empty';
+				$return ['status'] = 520;
+				$return ['message'] = 'order id can not be empty';
 			}
 		} else {
 			$return ['status'] = 100;
@@ -1682,7 +1682,7 @@ class CartController extends AppController {
 					$return ['status'] = 0;
 					$return ['message'] = 'success';
 				}else{
-					$return ['status'] = 104;
+					$return ['status'] = 903;
 					$return ['message'] = 'something went wrong';
 				}
 			} else {

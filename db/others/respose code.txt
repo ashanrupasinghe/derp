@@ -1,0 +1,47 @@
+0-success
+100-token not found/invalid token
+
+102-already in your cart
+202-already in your wishlst
+
+400-invalid user name pw
+404-please provide a product id
+405-Please provide acategory id
+410-product id can not be empty
+411-product not found
+422-category not found
+433-order not found
+444-cart not found
+455-wishlist not found
+
+
+500-Unauthorized access
+504-please fille delivery address first
+510-please select product id and qty
+511-item not found in wishlist
+522-items not found in cart
+520-order id can not be empty
+555-wishlist not found
+
+
+611-no products found in the order [plase order]
+600-The email address not found [pw reset]
+800-account disabled 
+
+900-data saving issue
+901 Unable to save customer. 
+902 Unable to save user.
+903 could not re order the wish list
+904-products not saved[plse order]
+905-product not added
+906-cart not cleared [checkout]
+907- order products not saved [checkout]
+908- order data not saved [checkout]
+910-please fille delivery address first
+911-Address and time not saved
+912-could not save address
+913-cart not clear or car is empty
+914-Culd not delete the product
+915-could not update qty
+916-could not save deleivery time
+999-could not logout

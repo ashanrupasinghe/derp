@@ -549,17 +549,18 @@ class ProductsController extends AppController {
 				if (sizeof ( $product_list ) > 0) {
 					$return ['message'] = 'Success';
 				} else {
+					$return ['status'] = 411;
 					$return ['message'] = 'products not found';
 				}
 				$return ['result'] = $product_list;
 			} else {
-				$return ['status'] = 404;
+				$return ['status'] = 422;
 				$return ['message'] = 'category not found';
 				$return ['result'] = [ ];
 			}
 		} else {
-			$return ['status'] = 404;
-			$return ['message'] = 'Please subply category id';
+			$return ['status'] = 405;
+			$return ['message'] = 'Please suply category id';
 			$return ['result'] = [ ];
 		}
 		
@@ -604,12 +605,12 @@ class ProductsController extends AppController {
 				$return ['message'] = 'Success';
 				$return ['result'] = $product;
 			} else {
-				$return ['status'] = 404;
+				$return ['status'] = 411;
 				$return ['message'] = 'Product not found';
 				$return ['result'] = [ ];
 			}
 		} else {
-			$return ['status'] = 404;
+			$return ['status'] = 410;
 			$return ['message'] = 'please provide product id';
 			$return ['result'] = [ ];
 		}
@@ -649,6 +650,7 @@ class ProductsController extends AppController {
 		if (sizeof ( $products ) > 0) {
 			$return ['message'] = 'Success';
 		} else {
+			$return ['status'] = 411;
 			$return ['message'] = 'Products not found';
 		}
 		$return ['result'] = $products;

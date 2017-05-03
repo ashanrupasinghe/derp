@@ -280,14 +280,14 @@ class UsersController extends AppController {
 							die ();
 						} else {
 							// $this->Flash->error(__('Ops, Something went wrong'));
-							$return ['status'] = 104;
+							$return ['status'] = 901;
 							$return ['message'] = "Unable to save customer. Try again.";
 							echo json_encode ( $return );
 							die ();
 						}
 					} else {
 						// $this->Flash->error(__('The user could not be saved. Please, try again.'));
-						$return ['status'] = 104;
+						$return ['status'] = 902;
 						$return ['message'] = "Unable to save user. Try again.";
 						echo json_encode ( $return );
 						die ();
@@ -335,7 +335,7 @@ class UsersController extends AppController {
 						die ();
 					} else {
 						// $this->Flash->error(__('Your account has been disabled'));
-						$return ['status'] = 400;
+						$return ['status'] = 800;
 						$return ['message'] = 'Account is disabled';
 						echo json_encode ( $return );
 						die ();
@@ -398,7 +398,7 @@ class UsersController extends AppController {
 					$return ['status'] = 0;
 					$return ['message'] = 'logout sucess';
 				} else {
-					$return ['status'] = 104;
+					$return ['status'] = 999;
 					$return ['message'] = 'something wrong';
 				}
 			}else{
@@ -521,7 +521,7 @@ class UsersController extends AppController {
 					die ();
 				} else {
 					// $this->Flash->error(__('Ops, Something went wrong'));
-					$return->status = 104;
+					$return->status = 901;
 					$return->message = "Unable to save customer. Try again.";
 					echo json_encode ( $return );
 					die ();
@@ -530,7 +530,7 @@ class UsersController extends AppController {
 				// return $this->redirect(['action' => 'register']);
 			} else {
 				// $this->Flash->error(__('The user could not be saved. Please, try again.'));
-				$return ['status'] = 104;
+				$return ['status'] = 902;
 				$return ['message'] = "Unable to save user. Try again.";
 				echo json_encode ( $return );
 				die ();
@@ -573,7 +573,7 @@ class UsersController extends AppController {
 			if (empty ( $user )) {
 				// $this->Flash->error(__('Sorry, the username entered was not found.'));
 				// $this->redirect('/user/forgotpassword');
-				$return ['status'] = 400;
+				$return ['status'] = 600;
 				$return ['message'] = 'The email address not found';
 				echo json_encode ( $return );
 				die ();
@@ -589,7 +589,7 @@ class UsersController extends AppController {
 					die ();
 				} else {
 					// $this->Flash->error(__('Sorry, Something went wrong please try again'));
-					$return ['status'] = 104;
+					$return ['status'] = 902;
 					$return ['message'] = 'Sorry, Something went wrong please try again';
 					echo json_encode ( $return );
 					die ();
