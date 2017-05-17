@@ -834,14 +834,7 @@ class UsersController extends AppController {
 	function __getGrandTotal($user_id){
 		$cart_details=$this->Users->Cart->find('all',['fields'=>['id'],'conditions'=>['user_id'=>$user_id]])->toArray();
 		$cart=new CartController();
-		
-		if(is_array($cart_details) && !empty($cart_details)){
-			$total=$cart->__getTotal($cart_details[0]->id);
-		}else{
-			$total['grand_total'] = '0';
-		}
-		
-		
+		$total=$cart->__getTotal($cart_details[0]->id);
 		return $total['grand_total'];
 		
 	}
