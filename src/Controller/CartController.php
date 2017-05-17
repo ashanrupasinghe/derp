@@ -1220,7 +1220,7 @@ class CartController extends AppController {
 		$delivery_date = date ( 'Y-m-d', $delivery_date_time );
 		$delivery_time = date ( 'H:i:s', $delivery_date_time );
 		$order = [ 
-				'customerId' => $user_id,
+				'customerId' => $this->getCustomerID($user_id),
 				'address' => $currrent_shipping->street_number . ' ' . $currrent_shipping->street_address . ' ' . $currrent_shipping->city . ' ' . $currrent_shipping->country,
 				'city' => $this->__getCityID ( $currrent_shipping->city ), // city id
 				'callcenterId' => 11, // have to null
@@ -1710,5 +1710,15 @@ class CartController extends AppController {
 		return  $postion;
 		
 		
+	}
+	/*
+	 * return customer id of a user*/
+	function getCustomerID($userID){
+		$customerModel=$this->loadModel('Customers');
+		$query=$customerModel->find()
+		->select('id')
+		->where(['user_id'=>$userID])
+		->first();
+		return $query->id;		
 	}
 }
