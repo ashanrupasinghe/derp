@@ -1765,8 +1765,12 @@ class OrdersController extends AppController {
 		$token = $this->request->data ( 'token' );
 		$chck = $this->__checkToken ( $token );
 		
+		$this->loadModel('Customers');
+		
 		if ($chck ['boolean']) {
-			$orders = $this->Orders->find ( 'all', [ 'conditions'=>['Orders.customerId'=>$chck ['user_id']],
+			$customerDetails = $this->Customers->find ( 'all', [ 'conditions'=>['Customers.user_id'=>$chck ['user_id']],'fields' =>['id','firstName','lastName']])->toArray();
+			
+			$orders = $this->Orders->find ( 'all', [ 'conditions'=>['Orders.customerId'=>$customerDetails[0] ['id']],
 					'fields' => [ 
 							'id',
 							'subTotal',
@@ -1856,7 +1860,30 @@ class OrdersController extends AppController {
 		return $total;
 	}
 	
-}
+	public function __getOrderMailData($id = null) {
+		$order = $this->Orders->get ( $id, [
+				'contain' => [
+						'OrderProducts',
+						'callcenter',
+						'delivery',
+						'customers',
+						'city',
+						'Shipping',
+						'OrderProducts.Products',
+						'OrderProducts.Products.packageType',
+						'OrderProducts.Suppliers',
+						'OrderProducts.Suppliers.city'
+				]
+		] );
+	
+	
+		$total = $this->countTotal ( $id );
+		return ['order'=>$order,'total_pdf'=>$total];
+	
+	}
+	}
+	
+
 //http://www.jqueryscript.net/form/jQuery-Plugin-To-Duplicate-and-Remove-Form-Fieldsets-Multifield.html
 //http://stackoverflow.com/questions/17175534/clonned-select2-is-not-responding
 //http://stackoverflow.com/questions/28518158/jquery-select2-dropdown-disabled-when-cloning-a-table-row

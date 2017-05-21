@@ -216,3 +216,8 @@ Plugin::load('Migrations');
 Plugin::load('Search');
 Plugin::load('CakePdf', ['bootstrap' => true]);
 Plugin::load('Cewi/Excel', ['bootstrap' => true, 'routes'=>true]);
+
+Configure::write(array(
+'admin_email'=>'sudharshan.ars@gmail.com',
+'from_email'=>'sudharshan.ars@gmail.com'
+));
