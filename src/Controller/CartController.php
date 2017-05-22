@@ -1751,7 +1751,7 @@ private function __sendNotification($orderId,$cart_id,$user_id) {
 		$dilivery_notification = [ 
 				'deliveryId' => $order->deliveryId,
 				'notificationText' => 'del nofify',
-				'sentFrom' => 2,
+				'sentFrom' => 3,
 				'orderId' => $orderId 
 		];
 		
@@ -1759,7 +1759,7 @@ private function __sendNotification($orderId,$cart_id,$user_id) {
 			$supplier_notification [$j] = [ 
 					'supplierId' => $supplerids [$j],
 					'notificationText' => 'notify',
-					'sentFrom' => 2,
+					'sentFrom' => 3,
 					'orderId' => $orderId 
 			];
 		}
@@ -1983,14 +1983,14 @@ private function __sendNotification($orderId,$cart_id,$user_id) {
 	
 	public function sendemail2($type = 'new', $recipients, $recipient_type){
 		$from_mail_address=Configure::read('from_email');
-		
+		$subject=Configure::read('add_order_email_subject');
 		foreach ( $recipients as $email_add => $data ) {
 			$email = new Email ();
 			$email 	->template('customerorder')
 			->viewVars($data)
 			->from ( [$from_mail_address => 'Direct2door.lk'] )
 			->to ( $email_add )
-			->subject ( "Your Direct 2 door order confirmation" )
+			->subject ( $subject )
 			->emailFormat ( 'html' )
 			->send();
 		}
